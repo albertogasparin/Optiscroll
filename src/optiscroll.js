@@ -17,7 +17,7 @@ OptiScroll.defaults = {
   fixTouchPageBounce: true,
   trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
   forcedScrollbars: false,
-  scrollStopDelay: 200,
+  scrollStopDelay: 300,
   maxTrackSize: 90,
   minTrackSize: 5,
   scrollbarsInteractivity: false,
@@ -165,7 +165,7 @@ OptiScroll.Instance.prototype.updateScrollbars = function () {
   }
 
   if( this.scrollbars.dom ) {
-
+    
     if( this.cache.v.size !== newVDim.size ) {
       this.scrollbars.v.track.style.height = newVDim.size * 100 + '%';
     }
