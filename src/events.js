@@ -31,6 +31,9 @@ Events.scroll = function (ev) {
 
 
 Events.touchstart = function (ev) {
+  // clear scrollStop timer
+  clearTimeout(this.scrollStopTimer);
+
   if(this.scrollbars.dom) { // restore track transition
     this.scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
     this.scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
@@ -52,7 +55,12 @@ Events.touchmove = function (ev) {
 Events.scrollStop = function () {
   var eventData, cEvent;
 
-  this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
+  // prevents multiple 
+  clearTimeout(this.scrollStopTimer);
+
+  if(!G.isTouch) {
+    this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
+  }
 
   // update position and cache
   this.updateScrollbars();
