@@ -1,0 +1,131 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font: 14px/1.35 Helvetica, sans-serif; 
+}
+
+
+h2 {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px 20px;
+}
+
+.section {
+  background: #f4f4f6;
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+}
+
+.section:after,
+.example:after { 
+  content: ''; 
+  clear: both;
+  display: table;
+}
+
+
+.example {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.example + .example {
+  border-top: 1px solid #DDD;
+}
+
+.example h3 {
+  margin: 0;
+}
+
+pre {
+  color: #44C;
+}
+
+
+
+
+.optiscroll {
+  float: right;
+  margin-left: 20px;
+  width: 45%;
+  height: 200px;
+  font-size: 18px;
+  line-height: 1.6;
+  border: 1px solid #DDD;
+  background: #FFF;
+}
+
+.optiscroll-content p {
+  padding: 0 20px;
+  font-family: serif;
+}
+
+
+
+#os1ev {
+  height: 5.2em;
+  overflow: hidden;
+  color: #777;
+}
+
+
+
+
+
+#os2 .optiscroll-content p {
+  width: 120%;
+}
+
+
+#os3.vtrack-on .optiscroll-content {
+  margin-right: 10px; /* scrollbar width */
+}
+
+#os3.htrack-on .optiscroll-content {
+  margin-bottom: 10px; /* scrollbar height */
+}
+
+#os3.vtrack-on .optiscroll-v,
+#os3.htrack-on .optiscroll-h {
+  opacity: 1;
+} 
+
+#os3 .optiscroll-v {
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: #c5d3dc; /* Old browsers */
+}
+
+#os3 .optiscroll-vtrack {
+  width: 6px;
+  right: 2px;
+}
+
+#os3 .optiscroll-h {
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: #c5d3dc; /* Old browsers */
+}
+
+#os3 .optiscroll-htrack {
+  height: 6px;
+  bottom: 2px;
+}
+
+#os3.vtrack-on.htrack-on .optiscroll-v { border-bottom: 10px solid transparent; }
+#os3.vtrack-on.htrack-on .optiscroll-h { border-right: 10px solid transparent; }
+
+
+

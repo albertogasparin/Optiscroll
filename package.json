@@ -1,0 +1,35 @@
+{
+  "name": "optiscroll",
+  "author": "Alberto Gasparin",
+  "description": "Custom scrollbars for modern webapps",
+  "keywords": [
+    "scrollbars",
+    "user interface"
+  ],
+  "version": "0.9.0",
+  "homepage": "https://github.com/wilsonfletcher/optiScroll",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wilsonfletcher/optiScroll.git"
+  },
+  "scripts": {
+    "prepublish": "grunt build",
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.2",
+    "grunt-casper": "^0.3.3",
+    "grunt-contrib-concat": "^0.3.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "^0.5.0",
+    "uglify-js": "^2.3.x",
+    "grunt-contrib-jshint": "^0.9.2",
+    "load-grunt-tasks": "^0.4.0"
+  },
+  "browser": "dist/optiscroll.js",
+  "main": "dist/optiscroll.js",
+  "licence": "Apache-2.0",
+  "bugs": {
+    "url": "http://github.com/wilsonfletcher/optiScroll/issues"
+  }
+}

@@ -1,0 +1,102 @@
+.optiscroll {
+  position: relative;
+  overflow: hidden;
+}
+
+.optiscroll .optiscroll-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+.optiscroll-scrolling .optiscroll-content > * {
+  pointer-events: none;
+}
+
+
+.optiscroll-touchfix > .optiscroll-content:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  border-bottom: 2px solid transparent;
+
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+
+.optiscroll-v,
+.optiscroll-h {
+  position: absolute;
+  display: none;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s ease 0s;
+  transition: opacity 0.2s ease 0s;
+  z-index: 2;
+  -webkit-backface-visibility: hidden;
+}
+
+.optiscroll:hover > .optiscroll-v,
+.optiscroll:hover > .optiscroll-h { opacity: 1; }
+
+
+.vtrack-on > .optiscroll-v,
+.htrack-on > .optiscroll-h {
+  display: block;
+}
+
+
+.optiscroll-v {
+  top: 4px;
+  right: 0;
+  bottom: 4px;
+  width: 0;
+}
+
+.optiscroll-h {
+  left: 4px;
+  right: 4px;
+  bottom: 0;
+  height: 0;
+}
+
+.optiscroll-vtrack,
+.optiscroll-htrack {
+  display: block;
+  position: absolute;
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
+  opacity: 0;
+  box-shadow: 0 0 1px #FFF;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+.optiscroll-vtrack {
+  width: 3px;
+  right: 4px; 
+}
+
+.vtrack-on > .optiscroll-v .optiscroll-vtrack,
+.htrack-on > .optiscroll-h .optiscroll-htrack { opacity: 1; }
+
+.optiscroll-htrack {
+  height: 3px;
+  bottom: 4px;
+}
+
+
+.vtrack-on.htrack-on > .optiscroll-v { bottom: 8px; }
+.vtrack-on.htrack-on > .optiscroll-h { right: 8px; }
