@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html> 
-  <head>
-    <meta charset="utf-8">
-    <meta name="MobileOptimized" content="320">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
-    <title>OptiScroll.js</title>
-    <link rel="stylesheet" href="dist/optiscroll.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <script type="text/javascript" src="dist/optiscroll.js"></script>
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <meta name="MobileOptimized" content="320">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
+  <title>OptiScroll.js</title>
+  <link rel="stylesheet" href="dist/optiscroll.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script type="text/javascript" src="dist/optiscroll.js"></script>
+</head>
+<body>
 
+  <header class="main-header">
+    <h1>Optiscroll</h1>
+  </header>
+
+  <div id="wrapper" class="wrapper optiscroll">
+    <div class="optiscroll-content">
 
     <h2>Optiscroll basics</h2>
 
@@ -72,7 +78,8 @@
   minTrackSize: 20 
 };</code>
 <code>new OptiScroll(element, options)</code></pre>
-        <p>Custom scrollbars on all platforms. Min/max track size (percentage value)</p>
+        <p>Custom scrollbars on all platforms. Min/max track size (percentage value). 
+          On iOS, due to scrolling limitations, the scrollbars are animated when scroll stops</p>
       </div>
 
 
@@ -94,9 +101,23 @@
         <h3>Scrollbars inline</h3>
         <pre><code>new OptiScroll(element)</code></pre>
         <p>If you need scrollbars always on, no Javascript options needed, only few css changes</p>
+        <p>Check out how scrollbars automatically update on content change:</p>
+        <button id="changesize">Change content size</button>
+
+        <script type="text/javascript">
+          var size = 0;
+          document.getElementById('changesize').addEventListener('click', function () {
+            os3.element.className = os3.element.className.replace(/size-\d/,'') + ' size-' + ((size++) % 3);
+          });
+        </script>
       </div>
     </div>
     
-    
-  </body>
+  
+  </div></div>
+
+  <script type="text/javascript">
+    var wr = new OptiScroll(document.getElementById('wrapper'));
+  </script>
+</body>
 </html>

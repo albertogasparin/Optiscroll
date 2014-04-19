@@ -10,6 +10,28 @@ html, body {
   padding: 0;
   border: none;
   font: 14px/1.35 Helvetica, sans-serif; 
+
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.main-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #444;
+  color: #F60;
+  z-index: 5;
+  border-bottom: 5px solid #F60;
+}
+
+#wrapper {
+  width: 100%;
+  height: 100%;
+  border-top: 60px solid transparent;
 }
 
 
@@ -54,7 +76,7 @@ pre {
 
 
 
-.optiscroll {
+.example .optiscroll {
   float: right;
   margin-left: 20px;
   width: 45%;
@@ -65,7 +87,7 @@ pre {
   background: #FFF;
 }
 
-.optiscroll-content p {
+.example .optiscroll-content p {
   padding: 0 20px;
   font-family: serif;
 }
@@ -126,6 +148,15 @@ pre {
 
 #os3.vtrack-on.htrack-on .optiscroll-v { border-bottom: 10px solid transparent; }
 #os3.vtrack-on.htrack-on .optiscroll-h { border-right: 10px solid transparent; }
+
+#os3.size-0 .optiscroll-content p {
+  width: 120%;
+}
+
+#os3.size-1 .optiscroll-content p {
+  width: 300%;
+}
+
 
 
 
