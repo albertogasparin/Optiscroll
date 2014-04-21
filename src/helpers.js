@@ -190,9 +190,11 @@ Helpers.checkLoop = function () {
     });
   }
   
-  G.checkTimer = setTimeout(function () {
-    Helpers.checkLoop();
-  }, GS.checkFrequency);
+  if(GS.checkFrequency) {
+    G.checkTimer = setTimeout(function () {
+      Helpers.checkLoop();
+    }, GS.checkFrequency);
+  }
 };
 
 
