@@ -11,23 +11,22 @@ var OptiScroll = function OptiScroll(element, options) {
 
 
   
-  
-
-OptiScroll.defaults = {
-  fixTouchPageBounce: true,
-  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
-  forcedScrollbars: false,
-  scrollStopDelay: 300,
-  maxTrackSize: 90,
-  minTrackSize: 5,
-  scrollbarsInteractivity: false,
-  classPrefix: 'optiscroll'
-};
-
 var GS = OptiScroll.globalSettings = {
   scrollMinUpdateInterval: 1000 / 60, // 60 FPS
   checkFrequency: 1000,
   pauseCheck: false
+};
+
+var D = OptiScroll.defaults = {
+  fixTouchPageBounce: true,
+  forcedScrollbars: false,
+  scrollStopDelay: 300,
+  maxTrackSize: 90,
+  minTrackSize: 5,
+  scrollbarsInteractivity: true,
+  autoUpdate: true,
+  classPrefix: 'optiscroll',
+  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s'
 };
 
 
@@ -51,8 +50,10 @@ OptiScroll.Instance.prototype.init = function () {
   var self = this,
       createScrollbars = G.nativeScrollbarSize || this.settings.forcedScrollbars;
 
-  // add for timed check
-  G.instances.push( this );
+  if(this.settings.autoUpdate) {
+    // add for timed check
+    G.instances.push( this );
+  }
 
   if(createScrollbars) {
     Helpers.hideNativeScrollbars.call(this);
@@ -165,7 +166,7 @@ OptiScroll.Instance.prototype.updateScrollbars = function () {
   }
 
   if( this.scrollbars.dom ) {
-    
+
     if( this.cache.v.size !== newVDim.size ) {
       this.scrollbars.v.track.style.height = newVDim.size * 100 + '%';
     }
