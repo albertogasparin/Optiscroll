@@ -64,8 +64,8 @@ Helpers.checkEdges = function (isOnScrollStop) {
       cache.lastEdge = edge;
 
       if(edge !== -1 && isOnScrollStop) {
-        Helpers.fireCustomEvent.call(this, 'scrolledgereached');
-        Helpers.fireCustomEvent.call(this, 'scroll'+ (cache.lastEdge ? 'bottom':'top') +'reached');
+        Helpers.fireCustomEvent.call(this, 'scrollreachedge');
+        Helpers.fireCustomEvent.call(this, 'scrollreach'+ (cache.lastEdge ? 'bottom':'top'));
       }
 
       if(edge !== -1 && !isOnScrollStop && this.settings.fixTouchPageBounce) {
@@ -84,8 +84,8 @@ Helpers.checkEdges = function (isOnScrollStop) {
       cache.lastEdge = edge;
 
       if(edge !== -1 && isOnScrollStop) {
-        Helpers.fireCustomEvent.call(this, 'scrolledgereached');
-        Helpers.fireCustomEvent.call(this, 'scroll'+ (cache.lastEdge ? 'right':'left') +'reached');
+        Helpers.fireCustomEvent.call(this, 'scrollreachedge');
+        Helpers.fireCustomEvent.call(this, 'scrollreach'+ (cache.lastEdge ? 'right':'left'));
       }
 
       if(edge !== -1 && !isOnScrollStop && this.settings.fixTouchPageBounce) {
