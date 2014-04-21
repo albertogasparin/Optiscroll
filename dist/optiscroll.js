@@ -20,23 +20,22 @@ var OptiScroll = function OptiScroll(element, options) {
 
 
   
-  
-
-OptiScroll.defaults = {
-  fixTouchPageBounce: true,
-  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
-  forcedScrollbars: false,
-  scrollStopDelay: 200,
-  maxTrackSize: 90,
-  minTrackSize: 5,
-  scrollbarsInteractivity: false,
-  classPrefix: 'optiscroll'
-};
-
 var GS = OptiScroll.globalSettings = {
   scrollMinUpdateInterval: 1000 / 60, // 60 FPS
   checkFrequency: 1000,
   pauseCheck: false
+};
+
+var D = OptiScroll.defaults = {
+  fixTouchPageBounce: true,
+  forcedScrollbars: false,
+  scrollStopDelay: 300,
+  maxTrackSize: 90,
+  minTrackSize: 5,
+  scrollbarsInteractivity: true,
+  autoUpdate: true,
+  classPrefix: 'optiscroll',
+  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s'
 };
 
 
@@ -60,8 +59,10 @@ OptiScroll.Instance.prototype.init = function () {
   var self = this,
       createScrollbars = G.nativeScrollbarSize || this.settings.forcedScrollbars;
 
-  // add for timed check
-  G.instances.push( this );
+  if(this.settings.autoUpdate) {
+    // add for timed check
+    G.instances.push( this );
+  }
 
   if(createScrollbars) {
     Helpers.hideNativeScrollbars.call(this);
@@ -428,8 +429,8 @@ Helpers.checkEdges = function (isOnScrollStop) {
       cache.lastEdge = edge;
 
       if(edge !== -1 && isOnScrollStop) {
-        Helpers.fireCustomEvent.call(this, 'scrolledgereached');
-        Helpers.fireCustomEvent.call(this, 'scroll'+ (cache.lastEdge ? 'bottom':'top') +'reached');
+        Helpers.fireCustomEvent.call(this, 'scrollreachedge');
+        Helpers.fireCustomEvent.call(this, 'scrollreach'+ (cache.lastEdge ? 'bottom':'top'));
       }
 
       if(edge !== -1 && !isOnScrollStop && this.settings.fixTouchPageBounce) {
@@ -448,8 +449,8 @@ Helpers.checkEdges = function (isOnScrollStop) {
       cache.lastEdge = edge;
 
       if(edge !== -1 && isOnScrollStop) {
-        Helpers.fireCustomEvent.call(this, 'scrolledgereached');
-        Helpers.fireCustomEvent.call(this, 'scroll'+ (cache.lastEdge ? 'right':'left') +'reached');
+        Helpers.fireCustomEvent.call(this, 'scrollreachedge');
+        Helpers.fireCustomEvent.call(this, 'scrollreach'+ (cache.lastEdge ? 'right':'left'));
       }
 
       if(edge !== -1 && !isOnScrollStop && this.settings.fixTouchPageBounce) {
@@ -554,9 +555,11 @@ Helpers.checkLoop = function () {
     });
   }
   
-  G.checkTimer = setTimeout(function () {
-    Helpers.checkLoop();
-  }, GS.checkFrequency);
+  if(GS.checkFrequency) {
+    G.checkTimer = setTimeout(function () {
+      Helpers.checkLoop();
+    }, GS.checkFrequency);
+  }
 };
 
 
@@ -597,11 +600,16 @@ Events.scroll = function (ev) {
 
 
 Events.touchstart = function (ev) {
+  // clear scrollStop timer
+  clearTimeout(this.scrollStopTimer);
+
   if(this.scrollbars.dom) { // restore track transition
     this.scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
     this.scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
   }
+  
   if(this.settings.fixTouchPageBounce) {
+    this.updateScrollbars();
     Helpers.checkEdges.call(this);
   }
   this.cache.scrollNow = getTime();
@@ -618,7 +626,12 @@ Events.touchmove = function (ev) {
 Events.scrollStop = function () {
   var eventData, cEvent;
 
-  this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
+  // prevents multiple 
+  clearTimeout(this.scrollStopTimer);
+
+  if(!G.isTouch) {
+    this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
+  }
 
   // update position and cache
   this.updateScrollbars();

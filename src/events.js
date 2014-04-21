@@ -38,6 +38,7 @@ Events.touchstart = function (ev) {
     this.scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
     this.scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
   }
+  
   if(this.settings.fixTouchPageBounce) {
     this.updateScrollbars();
     Helpers.checkEdges.call(this);
