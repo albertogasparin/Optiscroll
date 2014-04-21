@@ -2,37 +2,40 @@ var Helpers = OptiScroll.Helpers = {};
 
 
 Helpers.createScrollbarElements = function () {
-  var vScrollbar = this.scrollbars.v.el = document.createElement('div'),
-      vTrack = this.scrollbars.v.track = document.createElement('b'),
-      hScrollbar = this.scrollbars.h.el = document.createElement('div'),
-      hTrack = this.scrollbars.h.track = document.createElement('b');
+  var scrollbars = this.scrollbars,
+      settings = this.settings,
+      vScrollbar = scrollbars.v.el = document.createElement('div'),
+      vTrack = scrollbars.v.track = document.createElement('b'),
+      hScrollbar = scrollbars.h.el = document.createElement('div'),
+      hTrack = scrollbars.h.track = document.createElement('b');
 
-  vScrollbar.className = this.settings.classPrefix+'-v';
-  vTrack.className = this.settings.classPrefix+'-vtrack';
+  vScrollbar.className = settings.classPrefix+'-v';
+  vTrack.className = settings.classPrefix+'-vtrack';
   vScrollbar.appendChild(vTrack);
   this.element.appendChild(vScrollbar);
 
-  hScrollbar.className = this.settings.classPrefix+'-h';
-  hTrack.className = this.settings.classPrefix+'-htrack';
+  hScrollbar.className = settings.classPrefix+'-h';
+  hTrack.className = settings.classPrefix+'-htrack';
   hScrollbar.appendChild(hTrack);
   this.element.appendChild(hScrollbar);
 
-  this.scrollbars.dom = true;
+  scrollbars.dom = true;
 };
 
 
 
 Helpers.hideNativeScrollbars = function () {
-  var self = this;
+  var self = this,
+      scrollElement = this.scrollElement;
 
   if( G.nativeScrollbarSize === 0 ) {
     // hide Webkit/touch scrollbars
     var time = getTime();
-    this.scrollElement.setAttribute('data-scroll', time);
+    scrollElement.setAttribute('data-scroll', time);
     
     if( G.isTouch ) {
       // force scrollbars disappear on iOS
-      this.scrollElement.style.display = 'none';
+      scrollElement.style.display = 'none';
       Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'display: none;');
 
       animationTimeout(function () { 
@@ -44,19 +47,20 @@ Helpers.hideNativeScrollbars = function () {
     
   } else {
     // force scrollbars and hide them
-    this.scrollElement.style.overflow = 'scroll';
-    this.scrollElement.style.right = -G.nativeScrollbarSize + 'px';
-    this.scrollElement.style.bottom = -G.nativeScrollbarSize + 'px';
+    scrollElement.style.overflow = 'scroll';
+    scrollElement.style.right = -G.nativeScrollbarSize + 'px';
+    scrollElement.style.bottom = -G.nativeScrollbarSize + 'px';
   }
 };
 
 
 
 Helpers.checkEdges = function (isOnScrollStop) {
-  var cache, edge, scrollFixPosition;
+  var scrollbars = this.scrollbars,
+      cache, edge, scrollFixPosition;
   
   // vertical (top - bottom) edges
-  if(this.scrollbars.v.enabled) {
+  if(scrollbars.v.enabled) {
     cache = this.cache.v;
     edge = Utils.detectEdge(cache, this.cache.scrollHeight, !isOnScrollStop);
 
@@ -76,7 +80,7 @@ Helpers.checkEdges = function (isOnScrollStop) {
   }
 
   // horizontal (left - right) edges
-  if(this.scrollbars.h.enabled) {
+  if(scrollbars.h.enabled) {
     cache = this.cache.h;
     edge = Utils.detectEdge(cache, this.cache.scrollWidth, !isOnScrollStop);
 
@@ -101,6 +105,7 @@ Helpers.checkEdges = function (isOnScrollStop) {
 
 Helpers.animateScroll = function (startX, endX, startY, endY, duration) {
   var self = this,
+      scrollElement = this.scrollElement,
       startTime = getTime();
   
   if(duration === 'auto') { 
@@ -117,10 +122,10 @@ Helpers.animateScroll = function (startX, endX, startY, endY, duration) {
         easedTime = easingFunction(time);
     
     if( endY !== startY ) {
-      self.scrollElement.scrollTop = (easedTime * (endY - startY)) + startY;
+      scrollElement.scrollTop = (easedTime * (endY - startY)) + startY;
     }
     if( endX !== startX ) {
-      self.scrollElement.scrollLeft = (easedTime * (endX - startX)) + startX;
+      scrollElement.scrollLeft = (easedTime * (endX - startX)) + startX;
     }
 
     if(time < 1) {
@@ -147,28 +152,34 @@ Helpers.fireCustomEvent = function (eventName) {
 
 
 Helpers.enableScrollbar = function (which) {
-  var sb = this.scrollbars[which];
-  sb.enabled = true;
-  if(this.scrollbars.dom)
+  var scrollbars = this.scrollbars,
+      sb = scrollbars[which];
+  
+  if(scrollbars.dom) {
     sb.track.style[G.cssTransition] = this.settings.trackTransitions;
+  }
   this.element.classList.add( which+'track-on' );
+  sb.enabled = true;
 };
 
 
 
 Helpers.disableScrollbar = function (which) {
   var sb = this.scrollbars[which];
-  sb.enabled = false;
+
   this.element.classList.remove( which+'track-on' );
+  sb.enabled = false;
 };
 
 
 
 Helpers.animateTracks = function () {
-  var dashedProp = G.cssTransform == 'transform' ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
+  var scrollbars = this.scrollbars,
+      transitions = this.settings.trackTransitions,
+      dashedProp = G.cssTransform == 'transform' ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
   
-  this.scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions+', '+ dashedProp + ' 0.2s linear 0s';
-  this.scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions+', '+ dashedProp + ' 0.2s linear 0s';
+  scrollbars.v.track.style[G.cssTransition] = transitions+', '+ dashedProp + ' 0.2s linear 0s';
+  scrollbars.h.track.style[G.cssTransition] = transitions+', '+ dashedProp + ' 0.2s linear 0s';
 };
 
 

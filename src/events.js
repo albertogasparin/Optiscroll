@@ -3,6 +3,7 @@ var Events = OptiScroll.Events = {};
 
 Events.scroll = function (ev) {
   var self = this,
+      cache = this.cache,
       now = getTime();
 
   if(this.disableScrollEvent) return;
@@ -12,13 +13,13 @@ Events.scroll = function (ev) {
   }
   GS.pauseCheck = true;
 
-  if( !GS.scrollMinUpdateInterval || now - (this.cache.scrollNow || 0) >= GS.scrollMinUpdateInterval ) {
+  if( !GS.scrollMinUpdateInterval || now - (cache.scrollNow || 0) >= GS.scrollMinUpdateInterval ) {
 
     if(this.scrollbars.dom) {
       self.updateScrollbars();
     }
 
-    this.cache.scrollNow = now;
+    cache.scrollNow = now;
     
     clearTimeout(this.scrollStopTimer);
     this.scrollStopTimer = setTimeout(function () {
@@ -31,14 +32,16 @@ Events.scroll = function (ev) {
 
 
 Events.touchstart = function (ev) {
+  var scrollbars = this.scrollbars;
+  
   // clear scrollStop timer
   clearTimeout(this.scrollStopTimer);
 
-  if(this.scrollbars.dom) { // restore track transition
-    this.scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
-    this.scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
+  if(scrollbars.dom) { // restore track transition
+    scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
+    scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
   }
-  
+
   if(this.settings.fixTouchPageBounce) {
     this.updateScrollbars();
     Helpers.checkEdges.call(this);

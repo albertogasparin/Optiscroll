@@ -21,16 +21,20 @@ Utils.cssTest = function (prop) {
 
 // Get scrollbars width, thanks Google Closure Library
 Utils.getScrollbarWidth = function () {
-  var outerEl = document.createElement('div');
+  var htmlEl = document.documentElement,
+      outerEl, innerEl, width = 0;
+
+  outerEl = document.createElement('div');
   outerEl.style.cssText = 'overflow:auto;width:50px;height:50px;' + 'position:absolute;left:-100px';
 
-  var innerEl = document.createElement('div');
+  innerEl = document.createElement('div');
   innerEl.style.cssText = 'width:100px;height:100px';
 
   outerEl.appendChild(innerEl);
-  document.documentElement.appendChild(outerEl);
-  var width = outerEl.offsetWidth - outerEl.clientWidth;
-  document.documentElement.removeChild(outerEl);
+  htmlEl.appendChild(outerEl);
+  width = outerEl.offsetWidth - outerEl.clientWidth;
+  htmlEl.removeChild(outerEl);
+
   return width;
 }
 
