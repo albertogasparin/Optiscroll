@@ -200,6 +200,109 @@ OptiScroll.Instance.prototype.updateScrollbars = function () {
   cache.h = Utils.extendObj(cache.h, newHDim);
 };
 
+
+var Scrollbar = function (which, instance) {
+
+  var parentElement = instance.element,
+      scrollElement = instance.scrollElement,
+      settings = instance.settings,
+      cache = instance.cache,
+      scrollbarCache = cache[which],
+
+      clientSize = (which == 'v') ? 'clientHeight' : 'clientWidth',
+      scrollSize = (which == 'v') ? 'scrollHeight' : 'scrollWidth',
+      scrollProp = (which == 'v') ? 'scrollTop' : 'scrollLeft',
+      elementSize = (which == 'v') ? 'height' : 'width',
+
+      enabled = false,
+      scrollbarEl = null,
+      trackEl = null;
+
+  
+  return {
+
+    toggle: function toggleStatus (bool) {
+      enabled = bool;
+
+      if(enabled) {
+        parentElement.classList.add( which+'track-on' );
+      } else {
+        parentElement.classList.remove( which+'track-on' );
+      }
+
+      if(trackEl && enabled) {
+        trackEl.style[G.cssTransition] = settings.trackTransitions;
+      }
+    },
+
+    create: function createElements () {
+      scrollbarEl = document.createElement('div');
+      trackEl = document.createElement('b');
+
+      scrollbarEl.className = settings.classPrefix+'-'+which;
+      trackEl.className = settings.classPrefix+'-'+which+'track';
+      scrollbarEl.appendChild(trackEl);
+      parentElement.appendChild(scrollbarEl);
+    },
+
+    update: function update () {
+      var edgeDist = scrollElement[scrollProp],
+          trackMin = settings.minTrackSize || 0,
+          trackMax = settings.maxTrackSize || 100,
+          newDim, newRelPos;
+
+      newDim = Utils.calculateScrollbarDimentions(edgeDist, cache[clientSize], cache[scrollSize], trackMin, trackMax);
+      newRelPos = ((1 / newDim.size) * newDim.position * 100);
+
+      if(newDim.size === 1 && enabled) {
+        this.toggle(false);
+      }
+
+      if(newDim.size < 1 && !enabled) {
+        this.toggle(true);
+      }
+
+      if(trackEl && enabled) {
+        if(scrollbarCache.size !== newDim.size) {
+          trackEl.style[elementSize] = newDim.size * 100 + '%';
+        }
+
+        if(G.isTouch) {
+          this.animateTrack();
+        }
+
+        if(which == 'v') {
+          if(G.cssTransform) {
+            trackEl.style[G.cssTransform] = 'translate(0, '+ newRelPos + '%' +')';
+          } else { // IE9
+            trackEl.style.top = newDim.position * 100 + '%';
+          }
+        } else {
+          if(G.cssTransform) {
+            trackEl.style[G.cssTransform] = 'translate('+ newRelPos + '%' +', 0)';
+          } else { // IE9
+            trackEl.style.left = newDim.position * 100 + '%';
+          }
+        }
+
+      }
+
+      // update cache values
+      scrollbarCache = Utils.extendObj(scrollbarCache, newDim);
+    },
+
+
+    animateTrack: function animateTrack () {
+      var dashedProp = G.cssTransform == 'transform' ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
+      trackElement.style[G.cssTransition] = settings.trackTransitions+', '+ dashedProp + ' 0.2s linear 0s';
+    }
+
+  };
+
+};
+
+
+
   
 
 
