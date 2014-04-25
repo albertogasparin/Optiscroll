@@ -15,9 +15,7 @@ Events.scroll = function (ev) {
 
   if( !GS.scrollMinUpdateInterval || now - (cache.scrollNow || 0) >= GS.scrollMinUpdateInterval ) {
 
-    if(this.scrollbars.dom) {
-      self.updateScrollbars();
-    }
+    _invoke(this.scrollbars, 'update');
 
     cache.scrollNow = now;
     
@@ -37,14 +35,14 @@ Events.touchstart = function (ev) {
   // clear scrollStop timer
   clearTimeout(this.scrollStopTimer);
 
-  if(scrollbars.dom) { // restore track transition
-    scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
-    scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
-  }
+  // if(scrollbars.dom) { // restore track transition
+  //   scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
+  //   scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
+  // }
 
   if(this.settings.fixTouchPageBounce) {
-    this.updateScrollbars();
-    Helpers.checkEdges.call(this);
+    _invoke(this.scrollbars, 'update');
+    _invoke(this.scrollbars, 'checkEdges');
   }
   this.cache.scrollNow = getTime();
 };
@@ -68,12 +66,13 @@ Events.scrollStop = function () {
   }
 
   // update position and cache
-  this.updateScrollbars();
+  _invoke(this.scrollbars, 'update');
 
   // fire custom event
-  Helpers.fireCustomEvent.call(this, 'scrollstop');
+  this.fireCustomEvent('scrollstop');
 
-  Helpers.checkEdges.call(this, true);
+  // check if edge event needs to be fired
+  _invoke(this.scrollbars, 'checkEdges', [true]);
 
   // restore check loop
   GS.pauseCheck = false;
