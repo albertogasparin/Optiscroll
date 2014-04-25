@@ -447,7 +447,8 @@ var Scrollbar = function (which, instance) {
       enabled = false,
       scrollbarEl = null,
       trackEl = null,
-      dragData = null;
+      dragData = null,
+      animated = false;
 
   
   return {
@@ -486,7 +487,7 @@ var Scrollbar = function (which, instance) {
     update: function () {
       var trackMin = settings.minTrackSize || 0,
           trackMax = settings.maxTrackSize || 100,
-          newDim, newRelPos;
+          newDim, newRelPos, deltaPos;
 
       newDim = this.calc(scrollElement[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
@@ -500,12 +501,16 @@ var Scrollbar = function (which, instance) {
       }
 
       if(trackEl && enabled) {
+        deltaPos = Math.abs(newDim.position - scrollbarCache.position) * cache[clientSize];
+        
         if(scrollbarCache.size !== newDim.size) {
           trackEl.style[elementSize] = newDim.size * 100 + '%';
         }
 
-        if(G.isTouch) {
+        if( G.isTouch && deltaPos > 20 ) {
           this.animateTrack();
+        } else if (animated) {
+          this.removeTrackAnimation();
         }
 
         if(isVertical) {
@@ -530,7 +535,14 @@ var Scrollbar = function (which, instance) {
 
 
     animateTrack: function () {
+      animated = true;
       trackEl.style[G.cssTransition] = settings.trackTransitions+', '+ cssTransformDashed + ' 0.2s linear 0s';
+    },
+
+
+    removeTrackAnimation: function () {
+      animated = false;
+      trackEl.style[G.cssTransition] = settings.trackTransitions;
     },
 
 
