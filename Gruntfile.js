@@ -64,8 +64,8 @@ module.exports = exports = function(grunt) {
                 src: [
                     'src/intro.js',
                     'src/optiscroll.js',
-                    'src/helpers.js',
                     'src/events.js',
+                    'src/scrollbar.js',
                     'src/utils.js',
                     'src/globals.js',
                     'src/outro.js',
