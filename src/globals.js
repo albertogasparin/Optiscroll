@@ -1,13 +1,18 @@
 // Global variables
 var G = {
-  instances: [],
-  checkTimer: null,
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
-  nativeScrollbarSize: getScrollbarWidth()
+  cssTransformDashed: '',
+  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
+  nativeScrollbarSize: getScrollbarWidth(),
+
+  instances: [],
+  checkTimer: null,
+  pauseCheck: false
 };
 
+G.cssTransformDashed = (G.cssTransform == 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
 
 
 

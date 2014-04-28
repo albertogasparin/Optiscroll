@@ -68,8 +68,8 @@ module.exports = exports = function(grunt) {
                     'src/scrollbar.js',
                     'src/utils.js',
                     'src/globals.js',
-                    'src/outro.js',
                     'src/polyfills/*.js',
+                    'src/outro.js',
                 ],
                 dest: 'dist/optiscroll.js'
             }

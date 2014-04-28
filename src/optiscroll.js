@@ -21,19 +21,18 @@ var D = OptiScroll.defaults = {
   fixTouchPageBounce: true,
   forcedScrollbars: false,
   scrollStopDelay: 300,
-  maxTrackSize: 90,
+  maxTrackSize: 95,
   minTrackSize: 5,
   draggableTracks: true,
   autoUpdate: true,
-  classPrefix: 'optiscroll',
-  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s'
+  classPrefix: 'optiscroll'
 };
 
 
 
 OptiScroll.Instance = function ( element, options ) {
   this.element = element;
-  this.scrollElement = element.children[0];
+  this.scrollEl = element.children[0];
   
   // instance variables
   this.settings = _extend( _extend({}, OptiScroll.defaults), options || {});
@@ -60,7 +59,7 @@ OptiScroll.Instance.prototype.init = function () {
   };
 
   if(createScrollbars) {
-    Utils.hideNativeScrollbars(this.scrollElement);
+    Utils.hideNativeScrollbars(this.scrollEl);
     _invoke(this.scrollbars, 'create');
   } 
 
@@ -69,7 +68,7 @@ OptiScroll.Instance.prototype.init = function () {
   }
 
   // calculate scrollbars
-  this.checkScrollSize();
+  this.update();
 
   this.bindEvents();
 
@@ -83,26 +82,27 @@ OptiScroll.Instance.prototype.init = function () {
 
 OptiScroll.Instance.prototype.bindEvents = function () {
   var self = this,
-      scrollElement = this.scrollElement;
+      listeners = this.listeners = {},
+      scrollEl = this.scrollEl;
 
   // scroll event binding
-  this.scrollEventListener = function (ev) { Events.scroll.call(self, ev); };
-  scrollElement.addEventListener('scroll', this.scrollEventListener);
+  listeners.scroll = function (ev) { Events.scroll.call(self, ev); };
+  scrollEl.addEventListener('scroll', listeners.scroll);
 
   // overflow events bindings (non standard)
   // to update scrollbars immediately 
-  this.overflowEventListener = function (ev) { self.checkScrollSize() };
-  scrollElement.addEventListener('overflow', this.overflowEventListener); // Moz
-  scrollElement.addEventListener('underflow', this.overflowEventListener); // Moz
-  scrollElement.addEventListener('overflowchanged', this.overflowEventListener); // Webkit
+  listeners.overflow = function (ev) { self.update() };
+  scrollEl.addEventListener('overflow', listeners.overflow); // Moz
+  scrollEl.addEventListener('underflow', listeners.overflow); // Moz
+  scrollEl.addEventListener('overflowchanged', listeners.overflow); // Webkit
 
   if(G.isTouch) {
 
-    this.touchstartEventListener = function (ev) { Events.touchstart.call(self, ev); };
-    scrollElement.addEventListener('touchstart', this.touchstartEventListener);
+    listeners.touchstart = function (ev) { Events.touchstart.call(self, ev); };
+    scrollEl.addEventListener('touchstart', listeners.touchstart);
 
-    this.touchmoveEventListener = function (ev) { Events.touchmove.call(self, ev); };
-    scrollElement.addEventListener('touchmove', this.touchmoveEventListener);
+    listeners.touchmove = function (ev) { Events.touchmove.call(self, ev); };
+    scrollEl.addEventListener('touchmove', listeners.touchmove);
   }
 
 };
@@ -110,14 +110,14 @@ OptiScroll.Instance.prototype.bindEvents = function () {
 
 
 
-OptiScroll.Instance.prototype.checkScrollSize = function () {
+OptiScroll.Instance.prototype.update = function () {
   var oldcH = this.cache.clientHeight,
-      scrollElement = this.scrollElement,
+      scrollEl = this.scrollEl,
       cache = this.cache,
-      sH = scrollElement.scrollHeight,
-      cH = scrollElement.clientHeight,
-      sW = scrollElement.scrollWidth,
-      cW = scrollElement.clientWidth;
+      sH = scrollEl.scrollHeight,
+      cH = scrollEl.clientHeight,
+      sW = scrollEl.scrollWidth,
+      cW = scrollEl.clientWidth;
   
   if( sH !== cache.scrollHeight || cH !== cache.clientHeight || 
     sW !== cache.scrollWidth || cW !== cache.clientWidth ) {
@@ -149,22 +149,22 @@ OptiScroll.Instance.prototype.checkScrollSize = function () {
 
 /**
  * Animate scrollTo
- * ~~~
+ * ```
  * $(el).optiScroll('scrollTo', 'left', 100, 200) // scrolls x,y in 200ms
- * ~~~
+ * ```
  */
 OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disableEvents) {
   var self = this,
-      scrollElement = this.scrollElement,
+      scrollEl = this.scrollEl,
       cache = this.cache,
       startTime, startX, startY, endX, endY;
 
-  GS.pauseCheck = true;
+  G.pauseCheck = true;
   // force update
-  this.checkScrollSize();
+  this.update();
 
-  startX = endX = scrollElement.scrollLeft;
-  startY = endY = scrollElement.scrollTop;
+  startX = endX = scrollEl.scrollLeft;
+  startY = endY = scrollEl.scrollTop;
   
   if (typeof destX === 'string') { // left or right
     endX = (destX === 'left') ? 0 : cache.scrollWidth - cache.clientWidth;
@@ -181,8 +181,8 @@ OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
   this.disableScrollEvent = disableEvents;
 
   if(duration === 0) {
-    scrollElement.scrollLeft = endX;
-    scrollElement.scrollTop = endY;
+    scrollEl.scrollLeft = endX;
+    scrollEl.scrollTop = endY;
     animationTimeout( function () { self.disableScrollEvent = false; }); // restore
   } else {
     this.animateScroll(startX, endX, startY, endY, duration || 'auto');
@@ -192,17 +192,17 @@ OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
 
 
 OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) {
-  var scrollElement = this.scrollElement,
+  var scrollEl = this.scrollEl,
       eDim, sDim,
       leftEdge, topEdge, rightEdge, bottomEdge,
       startTime, startX, startY, endX, endY;
 
-  GS.pauseCheck = true;
+  G.pauseCheck = true;
   // force update
-  this.checkScrollSize();
+  this.update();
 
   if(typeof elem === 'string') { // selector
-    elem = scrollElement.querySelector(elem);
+    elem = scrollEl.querySelector(elem);
   }
 
   if(elem.length && elem.jquery) { // jquery element
@@ -215,10 +215,10 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 
   delta = delta || {};
   eDim = elem.getBoundingClientRect();
-  sDim = scrollElement.getBoundingClientRect();
+  sDim = scrollEl.getBoundingClientRect();
 
-  startX = endX = scrollElement.scrollLeft;
-  startY = endY = scrollElement.scrollTop;
+  startX = endX = scrollEl.scrollLeft;
+  startY = endY = scrollEl.scrollTop;
   leftEdge = startX + eDim.left - sDim.left - (delta.left || 0);
   topEdge = startY + eDim.top - sDim.top - (delta.top || 0);
   rightEdge = startX + eDim.left - sDim.left + eDim.width - sDim.width + (delta.right || 0);
@@ -239,8 +239,8 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   if(endX !== startX || endY !== startY) { 
 
     if(duration === 0) {
-      scrollElement.scrollLeft = endX;
-      scrollElement.scrollTop = endY;
+      scrollEl.scrollLeft = endX;
+      scrollEl.scrollTop = endY;
     } else {
       this.animateScroll(startX, endX, startY, endY, duration || 'auto');
     }
@@ -253,8 +253,8 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 
 
 OptiScroll.Instance.prototype.destroy = function () {
-  var scrollElement = this.scrollElement,
-      scrollbars = this.scrollbars,
+  var scrollEl = this.scrollEl,
+      listeners = this.listeners,
       index = G.instances.indexOf( this );
 
   // remove instance from global timed check
@@ -263,23 +263,19 @@ OptiScroll.Instance.prototype.destroy = function () {
   }
 
   // unbind events
-  scrollElement.removeEventListener('scroll', this.scrollEventListener);
-  scrollElement.removeEventListener('overflow', this.overflowEventListener);
-  scrollElement.removeEventListener('underflow', this.overflowEventListener);
-  scrollElement.removeEventListener('overflowchanged', this.overflowEventListener);
+  scrollEl.removeEventListener('scroll', listeners.scroll);
+  scrollEl.removeEventListener('overflow', listeners.overflow);
+  scrollEl.removeEventListener('underflow', listeners.overflow);
+  scrollEl.removeEventListener('overflowchanged', listeners.overflow);
 
-  scrollElement.removeEventListener('touchstart', this.touchstartEventListener);
-  scrollElement.removeEventListener('touchmove', this.touchmoveEventListener);
+  scrollEl.removeEventListener('touchstart', listeners.touchstart);
+  scrollEl.removeEventListener('touchmove', listeners.touchmove);
 
   // remove scrollbars elements
-  if(scrollbars.dom) {
-    this.element.removeChild(scrollbars.v.el);
-    this.element.removeChild(scrollbars.h.el);
-    scrollbars = null;
-  }
+  _invoke(this.scrollbars, 'remove');
   
   // restore style
-  scrollElement.removeAttribute('style');
+  scrollEl.removeAttribute('style');
 };
 
 
@@ -287,7 +283,7 @@ OptiScroll.Instance.prototype.destroy = function () {
 
 OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, endY, duration) {
   var self = this,
-      scrollElement = this.scrollElement,
+      scrollEl = this.scrollEl,
       startTime = getTime();
   
   if(duration === 'auto') { 
@@ -304,10 +300,10 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
         easedTime = easingFunction(time);
     
     if( endY !== startY ) {
-      scrollElement.scrollTop = (easedTime * (endY - startY)) + startY;
+      scrollEl.scrollTop = (easedTime * (endY - startY)) + startY;
     }
     if( endX !== startX ) {
-      scrollElement.scrollLeft = (easedTime * (endX - startX)) + startX;
+      scrollEl.scrollLeft = (easedTime * (endX - startX)) + startX;
     }
 
     if(time < 1) {

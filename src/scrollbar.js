@@ -1,18 +1,16 @@
 var Scrollbar = function (which, instance) {
 
   var isVertical = (which === 'v'),
-      cssTransformDashed = (G.cssTransform == 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase(),
-
-      parentElement = instance.element,
-      scrollElement = instance.scrollElement,
+      parentEl = instance.element,
+      scrollEl = instance.scrollEl,
       settings = instance.settings,
       cache = instance.cache,
       scrollbarCache = cache[which] = {},
 
-      clientSize = isVertical ? 'clientHeight' : 'clientWidth',
-      scrollSize = isVertical ? 'scrollHeight' : 'scrollWidth',
+      sizeProp = isVertical ? 'Height' : 'Width',
+      clientSize = 'client'+sizeProp,
+      scrollSize = 'scroll'+sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
-      elementSize = isVertical ? 'height' : 'width',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
 
       enabled = false,
@@ -29,13 +27,13 @@ var Scrollbar = function (which, instance) {
       enabled = bool;
 
       if(enabled) {
-        parentElement.classList.add( which+'track-on' );
+        parentEl.classList.add( which+'track-on' );
       } else {
-        parentElement.classList.remove( which+'track-on' );
+        parentEl.classList.remove( which+'track-on' );
       }
 
       if(trackEl && enabled) {
-        trackEl.style[G.cssTransition] = settings.trackTransitions;
+        trackEl.style[G.cssTransition] = G.trackTransitions;
       }
     },
 
@@ -47,7 +45,7 @@ var Scrollbar = function (which, instance) {
       scrollbarEl.className = settings.classPrefix+'-'+which;
       trackEl.className = settings.classPrefix+'-'+which+'track';
       scrollbarEl.appendChild(trackEl);
-      parentElement.appendChild(scrollbarEl);
+      parentEl.appendChild(scrollbarEl);
 
       if(settings.draggableTracks) {
         this.bind();
@@ -55,12 +53,12 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    update: function () {
+    update: function (isOnTouch) {
       var trackMin = settings.minTrackSize || 0,
           trackMax = settings.maxTrackSize || 100,
           newDim, newRelPos, deltaPos;
 
-      newDim = this.calc(scrollElement[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
+      newDim = this.calc(scrollEl[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
       deltaPos = Math.abs(newDim.position - scrollbarCache.position) * cache[clientSize];
 
@@ -74,7 +72,7 @@ var Scrollbar = function (which, instance) {
 
       if(trackEl && enabled) {
         if(scrollbarCache.size !== newDim.size) {
-          trackEl.style[elementSize] = newDim.size * 100 + '%';
+          trackEl.style[sizeProp.toLowerCase()] = newDim.size * 100 + '%';
         }
 
         if( G.isTouch && deltaPos > 20 ) {
@@ -83,36 +81,30 @@ var Scrollbar = function (which, instance) {
           this.removeTrackAnimation();
         }
 
-        if(isVertical) {
-          if(G.cssTransform) {
-            trackEl.style[G.cssTransform] = 'translate(0, '+ newRelPos + '%' +')';
-          } else { // IE9
-            trackEl.style.top = newDim.position * 100 + '%';
-          }
-        } else {
-          if(G.cssTransform) {
-            trackEl.style[G.cssTransform] = 'translate('+ newRelPos + '%' +', 0)';
-          } else { // IE9
-            trackEl.style.left = newDim.position * 100 + '%';
-          }
+        if(G.cssTransform) {
+          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
+        } else { // IE9
+          trackEl.style[evNames[0]] = newDim.position * 100 + '%';
         }
 
       }
 
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
+
+      this.checkEdges(isOnTouch);
     },
 
 
     animateTrack: function () {
       animated = true;
-      trackEl.style[G.cssTransition] = settings.trackTransitions+', '+ cssTransformDashed + ' 0.2s linear 0s';
+      trackEl.style[G.cssTransition] = G.trackTransitions+', '+ G.cssTransformDashed + ' 0.2s linear 0s';
     },
 
 
     removeTrackAnimation: function () {
       animated = false;
-      trackEl.style[G.cssTransition] = settings.trackTransitions;
+      trackEl.style[G.cssTransition] = G.trackTransitions;
     },
 
 
@@ -121,7 +113,7 @@ var Scrollbar = function (which, instance) {
 
       var dragStart = function (ev) {
         var evData = ev.touches ? ev.touches[0] : ev;
-        dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollElement[scrollProp] };
+        dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
       }
 
       var dragMove = function (ev) {
@@ -133,7 +125,7 @@ var Scrollbar = function (which, instance) {
         delta = isVertical ? evData.pageY - dragData.y : evData.pageX - dragData.x;
         deltaRatio = delta / cache[clientSize];
         
-        scrollElement[scrollProp] = dragData.scroll + deltaRatio * cache[scrollSize];
+        scrollEl[scrollProp] = dragData.scroll + deltaRatio * cache[scrollSize];
       }
 
       var dragEnd = function (ev) {
@@ -186,22 +178,29 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    checkEdges: function (isOnScrollStop) {
-      var edge = Utils.detectEdge(scrollbarCache, cache[scrollSize], !isOnScrollStop);
+    checkEdges: function (isOnTouch) {
+      var percent = scrollbarCache.percent, scrollFixPosition;
 
-      if(!enabled || edge === false) 
-        return;
+      if(!enabled) return;
 
-      scrollbarCache.lastEdge = edge;
-
-      if(edge !== -1 && isOnScrollStop) {
+      if(scrollbarCache.was !== percent && percent % 100 === 0 && !isOnTouch) {
         instance.fireCustomEvent('scrollreachedge');
-        instance.fireCustomEvent('scrollreach'+ evNames[scrollbarCache.lastEdge] );
+        instance.fireCustomEvent('scrollreach'+ evNames[percent/100] );
       }
 
-      if(edge !== -1 && !isOnScrollStop && settings.fixTouchPageBounce) {
-        scrollFixPosition = scrollbarCache.lastEdge ? scrollbarCache.position * cache[scrollSize] - 1 : 1;
+      if(percent % 100 === 0 && isOnTouch && settings.fixTouchPageBounce) {
+        scrollFixPosition = percent ? scrollbarCache.position * cache[scrollSize] - 1 : 1;
         instance.scrollTo( isVertical ? false : scrollFixPosition, isVertical ? scrollFixPosition : false , 0, true);
+      }
+
+      // if(percent > 0 && percent < 100) // update only if not overscroll
+        scrollbarCache.was = percent;
+    },
+
+
+    remove: function () {
+      if(scrollbarEl) {
+        parentEl.removeChild(scrollbarEl);
       }
     }
 
