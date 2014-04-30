@@ -12,6 +12,7 @@ var Scrollbar = function (which, instance) {
       scrollSize = 'scroll'+sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
+      trackTransition = 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
 
       enabled = false,
       scrollbarEl = null,
@@ -26,14 +27,12 @@ var Scrollbar = function (which, instance) {
     toggle: function (bool) {
       enabled = bool;
 
-      if(enabled) {
-        parentEl.classList.add( which+'track-on' );
-      } else {
-        parentEl.classList.remove( which+'track-on' );
-      }
+      if(trackEl) {
+        parentEl.classList[ enabled ? 'add' : 'remove' ]( which+'track-on' );
 
-      if(trackEl && enabled) {
-        trackEl.style[G.cssTransition] = G.trackTransitions;
+        if(enabled) {
+          trackEl.style[G.cssTransition] = trackTransition;
+        }
       }
     },
 
@@ -75,11 +74,7 @@ var Scrollbar = function (which, instance) {
           trackEl.style[sizeProp.toLowerCase()] = newDim.size * 100 + '%';
         }
 
-        if( G.isTouch && deltaPos > 20 ) {
-          this.animateTrack();
-        } else if (animated) {
-          this.removeTrackAnimation();
-        }
+        this.animateTrack( G.isTouch && deltaPos > 20 );
 
         if(G.cssTransform) {
           trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
@@ -96,15 +91,11 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    animateTrack: function () {
-      animated = true;
-      trackEl.style[G.cssTransition] = G.trackTransitions+', '+ G.cssTransformDashed + ' 0.2s linear 0s';
-    },
-
-
-    removeTrackAnimation: function () {
-      animated = false;
-      trackEl.style[G.cssTransition] = G.trackTransitions;
+    animateTrack: function (animatePos) {
+      if(animatePos || animated) {
+        trackEl.style[G.cssTransition] = trackTransition + (animatePos ? ', '+ G.cssTransformDashed + ' 0.2s linear 0s' : '');
+      }
+      animated = animatePos;
     },
 
 
@@ -200,6 +191,7 @@ var Scrollbar = function (which, instance) {
 
     remove: function () {
       if(scrollbarEl) {
+        this.toggle(false);
         parentEl.removeChild(scrollbarEl);
       }
     }
