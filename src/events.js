@@ -5,22 +5,22 @@ Events.scroll = function (ev) {
   var self = this,
       cache = this.cache,
       now = getTime();
+  
+  if(this.disableScrollEv) return;
 
-  if(this.disableScrollEvent) return;
-
-  if (!G.pauseCheck && !G.isTouch) {
-    this.element.classList.add( this.settings.classPrefix+'-scrolling' );
+  if (!G.pauseCheck) {
+    this.fireCustomEvent('scrollstart');
   }
   G.pauseCheck = true;
 
-  if( !GS.scrollMinUpdateInterval || now - (cache.scrollNow || 0) >= GS.scrollMinUpdateInterval ) {
+  if( now - (cache.now || 0) >= GS.scrollMinUpdateInterval ) {
 
     _invoke(this.scrollbars, 'update');
 
-    cache.scrollNow = now;
+    cache.now = now;
     
-    clearTimeout(this.scrollStopTimer);
-    this.scrollStopTimer = setTimeout(function () {
+    clearTimeout(this.sTimer);
+    this.sTimer = setTimeout(function () {
       Events.scrollStop.call(self);
     }, this.settings.scrollStopDelay);
   }
@@ -30,32 +30,25 @@ Events.scroll = function (ev) {
 
 
 Events.touchstart = function (ev) {
-  // clear scrollStop timer
-  clearTimeout(this.scrollStopTimer);
-
+  G.pauseCheck = false;
   if(this.settings.fixTouchPageBounce) {
     _invoke(this.scrollbars, 'update', [true]);
   }
-  this.cache.scrollNow = getTime();
+  this.cache.now = getTime();
 };
 
 
 
-Events.touchmove = function (ev) {
-  G.pauseCheck = true; 
+Events.touchend = function (ev) {
+  // prevents touchmove generate scroll event to call
+  // scrollstop  while the page is still momentum scrolling
+  clearTimeout(this.sTimer);
 };
 
 
 
 Events.scrollStop = function () {
   var eventData, cEvent;
-
-  // prevents multiple 
-  clearTimeout(this.scrollStopTimer);
-
-  if(!G.isTouch) {
-    this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
-  }
 
   // update position, cache and detect edge
   _invoke(this.scrollbars, 'update');

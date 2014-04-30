@@ -87,22 +87,18 @@ OptiScroll.Instance.prototype.bindEvents = function () {
 
   // scroll event binding
   listeners.scroll = function (ev) { Events.scroll.call(self, ev); };
-  scrollEl.addEventListener('scroll', listeners.scroll);
 
-  // overflow events bindings (non standard)
+  // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
-  listeners.overflow = function (ev) { self.update() };
-  scrollEl.addEventListener('overflow', listeners.overflow); // Moz
-  scrollEl.addEventListener('underflow', listeners.overflow); // Moz
-  scrollEl.addEventListener('overflowchanged', listeners.overflow); // Webkit
+  listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { self.update() };
 
   if(G.isTouch) {
-
     listeners.touchstart = function (ev) { Events.touchstart.call(self, ev); };
-    scrollEl.addEventListener('touchstart', listeners.touchstart);
+    listeners.touchend = function (ev) { Events.touchend.call(self, ev); };
+  }
 
-    listeners.touchmove = function (ev) { Events.touchmove.call(self, ev); };
-    scrollEl.addEventListener('touchmove', listeners.touchmove);
+  for (ev in listeners) {
+    scrollEl.addEventListener(ev, listeners[ev]);
   }
 
 };
