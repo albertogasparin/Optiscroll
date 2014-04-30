@@ -3,8 +3,6 @@ var G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
-  cssTransformDashed: '',
-  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
   nativeScrollbarSize: getScrollbarWidth(),
 
   instances: [],
@@ -23,8 +21,7 @@ var animationTimeout = (function () {
   return window.requestAnimationFrame 
     || window.webkitRequestAnimationFrame 
     || window.mozRequestAnimationFrame 
-    || window.msRequestAnimationFrame 
-    || window.oRequestAnimationFrame 
+    || window.msRequestAnimationFrame
     || function(callback){ window.setTimeout(callback, 1000/60); };
 })();
 
@@ -76,16 +73,14 @@ function _extend (dest, src, merge) {
 
 
 function _invoke (collection, fn, args) {
-  var i, j, key;
+  var i, j;
   if(collection.length) {
     for(i = 0, j = collection.length; i < j; i++) {
-      if(collection[i][fn]) 
-        collection[i][fn].apply(collection[i], args);
+      collection[i][fn].apply(collection[i], args);
     }
   } else {
-    for (key in collection) {
-      if(collection.hasOwnProperty(key) && collection[key][fn])
-        collection[key][fn].apply(collection[key], args);
+    for (i in collection) {
+      collection[i][fn].apply(collection[i], args);
     }
   }
 }
