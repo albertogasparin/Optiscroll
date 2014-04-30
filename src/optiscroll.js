@@ -279,6 +279,31 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
 
 
 
+OptiScroll.Instance.prototype.destroy = function () {
+  var scrollEl = this.scrollEl,
+      listeners = this.listeners,
+      index = G.instances.indexOf( this ),
+      ev;
+
+  // remove instance from global timed check
+  if (index > -1) {
+    G.instances.splice(index, 1);
+  }
+
+  // unbind events
+  for (ev in listeners) {
+    scrollEl.removeEventListener(ev, listeners[ev]);
+  }
+
+  // remove scrollbars elements
+  _invoke(this.scrollbars, 'remove');
+  
+  // restore style
+  scrollEl.removeAttribute('style');
+};
+
+
+
 
 OptiScroll.Instance.prototype.fireCustomEvent = function (eventName) {
   var eventData = Utils.exposedData(this.cache),
