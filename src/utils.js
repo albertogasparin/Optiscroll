@@ -32,22 +32,23 @@ Utils.hideNativeScrollbars = function (scrollEl) {
 
 
 Utils.exposedData = function (obj) {
+  var sH = obj.scrollH, sW = obj.scrollW;
   return {
     // scrollbars data
     scrollbarV: _extend({}, obj.v),
     scrollbarH: _extend({}, obj.h),
 
     // scroll position
-    scrollTop: obj.v.position * obj.scrollHeight,
-    scrollLeft: obj.h.position * obj.scrollWidth,
-    scrollBottom: (1 - obj.v.position) * obj.scrollHeight,
-    scrollRight: (1 - obj.h.position) * obj.scrollWidth,
+    scrollTop: obj.v.position * sH,
+    scrollLeft: obj.h.position * sW,
+    scrollBottom: (1 - obj.v.position) * sH,
+    scrollRight: (1 - obj.h.position) * sW,
 
     // element size
-    scrollWidth: obj.scrollWidth,
-    scrollHeight: obj.scrollHeight,
-    clientWidth: obj.clientWidth,
-    clientHeight: obj.clientHeight
+    scrollWidth: sW,
+    scrollHeight: sH,
+    clientWidth: obj.clientW,
+    clientHeight: obj.clientH
   };
 };
 

@@ -2,27 +2,27 @@ var Events = OptiScroll.Events = {};
 
 
 Events.scroll = function (ev) {
-  var self = this,
-      cache = this.cache,
+  var me = this,
+      cache = me.cache,
       now = getTime();
   
-  if(this.disableScrollEv) return;
+  if(me.disableScrollEv) return;
 
   if (!G.pauseCheck) {
-    this.fireCustomEvent('scrollstart');
+    me.fireCustomEvent('scrollstart');
   }
   G.pauseCheck = true;
 
   if( now - (cache.now || 0) >= GS.scrollMinUpdateInterval ) {
 
-    _invoke(this.scrollbars, 'update');
+    _invoke(me.scrollbars, 'update');
 
     cache.now = now;
     
-    clearTimeout(this.sTimer);
-    this.sTimer = setTimeout(function () {
-      Events.scrollStop.call(self);
-    }, this.settings.scrollStopDelay);
+    clearTimeout(me.sTimer);
+    me.sTimer = setTimeout(function () {
+      Events.scrollStop.call(me);
+    }, me.settings.scrollStopDelay);
   }
 
 };
@@ -30,11 +30,13 @@ Events.scroll = function (ev) {
 
 
 Events.touchstart = function (ev) {
+  var me = this;
+
   G.pauseCheck = false;
-  if(this.settings.fixTouchPageBounce) {
-    _invoke(this.scrollbars, 'update', [true]);
+  if(me.settings.fixTouchPageBounce) {
+    _invoke(me.scrollbars, 'update', [true]);
   }
-  this.cache.now = getTime();
+  me.cache.now = getTime();
 };
 
 
@@ -48,13 +50,14 @@ Events.touchend = function (ev) {
 
 
 Events.scrollStop = function () {
-  var eventData, cEvent;
+  var me = this,
+      eventData, cEvent;
 
   // update position, cache and detect edge
-  _invoke(this.scrollbars, 'update');
+  _invoke(me.scrollbars, 'update');
 
   // fire custom event
-  this.fireCustomEvent('scrollstop');
+  me.fireCustomEvent('scrollstop');
 
   // restore check loop
   G.pauseCheck = false;

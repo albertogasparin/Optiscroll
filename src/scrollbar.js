@@ -7,7 +7,7 @@ var Scrollbar = function (which, instance) {
       cache = instance.cache,
       scrollbarCache = cache[which] = {},
 
-      sizeProp = isVertical ? 'Height' : 'Width',
+      sizeProp = isVertical ? 'H' : 'W',
       clientSize = 'client'+sizeProp,
       scrollSize = 'scroll'+sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
@@ -53,7 +53,8 @@ var Scrollbar = function (which, instance) {
 
 
     update: function (isOnTouch) {
-      var trackMin = settings.minTrackSize || 0,
+      var me = this,
+          trackMin = settings.minTrackSize || 0,
           trackMax = settings.maxTrackSize || 100,
           newDim, newRelPos, deltaPos;
 
@@ -62,19 +63,19 @@ var Scrollbar = function (which, instance) {
       deltaPos = Math.abs(newDim.position - scrollbarCache.position) * cache[clientSize];
 
       if(newDim.size === 1 && enabled) {
-        this.toggle(false);
+        me.toggle(false);
       }
 
       if(newDim.size < 1 && !enabled) {
-        this.toggle(true);
+        me.toggle(true);
       }
 
       if(trackEl && enabled) {
         if(scrollbarCache.size !== newDim.size) {
-          trackEl.style[sizeProp.toLowerCase()] = newDim.size * 100 + '%';
+          trackEl.style[ isVertical ? 'height':'width' ] = newDim.size * 100 + '%';
         }
 
-        this.animateTrack( G.isTouch && deltaPos > 20 );
+        me.animateTrack( G.isTouch && deltaPos > 20 );
 
         if(G.cssTransform) {
           trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
@@ -87,7 +88,7 @@ var Scrollbar = function (which, instance) {
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
 
-      this.checkEdges(isOnTouch);
+      me.checkEdges(isOnTouch);
     },
 
 
@@ -100,7 +101,7 @@ var Scrollbar = function (which, instance) {
 
 
     bind: function () {
-      var self = this;
+      var on = 'addEventListener';
 
       var dragStart = function (ev) {
         var evData = ev.touches ? ev.touches[0] : ev;
@@ -110,6 +111,7 @@ var Scrollbar = function (which, instance) {
       var dragMove = function (ev) {
         var evData = ev.touches ? ev.touches[0] : ev,
             delta, deltaRatio;
+        
         if(!dragData) return;
 
         ev.preventDefault();
@@ -123,15 +125,16 @@ var Scrollbar = function (which, instance) {
         dragData = null;
       }
 
-      trackEl.addEventListener('mousedown', dragStart);
-      trackEl.addEventListener('touchstart', dragStart);
+      trackEl[on]('mousedown', dragStart);
+      trackEl[on]('touchstart', dragStart);
 
-      scrollbarEl.addEventListener('mousemove', dragMove);
-      scrollbarEl.addEventListener('touchmove', dragMove);
+      scrollbarEl[on]('mousemove', dragMove);
+      scrollbarEl[on]('touchmove', dragMove);
 
-      scrollbarEl.addEventListener('mouseup', dragEnd);
-      scrollbarEl.addEventListener('touchend', dragEnd);
+      scrollbarEl[on]('mouseup', dragEnd);
+      scrollbarEl[on]('touchend', dragEnd);
     },
+
 
     calc: function (position, viewSize, scrollSize, min, max) {
       var minTrackR = min / 100,
