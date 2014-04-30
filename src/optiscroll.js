@@ -174,15 +174,10 @@ OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
     endY = destY;
   }
 
-  this.disableScrollEvent = disableEvents;
+  this.disableScrollEv = disableEvents;
 
-  if(duration === 0) {
-    scrollEl.scrollLeft = endX;
-    scrollEl.scrollTop = endY;
-    animationTimeout( function () { self.disableScrollEvent = false; }); // restore
-  } else {
-    this.animateScroll(startX, endX, startY, endY, duration || 'auto');
-  }
+  // animate
+  this.animateScroll(startX, endX, startY, endY, duration);
   
 };
 
@@ -231,47 +226,8 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   if(endX < 0) { endX = 0; }
   if(endY < 0) { endY = 0; }
   
-  // animate only if element is out of view
-  if(endX !== startX || endY !== startY) { 
-
-    if(duration === 0) {
-      scrollEl.scrollLeft = endX;
-      scrollEl.scrollTop = endY;
-    } else {
-      this.animateScroll(startX, endX, startY, endY, duration || 'auto');
-    }
-  }
-};
-
-
-  
-
-
-
-OptiScroll.Instance.prototype.destroy = function () {
-  var scrollEl = this.scrollEl,
-      listeners = this.listeners,
-      index = G.instances.indexOf( this );
-
-  // remove instance from global timed check
-  if (index > -1) {
-    G.instances.splice(index, 1);
-  }
-
-  // unbind events
-  scrollEl.removeEventListener('scroll', listeners.scroll);
-  scrollEl.removeEventListener('overflow', listeners.overflow);
-  scrollEl.removeEventListener('underflow', listeners.overflow);
-  scrollEl.removeEventListener('overflowchanged', listeners.overflow);
-
-  scrollEl.removeEventListener('touchstart', listeners.touchstart);
-  scrollEl.removeEventListener('touchmove', listeners.touchmove);
-
-  // remove scrollbars elements
-  _invoke(this.scrollbars, 'remove');
-  
-  // restore style
-  scrollEl.removeAttribute('style');
+  // animate
+  this.animateScroll(startX, endX, startY, endY, duration);
 };
 
 
@@ -281,14 +237,21 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
   var self = this,
       scrollEl = this.scrollEl,
       startTime = getTime();
-  
-  if(duration === 'auto') { 
-    // 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms
-    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.62) * 15;
+
+  if(endX === startX && endY === startY) {
+    return;
   }
 
-  if(typeof duration !== 'number') { // if duration was 'asd'
-    duration = 500;
+  if(duration === 0) {
+    scrollEl.scrollLeft = endX;
+    scrollEl.scrollTop = endY;
+    animationTimeout( function () { self.disableScrollEv = false; }); // restore
+    return;
+  }
+
+  if(typeof duration !== 'number') { // undefined or auto
+    // 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms
+    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.62) * 15;
   }
 
   var scrollAnimation = function () {
@@ -305,7 +268,7 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
     if(time < 1) {
       animationTimeout(scrollAnimation);
     } else {
-      self.disableScrollEvent = false;
+      self.disableScrollEv = false;
       // now the internal scroll event will fire
     }
   };
