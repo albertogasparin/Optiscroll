@@ -40,46 +40,48 @@ var D = OptiScroll.defaults = {
 
 
 OptiScroll.Instance = function ( element, options ) {
-  this.element = element;
-  this.scrollEl = element.children[0];
+  var me = this;
+  
+  me.element = element;
+  me.scrollEl = element.children[0];
   
   // instance variables
-  this.settings = _extend( _extend({}, OptiScroll.defaults), options || {});
+  me.settings = _extend( _extend({}, OptiScroll.defaults), options || {});
   
-  this.cache = {};
+  me.cache = {};
   
-  this.init();
+  me.init();
 };
 
 
 
 OptiScroll.Instance.prototype.init = function () {
-  var self = this,
-      createScrollbars = G.nativeScrollbarSize || this.settings.forcedScrollbars;
+  var me = this,
+      createScrollbars = G.nativeScrollbarSize || me.settings.forcedScrollbars;
 
-  if(this.settings.autoUpdate) {
+  if(me.settings.autoUpdate) {
     // add for timed check
-    G.instances.push( this );
+    G.instances.push( me );
   }
 
-  this.scrollbars = { 
-    v: new Scrollbar('v', this), 
-    h: new Scrollbar('h', this) 
+  me.scrollbars = { 
+    v: new Scrollbar('v', me), 
+    h: new Scrollbar('h', me) 
   };
 
   if(createScrollbars) {
-    Utils.hideNativeScrollbars(this.scrollEl);
-    _invoke(this.scrollbars, 'create');
+    Utils.hideNativeScrollbars(me.scrollEl);
+    _invoke(me.scrollbars, 'create');
   } 
 
-  if(G.isTouch && this.settings.fixTouchPageBounce) {
-    this.element.classList.add( this.settings.classPrefix+'-touchfix' );
+  if(G.isTouch && me.settings.fixTouchPageBounce) {
+    me.element.classList.add( me.settings.classPrefix+'-touchfix' );
   }
 
   // calculate scrollbars
-  this.update();
+  me.update();
 
-  this.bindEvents();
+  me.bindEvents();
 
   if(!G.checkTimer) {
     Utils.checkLoop();
@@ -90,28 +92,24 @@ OptiScroll.Instance.prototype.init = function () {
   
 
 OptiScroll.Instance.prototype.bindEvents = function () {
-  var self = this,
-      listeners = this.listeners = {},
-      scrollEl = this.scrollEl;
+  var me = this,
+      listeners = me.listeners = {},
+      scrollEl = me.scrollEl;
 
   // scroll event binding
-  listeners.scroll = function (ev) { Events.scroll.call(self, ev); };
-  scrollEl.addEventListener('scroll', listeners.scroll);
+  listeners.scroll = function (ev) { Events.scroll.call(me, ev); };
 
-  // overflow events bindings (non standard)
+  // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
-  listeners.overflow = function (ev) { self.update() };
-  scrollEl.addEventListener('overflow', listeners.overflow); // Moz
-  scrollEl.addEventListener('underflow', listeners.overflow); // Moz
-  scrollEl.addEventListener('overflowchanged', listeners.overflow); // Webkit
+  listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update() };
 
   if(G.isTouch) {
+    listeners.touchstart = function (ev) { Events.touchstart.call(me, ev); };
+    listeners.touchend = function (ev) { Events.touchend.call(me, ev); };
+  }
 
-    listeners.touchstart = function (ev) { Events.touchstart.call(self, ev); };
-    scrollEl.addEventListener('touchstart', listeners.touchstart);
-
-    listeners.touchmove = function (ev) { Events.touchmove.call(self, ev); };
-    scrollEl.addEventListener('touchmove', listeners.touchmove);
+  for (ev in listeners) {
+    scrollEl.addEventListener(ev, listeners[ev]);
   }
 
 };
@@ -120,36 +118,37 @@ OptiScroll.Instance.prototype.bindEvents = function () {
 
 
 OptiScroll.Instance.prototype.update = function () {
-  var oldcH = this.cache.clientHeight,
-      scrollEl = this.scrollEl,
-      cache = this.cache,
+  var me = this,
+      oldcH = me.cache.clientH,
+      scrollEl = me.scrollEl,
+      cache = me.cache,
       sH = scrollEl.scrollHeight,
       cH = scrollEl.clientHeight,
       sW = scrollEl.scrollWidth,
       cW = scrollEl.clientWidth;
   
-  if( sH !== cache.scrollHeight || cH !== cache.clientHeight || 
-    sW !== cache.scrollWidth || cW !== cache.clientWidth ) {
+  if( sH !== cache.scrollH || cH !== cache.clientH || 
+    sW !== cache.scrollW || cW !== cache.clientW ) {
     
     // if the element is no more in the DOM
-    if(sH === 0 && cH === 0 && this.element.parentNode === null) {
-      this.destroy()
+    if(sH === 0 && cH === 0 && me.element.parentNode === null) {
+      me.destroy()
       return false;
     }
 
-    cache.scrollHeight = sH;
-    cache.clientHeight = cH;
-    cache.scrollWidth = sW;
-    cache.clientWidth = cW;
+    cache.scrollH = sH;
+    cache.clientH = cH;
+    cache.scrollW = sW;
+    cache.clientW = cW;
 
     if( oldcH !== undefined ) {
       // don't fire on init
-      this.fireCustomEvent('sizechange');
+      me.fireCustomEvent('sizechange');
     }
 
     // this will update the scrollbar
     // and check if bottom is reached
-    Events.scrollStop.call(this);
+    Events.scrollStop.call(me);
   }
 };
 
@@ -163,52 +162,47 @@ OptiScroll.Instance.prototype.update = function () {
  * ```
  */
 OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disableEvents) {
-  var self = this,
-      scrollEl = this.scrollEl,
-      cache = this.cache,
-      startTime, startX, startY, endX, endY;
+  var me = this,
+      cache = me.cache,
+      startX, startY, endX, endY;
 
   G.pauseCheck = true;
   // force update
-  this.update();
+  me.update();
 
-  startX = endX = scrollEl.scrollLeft;
-  startY = endY = scrollEl.scrollTop;
+  startX = endX = me.scrollEl.scrollLeft;
+  startY = endY = me.scrollEl.scrollTop;
   
   if (typeof destX === 'string') { // left or right
-    endX = (destX === 'left') ? 0 : cache.scrollWidth - cache.clientWidth;
+    endX = (destX === 'left') ? 0 : cache.scrollW - cache.clientW;
   } else if (typeof destX === 'number') {
     endX = destX;
   }
 
   if (typeof destY === 'string') { // top or bottom
-    endY = (destY === 'top') ? 0 : cache.scrollHeight - cache.clientHeight;
+    endY = (destY === 'top') ? 0 : cache.scrollH - cache.clientH;
   } else if (typeof destY === 'number') {
     endY = destY;
   }
 
-  this.disableScrollEvent = disableEvents;
+  me.disableScrollEv = disableEvents;
 
-  if(duration === 0) {
-    scrollEl.scrollLeft = endX;
-    scrollEl.scrollTop = endY;
-    animationTimeout( function () { self.disableScrollEvent = false; }); // restore
-  } else {
-    this.animateScroll(startX, endX, startY, endY, duration || 'auto');
-  }
+  // animate
+  me.animateScroll(startX, endX, startY, endY, duration);
   
 };
 
 
 OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) {
-  var scrollEl = this.scrollEl,
+  var me = this,
+      scrollEl = me.scrollEl,
       eDim, sDim,
       leftEdge, topEdge, rightEdge, bottomEdge,
-      startTime, startX, startY, endX, endY;
+      startX, startY, endX, endY;
 
   G.pauseCheck = true;
   // force update
-  this.update();
+  me.update();
 
   if(typeof elem === 'string') { // selector
     elem = scrollEl.querySelector(elem);
@@ -241,67 +235,35 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
     endY = (topEdge < startY) ? topEdge : bottomEdge;
   }
 
-  if(endX < 0) { endX = 0; }
-  if(endY < 0) { endY = 0; }
+  // if(endX < 0) { endX = 0; }
+  // if(endY < 0) { endY = 0; }
   
-  // animate only if element is out of view
-  if(endX !== startX || endY !== startY) { 
-
-    if(duration === 0) {
-      scrollEl.scrollLeft = endX;
-      scrollEl.scrollTop = endY;
-    } else {
-      this.animateScroll(startX, endX, startY, endY, duration || 'auto');
-    }
-  }
-};
-
-
-  
-
-
-
-OptiScroll.Instance.prototype.destroy = function () {
-  var scrollEl = this.scrollEl,
-      listeners = this.listeners,
-      index = G.instances.indexOf( this );
-
-  // remove instance from global timed check
-  if (index > -1) {
-    G.instances.splice(index, 1);
-  }
-
-  // unbind events
-  scrollEl.removeEventListener('scroll', listeners.scroll);
-  scrollEl.removeEventListener('overflow', listeners.overflow);
-  scrollEl.removeEventListener('underflow', listeners.overflow);
-  scrollEl.removeEventListener('overflowchanged', listeners.overflow);
-
-  scrollEl.removeEventListener('touchstart', listeners.touchstart);
-  scrollEl.removeEventListener('touchmove', listeners.touchmove);
-
-  // remove scrollbars elements
-  _invoke(this.scrollbars, 'remove');
-  
-  // restore style
-  scrollEl.removeAttribute('style');
+  // animate
+  me.animateScroll(startX, endX, startY, endY, duration);
 };
 
 
 
 
 OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, endY, duration) {
-  var self = this,
-      scrollEl = this.scrollEl,
+  var me = this,
+      scrollEl = me.scrollEl,
       startTime = getTime();
-  
-  if(duration === 'auto') { 
-    // 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms
-    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.62) * 15;
+
+  if(endX === startX && endY === startY) {
+    return;
   }
 
-  if(typeof duration !== 'number') { // if duration was 'asd'
-    duration = 500;
+  if(duration === 0) {
+    scrollEl.scrollLeft = endX;
+    scrollEl.scrollTop = endY;
+    animationTimeout( function () { me.disableScrollEv = false; }); // restore
+    return;
+  }
+
+  if(typeof duration !== 'number') { // undefined or auto
+    // 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms
+    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.62) * 15;
   }
 
   var scrollAnimation = function () {
@@ -318,7 +280,7 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
     if(time < 1) {
       animationTimeout(scrollAnimation);
     } else {
-      self.disableScrollEvent = false;
+      me.disableScrollEv = false;
       // now the internal scroll event will fire
     }
   };
@@ -326,6 +288,32 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
   animationTimeout(scrollAnimation);
 };
 
+
+
+
+OptiScroll.Instance.prototype.destroy = function () {
+  var me = this,
+      scrollEl = me.scrollEl,
+      listeners = me.listeners,
+      index = G.instances.indexOf( me ),
+      ev;
+
+  // remove instance from global timed check
+  if (index > -1) {
+    G.instances.splice(index, 1);
+  }
+
+  // unbind events
+  for (ev in listeners) {
+    scrollEl.removeEventListener(ev, listeners[ev]);
+  }
+
+  // remove scrollbars elements
+  _invoke(me.scrollbars, 'remove');
+  
+  // restore style
+  scrollEl.removeAttribute('style');
+};
 
 
 
@@ -344,27 +332,27 @@ var Events = OptiScroll.Events = {};
 
 
 Events.scroll = function (ev) {
-  var self = this,
-      cache = this.cache,
+  var me = this,
+      cache = me.cache,
       now = getTime();
+  
+  if(me.disableScrollEv) return;
 
-  if(this.disableScrollEvent) return;
-
-  if (!G.pauseCheck && !G.isTouch) {
-    this.element.classList.add( this.settings.classPrefix+'-scrolling' );
+  if (!G.pauseCheck) {
+    me.fireCustomEvent('scrollstart');
   }
   G.pauseCheck = true;
 
-  if( !GS.scrollMinUpdateInterval || now - (cache.scrollNow || 0) >= GS.scrollMinUpdateInterval ) {
+  if( now - (cache.now || 0) >= GS.scrollMinUpdateInterval ) {
 
-    _invoke(this.scrollbars, 'update');
+    _invoke(me.scrollbars, 'update');
 
-    cache.scrollNow = now;
+    cache.now = now;
     
-    clearTimeout(this.scrollStopTimer);
-    this.scrollStopTimer = setTimeout(function () {
-      Events.scrollStop.call(self);
-    }, this.settings.scrollStopDelay);
+    clearTimeout(me.sTimer);
+    me.sTimer = setTimeout(function () {
+      Events.scrollStop.call(me);
+    }, me.settings.scrollStopDelay);
   }
 
 };
@@ -372,38 +360,34 @@ Events.scroll = function (ev) {
 
 
 Events.touchstart = function (ev) {
-  // clear scrollStop timer
-  clearTimeout(this.scrollStopTimer);
+  var me = this;
 
-  if(this.settings.fixTouchPageBounce) {
-    _invoke(this.scrollbars, 'update', [true]);
+  G.pauseCheck = false;
+  if(me.settings.fixTouchPageBounce) {
+    _invoke(me.scrollbars, 'update', [true]);
   }
-  this.cache.scrollNow = getTime();
+  me.cache.now = getTime();
 };
 
 
 
-Events.touchmove = function (ev) {
-  G.pauseCheck = true; 
+Events.touchend = function (ev) {
+  // prevents touchmove generate scroll event to call
+  // scrollstop  while the page is still momentum scrolling
+  clearTimeout(this.sTimer);
 };
 
 
 
 Events.scrollStop = function () {
-  var eventData, cEvent;
-
-  // prevents multiple 
-  clearTimeout(this.scrollStopTimer);
-
-  if(!G.isTouch) {
-    this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
-  }
+  var me = this,
+      eventData, cEvent;
 
   // update position, cache and detect edge
-  _invoke(this.scrollbars, 'update');
+  _invoke(me.scrollbars, 'update');
 
   // fire custom event
-  this.fireCustomEvent('scrollstop');
+  me.fireCustomEvent('scrollstop');
 
   // restore check loop
   G.pauseCheck = false;
@@ -421,11 +405,12 @@ var Scrollbar = function (which, instance) {
       cache = instance.cache,
       scrollbarCache = cache[which] = {},
 
-      sizeProp = isVertical ? 'Height' : 'Width',
+      sizeProp = isVertical ? 'H' : 'W',
       clientSize = 'client'+sizeProp,
       scrollSize = 'scroll'+sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
+      trackTransition = 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
 
       enabled = false,
       scrollbarEl = null,
@@ -440,14 +425,12 @@ var Scrollbar = function (which, instance) {
     toggle: function (bool) {
       enabled = bool;
 
-      if(enabled) {
-        parentEl.classList.add( which+'track-on' );
-      } else {
-        parentEl.classList.remove( which+'track-on' );
-      }
+      if(trackEl) {
+        parentEl.classList[ enabled ? 'add' : 'remove' ]( which+'track-on' );
 
-      if(trackEl && enabled) {
-        trackEl.style[G.cssTransition] = G.trackTransitions;
+        if(enabled) {
+          trackEl.style[G.cssTransition] = trackTransition;
+        }
       }
     },
 
@@ -468,7 +451,8 @@ var Scrollbar = function (which, instance) {
 
 
     update: function (isOnTouch) {
-      var trackMin = settings.minTrackSize || 0,
+      var me = this,
+          trackMin = settings.minTrackSize || 0,
           trackMax = settings.maxTrackSize || 100,
           newDim, newRelPos, deltaPos;
 
@@ -477,23 +461,19 @@ var Scrollbar = function (which, instance) {
       deltaPos = Math.abs(newDim.position - scrollbarCache.position) * cache[clientSize];
 
       if(newDim.size === 1 && enabled) {
-        this.toggle(false);
+        me.toggle(false);
       }
 
       if(newDim.size < 1 && !enabled) {
-        this.toggle(true);
+        me.toggle(true);
       }
 
       if(trackEl && enabled) {
         if(scrollbarCache.size !== newDim.size) {
-          trackEl.style[sizeProp.toLowerCase()] = newDim.size * 100 + '%';
+          trackEl.style[ isVertical ? 'height':'width' ] = newDim.size * 100 + '%';
         }
 
-        if( G.isTouch && deltaPos > 20 ) {
-          this.animateTrack();
-        } else if (animated) {
-          this.removeTrackAnimation();
-        }
+        me.animateTrack( G.isTouch && deltaPos > 20 );
 
         if(G.cssTransform) {
           trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
@@ -506,24 +486,20 @@ var Scrollbar = function (which, instance) {
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
 
-      this.checkEdges(isOnTouch);
+      me.checkEdges(isOnTouch);
     },
 
 
-    animateTrack: function () {
-      animated = true;
-      trackEl.style[G.cssTransition] = G.trackTransitions+', '+ G.cssTransformDashed + ' 0.2s linear 0s';
-    },
-
-
-    removeTrackAnimation: function () {
-      animated = false;
-      trackEl.style[G.cssTransition] = G.trackTransitions;
+    animateTrack: function (animatePos) {
+      if(animatePos || animated) {
+        trackEl.style[G.cssTransition] = trackTransition + (animatePos ? ', '+ G.cssTransformDashed + ' 0.2s linear 0s' : '');
+      }
+      animated = animatePos;
     },
 
 
     bind: function () {
-      var self = this;
+      var on = 'addEventListener';
 
       var dragStart = function (ev) {
         var evData = ev.touches ? ev.touches[0] : ev;
@@ -533,6 +509,7 @@ var Scrollbar = function (which, instance) {
       var dragMove = function (ev) {
         var evData = ev.touches ? ev.touches[0] : ev,
             delta, deltaRatio;
+        
         if(!dragData) return;
 
         ev.preventDefault();
@@ -546,15 +523,16 @@ var Scrollbar = function (which, instance) {
         dragData = null;
       }
 
-      trackEl.addEventListener('mousedown', dragStart);
-      trackEl.addEventListener('touchstart', dragStart);
+      trackEl[on]('mousedown', dragStart);
+      trackEl[on]('touchstart', dragStart);
 
-      scrollbarEl.addEventListener('mousemove', dragMove);
-      scrollbarEl.addEventListener('touchmove', dragMove);
+      scrollbarEl[on]('mousemove', dragMove);
+      scrollbarEl[on]('touchmove', dragMove);
 
-      scrollbarEl.addEventListener('mouseup', dragEnd);
-      scrollbarEl.addEventListener('touchend', dragEnd);
+      scrollbarEl[on]('mouseup', dragEnd);
+      scrollbarEl[on]('touchend', dragEnd);
     },
+
 
     calc: function (position, viewSize, scrollSize, min, max) {
       var minTrackR = min / 100,
@@ -614,6 +592,7 @@ var Scrollbar = function (which, instance) {
 
     remove: function () {
       if(scrollbarEl) {
+        this.toggle(false);
         parentEl.removeChild(scrollbarEl);
       }
     }
@@ -657,22 +636,23 @@ Utils.hideNativeScrollbars = function (scrollEl) {
 
 
 Utils.exposedData = function (obj) {
+  var sH = obj.scrollH, sW = obj.scrollW;
   return {
     // scrollbars data
     scrollbarV: _extend({}, obj.v),
     scrollbarH: _extend({}, obj.h),
 
     // scroll position
-    scrollTop: obj.v.position * obj.scrollHeight,
-    scrollLeft: obj.h.position * obj.scrollWidth,
-    scrollBottom: (1 - obj.v.position) * obj.scrollHeight,
-    scrollRight: (1 - obj.h.position) * obj.scrollWidth,
+    scrollTop: obj.v.position * sH,
+    scrollLeft: obj.h.position * sW,
+    scrollBottom: (1 - obj.v.position) * sH,
+    scrollRight: (1 - obj.h.position) * sW,
 
     // element size
-    scrollWidth: obj.scrollWidth,
-    scrollHeight: obj.scrollHeight,
-    clientWidth: obj.clientWidth,
-    clientHeight: obj.clientHeight
+    scrollWidth: sW,
+    scrollHeight: sH,
+    clientWidth: obj.clientW,
+    clientHeight: obj.clientH
   };
 };
 
@@ -741,8 +721,6 @@ var G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
-  cssTransformDashed: '',
-  trackTransitions: 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
   nativeScrollbarSize: getScrollbarWidth(),
 
   instances: [],
@@ -761,8 +739,7 @@ var animationTimeout = (function () {
   return window.requestAnimationFrame 
     || window.webkitRequestAnimationFrame 
     || window.mozRequestAnimationFrame 
-    || window.msRequestAnimationFrame 
-    || window.oRequestAnimationFrame 
+    || window.msRequestAnimationFrame
     || function(callback){ window.setTimeout(callback, 1000/60); };
 })();
 
@@ -814,16 +791,14 @@ function _extend (dest, src, merge) {
 
 
 function _invoke (collection, fn, args) {
-  var i, j, key;
+  var i, j;
   if(collection.length) {
     for(i = 0, j = collection.length; i < j; i++) {
-      if(collection[i][fn]) 
-        collection[i][fn].apply(collection[i], args);
+      collection[i][fn].apply(collection[i], args);
     }
   } else {
-    for (key in collection) {
-      if(collection.hasOwnProperty(key) && collection[key][fn])
-        collection[key][fn].apply(collection[key], args);
+    for (i in collection) {
+      collection[i][fn].apply(collection[i], args);
     }
   }
 }
@@ -864,10 +839,15 @@ if (!("classList" in document.documentElement) && Object.defineProperty && typeo
   });
 }
 
-// CustomEvent polyfill for IE9
-// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+/*
+ * CustomEvent polyfill for IE9
+ * By MDN
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ * MIT LICENSE
+ */
 
-(function () {
+'CustomEvent' in window || (function () {
+
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
     var evt = document.createEvent( 'CustomEvent' );
@@ -877,8 +857,8 @@ if (!("classList" in document.documentElement) && Object.defineProperty && typeo
 
   CustomEvent.prototype = window.Event.prototype;
 
-  if (!('CustomEvent' in window))
-    window.CustomEvent = CustomEvent;
+  window.CustomEvent = CustomEvent;
+
 })();
 
   // AMD export
