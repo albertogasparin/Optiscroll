@@ -1,3 +1,61 @@
+/*
+ * Minimal classList shim for IE 9
+ * By Devon Govett
+ * https://gist.github.com/devongovett/1381839
+ * MIT LICENSE
+ */
+ 
+if (!("classList" in document.documentElement) && Object.defineProperty && typeof HTMLElement !== 'undefined') {
+  Object.defineProperty(HTMLElement.prototype, 'classList', {
+    get: function() {
+      var self = this;
+      function update(fn) {
+        return function(value) {
+          var classes = self.className.split(/\s+/),
+              index = classes.indexOf(value);
+
+          fn(classes, index, value);
+          self.className = classes.join(" ");
+        }
+      }
+
+      var ret = {                    
+        add: update(function(classes, index, value) {
+            ~index || classes.push(value);
+        }),
+
+        remove: update(function(classes, index) {
+            ~index && classes.splice(index, 1);
+        })
+      };
+
+      return ret;
+    }
+  });
+}
+
+/*
+ * CustomEvent polyfill for IE9
+ * By MDN
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ * MIT LICENSE
+ */
+
+'CustomEvent' in window || (function () {
+
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   };
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+
+})();
+
 /**
  * OptiScroll.js v0.8.2
  * Alberto Gasparin
@@ -81,7 +139,7 @@ OptiScroll.Instance.prototype.init = function () {
   // calculate scrollbars
   me.update();
 
-  me.bindEvents();
+  me.bind();
 
   if(!G.checkTimer) {
     Utils.checkLoop();
@@ -91,7 +149,7 @@ OptiScroll.Instance.prototype.init = function () {
 
   
 
-OptiScroll.Instance.prototype.bindEvents = function () {
+OptiScroll.Instance.prototype.bind = function () {
   var me = this,
       listeners = me.listeners = {},
       scrollEl = me.scrollEl;
@@ -108,7 +166,7 @@ OptiScroll.Instance.prototype.bindEvents = function () {
     listeners.touchend = function (ev) { Events.touchend.call(me, ev); };
   }
 
-  for (ev in listeners) {
+  for (var ev in listeners) {
     scrollEl.addEventListener(ev, listeners[ev]);
   }
 
@@ -295,8 +353,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   var me = this,
       scrollEl = me.scrollEl,
       listeners = me.listeners,
-      index = G.instances.indexOf( me ),
-      ev;
+      index = G.instances.indexOf( me );
 
   // remove instance from global timed check
   if (index > -1) {
@@ -304,7 +361,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   }
 
   // unbind events
-  for (ev in listeners) {
+  for (var ev in listeners) {
     scrollEl.removeEventListener(ev, listeners[ev]);
   }
 
@@ -802,64 +859,6 @@ function _invoke (collection, fn, args) {
     }
   }
 }
-
-/*
- * Minimal classList shim for IE 9
- * By Devon Govett
- * https://gist.github.com/devongovett/1381839
- * MIT LICENSE
- */
- 
-if (!("classList" in document.documentElement) && Object.defineProperty && typeof HTMLElement !== 'undefined') {
-  Object.defineProperty(HTMLElement.prototype, 'classList', {
-    get: function() {
-      var self = this;
-      function update(fn) {
-        return function(value) {
-          var classes = self.className.split(/\s+/),
-              index = classes.indexOf(value);
-
-          fn(classes, index, value);
-          self.className = classes.join(" ");
-        }
-      }
-
-      var ret = {                    
-        add: update(function(classes, index, value) {
-            ~index || classes.push(value);
-        }),
-
-        remove: update(function(classes, index) {
-            ~index && classes.splice(index, 1);
-        })
-      };
-
-      return ret;
-    }
-  });
-}
-
-/*
- * CustomEvent polyfill for IE9
- * By MDN
- * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
- * MIT LICENSE
- */
-
-'CustomEvent' in window || (function () {
-
-  function CustomEvent ( event, params ) {
-    params = params || { bubbles: false, cancelable: false, detail: undefined };
-    var evt = document.createEvent( 'CustomEvent' );
-    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-    return evt;
-   };
-
-  CustomEvent.prototype = window.Event.prototype;
-
-  window.CustomEvent = CustomEvent;
-
-})();
 
   // AMD export
   if(typeof define == 'function' && define.amd) {

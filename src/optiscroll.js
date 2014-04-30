@@ -72,7 +72,7 @@ OptiScroll.Instance.prototype.init = function () {
   // calculate scrollbars
   me.update();
 
-  me.bindEvents();
+  me.bind();
 
   if(!G.checkTimer) {
     Utils.checkLoop();
@@ -82,7 +82,7 @@ OptiScroll.Instance.prototype.init = function () {
 
   
 
-OptiScroll.Instance.prototype.bindEvents = function () {
+OptiScroll.Instance.prototype.bind = function () {
   var me = this,
       listeners = me.listeners = {},
       scrollEl = me.scrollEl;
@@ -99,7 +99,7 @@ OptiScroll.Instance.prototype.bindEvents = function () {
     listeners.touchend = function (ev) { Events.touchend.call(me, ev); };
   }
 
-  for (ev in listeners) {
+  for (var ev in listeners) {
     scrollEl.addEventListener(ev, listeners[ev]);
   }
 
@@ -286,8 +286,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   var me = this,
       scrollEl = me.scrollEl,
       listeners = me.listeners,
-      index = G.instances.indexOf( me ),
-      ev;
+      index = G.instances.indexOf( me );
 
   // remove instance from global timed check
   if (index > -1) {
@@ -295,7 +294,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   }
 
   // unbind events
-  for (ev in listeners) {
+  for (var ev in listeners) {
     scrollEl.removeEventListener(ev, listeners[ev]);
   }
 
