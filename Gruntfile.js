@@ -62,13 +62,13 @@ module.exports = exports = function(grunt) {
             },
             nojquery: {
                 src: [
+                    'src/polyfills/*.js',
                     'src/intro.js',
                     'src/optiscroll.js',
                     'src/events.js',
                     'src/scrollbar.js',
                     'src/utils.js',
                     'src/globals.js',
-                    'src/polyfills/*.js',
                     'src/outro.js',
                 ],
                 dest: 'dist/optiscroll.js'
