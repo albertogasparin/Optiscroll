@@ -28,7 +28,7 @@ var Scrollbar = function (which, instance) {
       enabled = bool;
 
       if(trackEl) {
-        parentEl.classList[ enabled ? 'add' : 'remove' ]( which+'track-on' );
+        toggleClass(parentEl, which+'track-on', enabled);
 
         if(enabled) {
           trackEl.style[G.cssTransition] = trackTransition;

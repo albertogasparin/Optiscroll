@@ -61,6 +61,22 @@ function cssTest (prop) {
 
 
 
+function toggleClass (el, value, bool) {
+  var classes = el.className.split(/\s+/),
+      index = classes.indexOf(value);
+  
+  if(bool) {
+    ~index || classes.push(value);
+  } else {
+    ~index && classes.splice(index, 1);
+  }
+
+  el.className = classes.join(" ");
+}
+
+
+
+
 function _extend (dest, src, merge) {
   for(var key in src) {
     if(!src.hasOwnProperty(key) || dest[key] !== undefined && merge) {
