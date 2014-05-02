@@ -48,9 +48,10 @@ OptiScroll.Instance = function ( element, options ) {
 
 OptiScroll.Instance.prototype.init = function () {
   var me = this,
-      createScrollbars = G.nativeScrollbarSize || me.settings.forcedScrollbars;
+      settings = me.settings,
+      createScrollbars = G.nativeScrollbarSize || settings.forcedScrollbars;
 
-  if(me.settings.autoUpdate) {
+  if(settings.autoUpdate) {
     // add for timed check
     G.instances.push( me );
   }
@@ -65,16 +66,13 @@ OptiScroll.Instance.prototype.init = function () {
     _invoke(me.scrollbars, 'create');
   } 
 
-  if(G.isTouch && me.settings.fixTouchPageBounce) {
-    me.element.classList.add( me.settings.classPrefix+'-touchfix' );
-  }
-
   // calculate scrollbars
   me.update();
 
+  // bind events
   me.bind();
 
-  if(!G.checkTimer) {
+  if(settings.autoUpdate && !G.checkTimer) {
     Utils.checkLoop();
   }
 
@@ -88,15 +86,15 @@ OptiScroll.Instance.prototype.bind = function () {
       scrollEl = me.scrollEl;
 
   // scroll event binding
-  listeners.scroll = function (ev) { Events.scroll.call(me, ev); };
+  listeners.scroll = function (ev) { Events.scroll(ev, me); };
 
   // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
   listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update() };
 
   if(G.isTouch) {
-    listeners.touchstart = function (ev) { Events.touchstart.call(me, ev); };
-    listeners.touchend = function (ev) { Events.touchend.call(me, ev); };
+    listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
+    listeners.touchend = function (ev) { Events.touchend(ev, me); };
   }
 
   for (var ev in listeners) {
@@ -122,7 +120,7 @@ OptiScroll.Instance.prototype.update = function () {
     sW !== cache.scrollW || cW !== cache.clientW ) {
     
     // if the element is no more in the DOM
-    if(sH === 0 && cH === 0 && me.element.parentNode === null) {
+    if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
       me.destroy()
       return false;
     }
@@ -139,7 +137,7 @@ OptiScroll.Instance.prototype.update = function () {
 
     // this will update the scrollbar
     // and check if bottom is reached
-    Events.scrollStop.call(me);
+    Events.scrollStop(me);
   }
 };
 
@@ -303,6 +301,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   
   // restore style
   scrollEl.removeAttribute('style');
+  scrollEl.removeAttribute('data-scroll');
 };
 
 
