@@ -1,40 +1,4 @@
 /*
- * Minimal classList shim for IE 9
- * By Devon Govett
- * https://gist.github.com/devongovett/1381839
- * MIT LICENSE
- */
- 
-if (!("classList" in document.documentElement) && Object.defineProperty && typeof HTMLElement !== 'undefined') {
-  Object.defineProperty(HTMLElement.prototype, 'classList', {
-    get: function() {
-      var self = this;
-      function update(fn) {
-        return function(value) {
-          var classes = self.className.split(/\s+/),
-              index = classes.indexOf(value);
-
-          fn(classes, index, value);
-          self.className = classes.join(" ");
-        }
-      }
-
-      var ret = {                    
-        add: update(function(classes, index, value) {
-            ~index || classes.push(value);
-        }),
-
-        remove: update(function(classes, index) {
-            ~index && classes.splice(index, 1);
-        })
-      };
-
-      return ret;
-    }
-  });
-}
-
-/*
  * CustomEvent polyfill for IE9
  * By MDN
  * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
@@ -115,9 +79,10 @@ OptiScroll.Instance = function ( element, options ) {
 
 OptiScroll.Instance.prototype.init = function () {
   var me = this,
-      createScrollbars = G.nativeScrollbarSize || me.settings.forcedScrollbars;
+      settings = me.settings,
+      createScrollbars = G.nativeScrollbarSize || settings.forcedScrollbars;
 
-  if(me.settings.autoUpdate) {
+  if(settings.autoUpdate) {
     // add for timed check
     G.instances.push( me );
   }
@@ -132,16 +97,13 @@ OptiScroll.Instance.prototype.init = function () {
     _invoke(me.scrollbars, 'create');
   } 
 
-  if(G.isTouch && me.settings.fixTouchPageBounce) {
-    me.element.classList.add( me.settings.classPrefix+'-touchfix' );
-  }
-
   // calculate scrollbars
   me.update();
 
+  // bind events
   me.bind();
 
-  if(!G.checkTimer) {
+  if(settings.autoUpdate && !G.checkTimer) {
     Utils.checkLoop();
   }
 
@@ -155,15 +117,15 @@ OptiScroll.Instance.prototype.bind = function () {
       scrollEl = me.scrollEl;
 
   // scroll event binding
-  listeners.scroll = function (ev) { Events.scroll.call(me, ev); };
+  listeners.scroll = function (ev) { Events.scroll(ev, me); };
 
   // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
   listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update() };
 
   if(G.isTouch) {
-    listeners.touchstart = function (ev) { Events.touchstart.call(me, ev); };
-    listeners.touchend = function (ev) { Events.touchend.call(me, ev); };
+    listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
+    listeners.touchend = function (ev) { Events.touchend(ev, me); };
   }
 
   for (var ev in listeners) {
@@ -189,7 +151,7 @@ OptiScroll.Instance.prototype.update = function () {
     sW !== cache.scrollW || cW !== cache.clientW ) {
     
     // if the element is no more in the DOM
-    if(sH === 0 && cH === 0 && me.element.parentNode === null) {
+    if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
       me.destroy()
       return false;
     }
@@ -206,7 +168,7 @@ OptiScroll.Instance.prototype.update = function () {
 
     // this will update the scrollbar
     // and check if bottom is reached
-    Events.scrollStop.call(me);
+    Events.scrollStop(me);
   }
 };
 
@@ -370,6 +332,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   
   // restore style
   scrollEl.removeAttribute('style');
+  scrollEl.removeAttribute('data-scroll');
 };
 
 
@@ -388,9 +351,8 @@ OptiScroll.Instance.prototype.fireCustomEvent = function (eventName) {
 var Events = OptiScroll.Events = {};
 
 
-Events.scroll = function (ev) {
-  var me = this,
-      cache = me.cache,
+Events.scroll = function (ev, me) {
+  var cache = me.cache,
       now = getTime();
   
   if(me.disableScrollEv) return;
@@ -408,7 +370,7 @@ Events.scroll = function (ev) {
     
     clearTimeout(me.sTimer);
     me.sTimer = setTimeout(function () {
-      Events.scrollStop.call(me);
+      Events.scrollStop(me);
     }, me.settings.scrollStopDelay);
   }
 
@@ -416,9 +378,7 @@ Events.scroll = function (ev) {
 
 
 
-Events.touchstart = function (ev) {
-  var me = this;
-
+Events.touchstart = function (ev, me) {
   G.pauseCheck = false;
   if(me.settings.fixTouchPageBounce) {
     _invoke(me.scrollbars, 'update', [true]);
@@ -428,17 +388,16 @@ Events.touchstart = function (ev) {
 
 
 
-Events.touchend = function (ev) {
+Events.touchend = function (ev, me) {
   // prevents touchmove generate scroll event to call
   // scrollstop  while the page is still momentum scrolling
-  clearTimeout(this.sTimer);
+  clearTimeout(me.sTimer);
 };
 
 
 
-Events.scrollStop = function () {
-  var me = this,
-      eventData, cEvent;
+Events.scrollStop = function (me) {
+  var eventData, cEvent;
 
   // update position, cache and detect edge
   _invoke(me.scrollbars, 'update');
@@ -483,7 +442,7 @@ var Scrollbar = function (which, instance) {
       enabled = bool;
 
       if(trackEl) {
-        parentEl.classList[ enabled ? 'add' : 'remove' ]( which+'track-on' );
+        toggleClass(parentEl, which+'track-on', enabled);
 
         if(enabled) {
           trackEl.style[G.cssTransition] = trackTransition;
@@ -833,6 +792,22 @@ function cssTest (prop) {
   }
   return false;
 }
+
+
+
+function toggleClass (el, value, bool) {
+  var classes = el.className.split(/\s+/),
+      index = classes.indexOf(value);
+  
+  if(bool) {
+    ~index || classes.push(value);
+  } else {
+    ~index && classes.splice(index, 1);
+  }
+
+  el.className = classes.join(" ");
+}
+
 
 
 

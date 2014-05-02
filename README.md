@@ -163,7 +163,7 @@ By design, OptiScroll caches some DOM properties (like `scrollHeight`, `clientHe
 
 ### destroy ()
 
-If you want to remove OptiScroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. Keep in mind that, if you remove the element from the DOM, OptiScroll tries to be clever enought to destroy itself automatically (in order to avoid memory leaks).
+If you want to remove OptiScroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. However, OptiScroll tries to be clever enought to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
 
 
 ## Instance events
