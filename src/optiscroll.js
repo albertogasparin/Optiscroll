@@ -257,7 +257,7 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
 
   var scrollAnimation = function () {
     var time = Math.min(1, ((getTime() - startTime) / duration)),
-        easedTime = easingFunction(time);
+        easedTime = Utils.easingFunction(time);
     
     if( endY !== startY ) {
       scrollEl.scrollTop = (easedTime * (endY - startY)) + startY;
