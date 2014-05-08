@@ -17,7 +17,7 @@ var GS = OptiScroll.globalSettings = {
   pauseCheck: false
 };
 
-var D = OptiScroll.defaults = {
+OptiScroll.defaults = {
   fixTouchPageBounce: true,
   forcedScrollbars: false,
   scrollStopDelay: 300,
@@ -90,7 +90,7 @@ OptiScroll.Instance.prototype.bind = function () {
 
   // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
-  listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update() };
+  listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update(); };
 
   if(G.isTouch) {
     listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
@@ -121,7 +121,7 @@ OptiScroll.Instance.prototype.update = function () {
     
     // if the element is no more in the DOM
     if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
-      me.destroy()
+      me.destroy();
       return false;
     }
 

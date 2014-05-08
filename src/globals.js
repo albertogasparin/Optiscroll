@@ -10,7 +10,7 @@ var G = OptiScroll.G = {
   pauseCheck: false
 };
 
-G.cssTransformDashed = (G.cssTransform == 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
+G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
 
 
 
@@ -18,11 +18,11 @@ var getTime = Date.now || function() { return new Date().getTime(); };
 
 
 var animationTimeout = (function () {
-  return window.requestAnimationFrame 
-    || window.webkitRequestAnimationFrame 
-    || window.mozRequestAnimationFrame 
-    || window.msRequestAnimationFrame
-    || function(callback){ window.setTimeout(callback, 1000/60); };
+  return window.requestAnimationFrame || 
+    window.webkitRequestAnimationFrame || 
+    window.mozRequestAnimationFrame || 
+    window.msRequestAnimationFrame || 
+    function(callback){ window.setTimeout(callback, 1000/60); };
 })();
 
 
@@ -54,7 +54,7 @@ function cssTest (prop) {
       props   = (prop + ' ' + ['Webkit','Moz','O','ms'].join(ucProp + ' ') + ucProp).split(' ');
 
   for ( var i in props ) {
-    if ( el.style[ props[i] ] !== undefined ) return props[i];
+    if ( el.style[ props[i] ] !== undefined ) { return props[i]; }
   }
   return false;
 }

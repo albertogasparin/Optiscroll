@@ -5,7 +5,7 @@ Events.scroll = function (ev, me) {
   var cache = me.cache,
       now = getTime();
   
-  if(me.disableScrollEv) return;
+  if(me.disableScrollEv) { return; }
 
   if (!G.pauseCheck) {
     me.fireCustomEvent('scrollstart');
@@ -47,8 +47,6 @@ Events.touchend = function (ev, me) {
 
 
 Events.scrollStop = function (me) {
-  var eventData, cEvent;
-
   // update position, cache and detect edge
   _invoke(me.scrollbars, 'update');
 

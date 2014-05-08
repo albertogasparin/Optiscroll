@@ -112,7 +112,7 @@ var Scrollbar = function (which, instance) {
         var evData = ev.touches ? ev.touches[0] : ev,
             delta, deltaRatio;
         
-        if(!dragData) return;
+        if(!dragData) { return; }
 
         ev.preventDefault();
         delta = isVertical ? evData.pageY - dragData.y : evData.pageX - dragData.x;
@@ -175,7 +175,7 @@ var Scrollbar = function (which, instance) {
     checkEdges: function (isOnTouch) {
       var percent = scrollbarCache.percent, scrollFixPosition;
 
-      if(!enabled) return;
+      if(!enabled) { return; }
 
       if(scrollbarCache.was !== percent && percent % 100 === 0 && !isOnTouch) {
         instance.fireCustomEvent('scrollreachedge');
