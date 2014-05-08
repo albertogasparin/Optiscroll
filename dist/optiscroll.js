@@ -5,20 +5,20 @@
  * MIT LICENSE
  */
 
-'CustomEvent' in window || (function () {
+'CustomEvent' in window || (function (window) {
 
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
     var evt = document.createEvent( 'CustomEvent' );
     evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
     return evt;
-   };
+  }
 
   CustomEvent.prototype = window.Event.prototype;
 
   window.CustomEvent = CustomEvent;
 
-})();
+})(window);
 
 /**
  * OptiScroll.js v0.8.2
@@ -48,7 +48,7 @@ var GS = OptiScroll.globalSettings = {
   pauseCheck: false
 };
 
-var D = OptiScroll.defaults = {
+OptiScroll.defaults = {
   fixTouchPageBounce: true,
   forcedScrollbars: false,
   scrollStopDelay: 300,
@@ -121,7 +121,7 @@ OptiScroll.Instance.prototype.bind = function () {
 
   // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
-  listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update() };
+  listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update(); };
 
   if(G.isTouch) {
     listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
@@ -152,7 +152,7 @@ OptiScroll.Instance.prototype.update = function () {
     
     // if the element is no more in the DOM
     if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
-      me.destroy()
+      me.destroy();
       return false;
     }
 
@@ -288,7 +288,7 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
 
   var scrollAnimation = function () {
     var time = Math.min(1, ((getTime() - startTime) / duration)),
-        easedTime = easingFunction(time);
+        easedTime = Utils.easingFunction(time);
     
     if( endY !== startY ) {
       scrollEl.scrollTop = (easedTime * (endY - startY)) + startY;
@@ -355,7 +355,7 @@ Events.scroll = function (ev, me) {
   var cache = me.cache,
       now = getTime();
   
-  if(me.disableScrollEv) return;
+  if(me.disableScrollEv) { return; }
 
   if (!G.pauseCheck) {
     me.fireCustomEvent('scrollstart');
@@ -397,8 +397,6 @@ Events.touchend = function (ev, me) {
 
 
 Events.scrollStop = function (me) {
-  var eventData, cEvent;
-
   // update position, cache and detect edge
   _invoke(me.scrollbars, 'update');
 
@@ -526,7 +524,7 @@ var Scrollbar = function (which, instance) {
         var evData = ev.touches ? ev.touches[0] : ev,
             delta, deltaRatio;
         
-        if(!dragData) return;
+        if(!dragData) { return; }
 
         ev.preventDefault();
         delta = isVertical ? evData.pageY - dragData.y : evData.pageX - dragData.x;
@@ -589,7 +587,7 @@ var Scrollbar = function (which, instance) {
     checkEdges: function (isOnTouch) {
       var percent = scrollbarCache.percent, scrollFixPosition;
 
-      if(!enabled) return;
+      if(!enabled) { return; }
 
       if(scrollbarCache.was !== percent && percent % 100 === 0 && !isOnTouch) {
         instance.fireCustomEvent('scrollreachedge');
@@ -733,7 +731,7 @@ Utils.easingFunction = function (t) {
 
 
 // Global variables
-var G = {
+var G = OptiScroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
@@ -744,7 +742,7 @@ var G = {
   pauseCheck: false
 };
 
-G.cssTransformDashed = (G.cssTransform == 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
+G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
 
 
 
@@ -752,11 +750,11 @@ var getTime = Date.now || function() { return new Date().getTime(); };
 
 
 var animationTimeout = (function () {
-  return window.requestAnimationFrame 
-    || window.webkitRequestAnimationFrame 
-    || window.mozRequestAnimationFrame 
-    || window.msRequestAnimationFrame
-    || function(callback){ window.setTimeout(callback, 1000/60); };
+  return window.requestAnimationFrame || 
+    window.webkitRequestAnimationFrame || 
+    window.mozRequestAnimationFrame || 
+    window.msRequestAnimationFrame || 
+    function(callback){ window.setTimeout(callback, 1000/60); };
 })();
 
 
@@ -788,7 +786,7 @@ function cssTest (prop) {
       props   = (prop + ' ' + ['Webkit','Moz','O','ms'].join(ucProp + ' ') + ucProp).split(' ');
 
   for ( var i in props ) {
-    if ( el.style[ props[i] ] !== undefined ) return props[i];
+    if ( el.style[ props[i] ] !== undefined ) { return props[i]; }
   }
   return false;
 }
