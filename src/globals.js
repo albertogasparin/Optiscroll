@@ -1,5 +1,5 @@
 // Global variables
-var G = {
+var G = OptiScroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
