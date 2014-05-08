@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OptiScroll: Global Scope Test</title>
+    <link rel="stylesheet" href="resources/qunit.css">
+
+
+    <link rel="stylesheet" href="../dist/optiscroll.css">
+    <script src="../dist/optiscroll.js"></script>
+    
+    <style type="text/css">
+      .optiscroll {
+        width: 100px;
+        height: 100px;
+      }
+
+      .optiscroll-content .test {
+        width: 200px;
+        height: 200px;
+        background: #157E57;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="qunit"></div>
+    
+    <div id="qunit-fixture">
+
+      <div id="os" class="optiscroll">
+        <div class="optiscroll-content">
+          <div class="test"></div>
+        </div>
+      </div>
+
+      <div id="os2" class="optiscroll">
+        <div class="optiscroll-content">
+          <div class="test"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="resources/qunit.js"></script>
+    <script>var os, os2;</script>
+    <script src="test.api.js"></script>
+  </body>
+</html>
