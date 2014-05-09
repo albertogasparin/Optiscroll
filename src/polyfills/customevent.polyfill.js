@@ -1,15 +1,21 @@
-// CustomEvent polyfill for IE9
-// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
-if (!window.CustomEvent)
-  (function (win, doc) {
-    function CustomEvent ( event, params ) {
-      params = params || { bubbles: false, cancelable: false, detail: undefined };
-      var evt = doc.createEvent( 'CustomEvent' );
-      evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-      return evt;
-     }
+/*
+ * CustomEvent polyfill for IE9
+ * By MDN
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ * MIT LICENSE
+ */
 
-    CustomEvent.prototype = win.Event.prototype;
+'CustomEvent' in window || (function (window) {
 
-    win.CustomEvent = CustomEvent;
-  })(window, document);
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+  }
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+
+})(window);

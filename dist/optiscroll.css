@@ -43,6 +43,10 @@
   transition: opacity 0.2s ease 0s;
   z-index: 2;
   -webkit-backface-visibility: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .optiscroll:hover > .optiscroll-v,
