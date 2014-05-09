@@ -3,59 +3,16 @@ module.exports = exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
-        // casper: {
-        //     options: {
-        //         pre: './test/init.coffee',
-        //         test: true
-        //     },
 
-        //     indexedDB: {
-        //         options: {
-        //             args: [
-        //                 '--driver=asyncStorage',
-        //                 '--driver-name=IndexedDB',
-        //                 '--url=indexeddb'
-        //             ],
-        //             engine: 'slimerjs'
-        //         },
-        //         src: [
-        //             'test/test.*.coffee'
-        //         ]
-        //     },
+        connect: {
+            server: {
+              options: {
+                port: 8181,
+                hostname: '*'
+              }
+            }
+        },
 
-        //     localstorageGecko: {
-        //         options: {
-        //             args: [
-        //                 '--driver=localStorageWrapper',
-        //                 '--driver-name=localStorage',
-        //                 '--url=localstorage'
-        //             ],
-        //             engine: 'slimerjs'
-        //         },
-        //         src: [
-        //             'test/test.*.coffee'
-        //         ]
-        //     },
-
-        //     localstorageWebKit: {
-        //         src: [
-        //             'test/test.*.coffee'
-        //         ]
-        //     },
-
-        //     websql: {
-        //         options: {
-        //             args: [
-        //                 '--driver=webSQLStorage',
-        //                 '--driver-name=WebSQL',
-        //                 '--url=websql'
-        //             ]
-        //         },
-        //         src: [
-        //             'test/test.*.coffee'
-        //         ]
-        //     }
-        // },
         concat: {
             options: {
                 separator: "\n\n",
@@ -74,12 +31,13 @@ module.exports = exports = function(grunt) {
                 dest: 'dist/optiscroll.js'
             }
         },
-        // jshint: {
-        //     options: {
-        //         jshintrc: '.jshintrc'
-        //     },
-        //     source: ['src/*.js', 'src/**/*.js']
-        // },
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            // source: ['src/*.js', 'src/**/*.js']
+            source: ['dist/optiscroll.js']
+        },
         uglify: {
             nojquery: {
                 files: {
@@ -102,14 +60,8 @@ module.exports = exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('default', ['build', 'watch']);
+    grunt.registerTask('default', ['connect', 'build', 'watch']);
     grunt.registerTask('build', ['concat', 'uglify']);
-    
-    // grunt.registerTask('server', function() {
-    //     grunt.log.writeln('Starting web server at test/server.coffee');
 
-    //     require('./test/server.coffee').listen(8181);
-    // });
-
-    // grunt.registerTask('test', ['build', 'server', 'casper', 'jshint']);
+    grunt.registerTask('test', ['build', 'connect']);
 };

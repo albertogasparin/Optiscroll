@@ -245,7 +245,7 @@ _Note for Windows users:_ SlimerJS doesn't seem to work on Windows for our
 tests, so run the tests with `grunt test --force`. The SlimerJS versions will
 be run on Travis when you submit a pull request.
 
-optiScroll is designed to run in the browser, so the tests explicitly require
+OptiScroll is designed to run in the browser, so the tests explicitly require
 a browser environment instead of any JavaScript environment (i.e. node.js).
 The tests are run on both a headless WebKit (using
 [PhantomJS](http://phantomjs.org)) and
