@@ -20,6 +20,17 @@
         height: 200px;
         background: #157E57;
       }
+
+      .test-child {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+        background: #1E1;
+      }
+
     </style>
   </head>
   <body>
@@ -29,7 +40,7 @@
 
       <div id="os" class="optiscroll">
         <div class="optiscroll-content">
-          <div class="test"></div>
+          <div class="test"><b class="test-child"></b></div>
         </div>
       </div>
 
@@ -43,6 +54,8 @@
 
     <script src="resources/qunit.js"></script>
     <script>var os, os2;</script>
+    <script src="test.base.js"></script>
     <script src="test.api.js"></script>
+    <script src="test.scrollbars.js"></script>
   </body>
 </html>
