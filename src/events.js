@@ -1,82 +1,60 @@
 var Events = OptiScroll.Events = {};
 
 
-Events.scroll = function (ev) {
-  var self = this,
-      cache = this.cache,
+Events.scroll = function (ev, me) {
+  var cache = me.cache,
       now = getTime();
-
-  if(this.disableScrollEvent) return;
-
-  if (!GS.pauseCheck && !G.isTouch) {
-    this.element.classList.add( this.settings.classPrefix+'-scrolling' );
-  }
-  GS.pauseCheck = true;
-
-  if( !GS.scrollMinUpdateInterval || now - (cache.scrollNow || 0) >= GS.scrollMinUpdateInterval ) {
-
-    if(this.scrollbars.dom) {
-      self.updateScrollbars();
-    }
-
-    cache.scrollNow = now;
-    
-    clearTimeout(this.scrollStopTimer);
-    this.scrollStopTimer = setTimeout(function () {
-      Events.scrollStop.call(self);
-    }, this.settings.scrollStopDelay);
-  }
-
-};
-
-
-
-Events.touchstart = function (ev) {
-  var scrollbars = this.scrollbars;
   
-  // clear scrollStop timer
-  clearTimeout(this.scrollStopTimer);
+  if(me.disableScrollEv) { return; }
 
-  if(scrollbars.dom) { // restore track transition
-    scrollbars.v.track.style[G.cssTransition] = this.settings.trackTransitions;
-    scrollbars.h.track.style[G.cssTransition] = this.settings.trackTransitions;
+  if (!G.pauseCheck) {
+    me.fireCustomEvent('scrollstart');
+  }
+  G.pauseCheck = true;
+
+  if( now - (cache.now || 0) >= GS.scrollMinUpdateInterval ) {
+
+    _invoke(me.scrollbars, 'update');
+
+    cache.now = now;
+    
+    clearTimeout(me.sTimer);
+    me.sTimer = setTimeout(function () {
+      Events.scrollStop(me);
+    }, me.settings.scrollStopDelay);
   }
 
-  if(this.settings.fixTouchPageBounce) {
-    this.updateScrollbars();
-    Helpers.checkEdges.call(this);
-  }
-  this.cache.scrollNow = getTime();
 };
 
 
 
-Events.touchmove = function (ev) {
-  GS.pauseCheck = true; 
+Events.touchstart = function (ev, me) {
+  G.pauseCheck = false;
+  if(me.settings.fixTouchPageBounce) {
+    _invoke(me.scrollbars, 'update', [true]);
+  }
+  me.cache.now = getTime();
 };
 
 
 
-Events.scrollStop = function () {
-  var eventData, cEvent;
+Events.touchend = function (ev, me) {
+  // prevents touchmove generate scroll event to call
+  // scrollstop  while the page is still momentum scrolling
+  clearTimeout(me.sTimer);
+};
 
-  // prevents multiple 
-  clearTimeout(this.scrollStopTimer);
 
-  if(!G.isTouch) {
-    this.element.classList.remove( this.settings.classPrefix+'-scrolling' );
-  }
 
-  // update position and cache
-  this.updateScrollbars();
+Events.scrollStop = function (me) {
+  // update position, cache and detect edge
+  _invoke(me.scrollbars, 'update');
 
   // fire custom event
-  Helpers.fireCustomEvent.call(this, 'scrollstop');
-
-  Helpers.checkEdges.call(this, true);
+  me.fireCustomEvent('scrollstop');
 
   // restore check loop
-  GS.pauseCheck = false;
+  G.pauseCheck = false;
 };
 
 
