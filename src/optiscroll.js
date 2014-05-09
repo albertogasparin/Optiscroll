@@ -12,7 +12,7 @@ var OptiScroll = function OptiScroll(element, options) {
 
   
 var GS = OptiScroll.globalSettings = {
-  scrollMinUpdateInterval: 1000 / 60, // 60 FPS
+  scrollMinUpdateInterval: 16, // 60 FPS
   checkFrequency: 1000,
   pauseCheck: false
 };
@@ -213,9 +213,9 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   startY = endY = scrollEl.scrollTop;
   leftEdge = startX + eDim.left - sDim.left - (delta.left || 0);
   topEdge = startY + eDim.top - sDim.top - (delta.top || 0);
-  rightEdge = startX + eDim.left - sDim.left + eDim.width - sDim.width + (delta.right || 0);
-  bottomEdge = startY + eDim.top - sDim.top + eDim.height - sDim.height + (delta.bottom || 0);
-
+  rightEdge = startX + eDim.left - sDim.left + eDim.width - me.cache.clientW + (delta.right || 0);
+  bottomEdge = startY + eDim.top - sDim.top + eDim.height - me.cache.clientH + (delta.bottom || 0);
+  
   if(leftEdge < startX || rightEdge > startX) {
     endX = (leftEdge < startX) ? leftEdge : rightEdge;
   }

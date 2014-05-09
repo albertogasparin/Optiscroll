@@ -1,6 +1,6 @@
 module("Public APIs", {
   setup: function() {
-    os = new window.OptiScroll(document.querySelector('#os'));
+    os = new window.OptiScroll(document.querySelector('#os'), { autoUpdate: false });
   }, teardown: function() {
     os.destroy();
     os = null;
@@ -8,7 +8,7 @@ module("Public APIs", {
 });
 
 
-asyncTest("scrollTo(50, 100, 0)", function () {
+asyncTest("It should scrollTo(value, value, 0)", function () {
   expect(2);
 
   os.scrollEl.scrollLeft = 0;
@@ -23,12 +23,12 @@ asyncTest("scrollTo(50, 100, 0)", function () {
 });
 
 
-asyncTest("scrollTo('right', false, 'auto')", function() {
+asyncTest("It should scrollTo(edgeName, false)", function() {
   expect(2);
 
   os.scrollEl.scrollLeft = 0;
   os.scrollEl.scrollTop = 100;
-  os.scrollTo('right', false, 'auto');
+  os.scrollTo('right', false);
 
   setTimeout(function() {
     equal(os.scrollEl.scrollLeft, 100);
@@ -38,7 +38,7 @@ asyncTest("scrollTo('right', false, 'auto')", function() {
 });
 
 
-asyncTest("scrollTo(false, 0, 500)", function() {
+asyncTest("It should scrollTo(false, value, time)", function() {
   expect(2);
 
   os.scrollEl.scrollLeft = 50;
@@ -51,5 +51,54 @@ asyncTest("scrollTo(false, 0, 500)", function() {
     start();
   }, 550);
 });
+
+
+asyncTest("It should scrollIntoView(selector) from top/left", function () {
+  expect(2);
+
+  os.scrollEl.scrollLeft = 0;
+  os.scrollEl.scrollTop = 0;
+  os.scrollIntoView('.test-child');
+
+  setTimeout(function() {
+    equal(os.scrollEl.scrollLeft, 10);
+    equal(os.scrollEl.scrollTop, 10);
+    start();
+  }, 100);
+});
+
+
+asyncTest("It should scrollIntoView(node, time) from bottom/right", function () {
+  expect(2);
+
+  os.scrollEl.scrollLeft = 100;
+  os.scrollEl.scrollTop = 100;
+  os.scrollIntoView( os.element.querySelector('.test-child'), 100);
+
+  setTimeout(function() {
+    equal(os.scrollEl.scrollLeft, 90);
+    equal(os.scrollEl.scrollTop, 90);
+    start();
+  }, 150);
+});
+
+
+
+asyncTest("It should scrollIntoView(selector, time, delta)", function () {
+  expect(2);
+
+  os.scrollEl.scrollLeft = 0;
+  os.scrollEl.scrollTop = 0;
+  os.scrollIntoView('.test-child', 100, 10);
+
+  setTimeout(function() {
+    equal(os.scrollEl.scrollLeft, 20);
+    equal(os.scrollEl.scrollTop, 20);
+    start();
+  }, 150);
+});
+
+
+
 
 

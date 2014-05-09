@@ -5,7 +5,7 @@
  * MIT LICENSE
  */
 
-'CustomEvent' in window || (function (window) {
+typeof window.CustomEvent === 'function' || (function (window) {
 
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
@@ -43,7 +43,7 @@ var OptiScroll = function OptiScroll(element, options) {
 
   
 var GS = OptiScroll.globalSettings = {
-  scrollMinUpdateInterval: 1000 / 60, // 60 FPS
+  scrollMinUpdateInterval: 16, // 60 FPS
   checkFrequency: 1000,
   pauseCheck: false
 };
@@ -244,9 +244,9 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   startY = endY = scrollEl.scrollTop;
   leftEdge = startX + eDim.left - sDim.left - (delta.left || 0);
   topEdge = startY + eDim.top - sDim.top - (delta.top || 0);
-  rightEdge = startX + eDim.left - sDim.left + eDim.width - sDim.width + (delta.right || 0);
-  bottomEdge = startY + eDim.top - sDim.top + eDim.height - sDim.height + (delta.bottom || 0);
-
+  rightEdge = startX + eDim.left - sDim.left + eDim.width - me.cache.clientW + (delta.right || 0);
+  bottomEdge = startY + eDim.top - sDim.top + eDim.height - me.cache.clientH + (delta.bottom || 0);
+  
   if(leftEdge < startX || rightEdge > startX) {
     endX = (leftEdge < startX) ? leftEdge : rightEdge;
   }
@@ -472,7 +472,7 @@ var Scrollbar = function (which, instance) {
 
       newDim = this.calc(scrollEl[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
-      deltaPos = Math.abs(newDim.position - scrollbarCache.position) * cache[clientSize];
+      deltaPos = Math.abs(newDim.position - scrollbarCache.position || 0) * cache[clientSize];
 
       if(newDim.size === 1 && enabled) {
         me.toggle(false);
@@ -487,14 +487,10 @@ var Scrollbar = function (which, instance) {
           trackEl.style[ isVertical ? 'height':'width' ] = newDim.size * 100 + '%';
         }
 
-        me.animateTrack( G.isTouch && deltaPos > 20 );
-
-        if(G.cssTransform) {
-          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
-        } else { // IE9
-          trackEl.style[evNames[0]] = newDim.position * 100 + '%';
+        if(deltaPos) { // only if position has changed
+          me.animateTrack( G.isTouch && deltaPos > 20 );
+          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
         }
-
       }
 
       // update cache values
@@ -605,9 +601,9 @@ var Scrollbar = function (which, instance) {
 
 
     remove: function () {
-      if(scrollbarEl) {
-        this.toggle(false);
-        parentEl.removeChild(scrollbarEl);
+      this.toggle(false);
+      if(scrollbarEl.parentNode) {
+        scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
     }
 

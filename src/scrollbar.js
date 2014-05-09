@@ -60,7 +60,7 @@ var Scrollbar = function (which, instance) {
 
       newDim = this.calc(scrollEl[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
-      deltaPos = Math.abs(newDim.position - scrollbarCache.position) * cache[clientSize];
+      deltaPos = Math.abs(newDim.position - scrollbarCache.position || 0) * cache[clientSize];
 
       if(newDim.size === 1 && enabled) {
         me.toggle(false);
@@ -75,14 +75,10 @@ var Scrollbar = function (which, instance) {
           trackEl.style[ isVertical ? 'height':'width' ] = newDim.size * 100 + '%';
         }
 
-        me.animateTrack( G.isTouch && deltaPos > 20 );
-
-        if(G.cssTransform) {
-          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
-        } else { // IE9
-          trackEl.style[evNames[0]] = newDim.position * 100 + '%';
+        if(deltaPos) { // only if position has changed
+          me.animateTrack( G.isTouch && deltaPos > 20 );
+          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
         }
-
       }
 
       // update cache values
@@ -193,9 +189,9 @@ var Scrollbar = function (which, instance) {
 
 
     remove: function () {
-      if(scrollbarEl) {
-        this.toggle(false);
-        parentEl.removeChild(scrollbarEl);
+      this.toggle(false);
+      if(scrollbarEl.parentNode) {
+        scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
     }
 

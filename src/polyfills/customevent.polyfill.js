@@ -5,7 +5,7 @@
  * MIT LICENSE
  */
 
-'CustomEvent' in window || (function (window) {
+typeof window.CustomEvent === 'function' || (function (window) {
 
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
