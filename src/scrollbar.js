@@ -76,13 +76,7 @@ var Scrollbar = function (which, instance) {
         }
 
         me.animateTrack( G.isTouch && deltaPos > 20 );
-
-        if(G.cssTransform) {
-          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0,'+newRelPos+'%' : newRelPos+'%'+',0') +')';
-        } else { // IE9
-          trackEl.style[evNames[0]] = newDim.position * 100 + '%';
-        }
-
+        trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
       }
 
       // update cache values
@@ -193,9 +187,9 @@ var Scrollbar = function (which, instance) {
 
 
     remove: function () {
-      if(scrollbarEl) {
-        this.toggle(false);
-        parentEl.removeChild(scrollbarEl);
+      this.toggle(false);
+      if(scrollbarEl.parentNode) {
+        scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
     }
 
