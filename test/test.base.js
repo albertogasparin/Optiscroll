@@ -8,7 +8,7 @@ module("Basics", {
 });
 
 
-test("OptiScroll should be initialized", function () {
+test("It should be initialized", function () {
   equal(typeof os, 'object');
   // check DOM elements
   equal(os.element.toString(), '[object HTMLDivElement]');
