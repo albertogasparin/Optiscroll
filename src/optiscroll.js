@@ -12,7 +12,7 @@ var OptiScroll = function OptiScroll(element, options) {
 
   
 var GS = OptiScroll.globalSettings = {
-  scrollMinUpdateInterval: 1000 / 60, // 60 FPS
+  scrollMinUpdateInterval: 16, // 60 FPS
   checkFrequency: 1000,
   pauseCheck: false
 };
