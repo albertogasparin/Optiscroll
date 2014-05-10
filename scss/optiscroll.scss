@@ -1,45 +1,31 @@
+/**************************************
+ *  OptiScroll container base style
+ */
+
 .optiscroll {
   position: relative;
   overflow: hidden;
-
-  .optiscroll-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
-    z-index: 1;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
-.optiscroll-scrolling .optiscroll-content > * {
-  pointer-events: none;
-}
-
-
-.optiscroll-touchfix > .optiscroll-content:before {
-  content: '';
+.optiscroll-content {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1px;
-  height: 100%;
-  border-bottom: 2px solid transparent;
-
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
 }
 
+
+/**************************************
+ *  OptiScroll scrollbars base style
+ */
 
 .optiscroll-v,
 .optiscroll-h {
   position: absolute;
-  opacity: 0;
-  -webkit-transition: opacity 0.2s ease 0s;
-  transition: opacity 0.2s ease 0s;
   z-index: 2;
   -webkit-backface-visibility: hidden;
 
@@ -47,32 +33,21 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
-  .optiscroll:hover > & { opacity: 1; }
 }
 
-.optiscroll-v {
-  top: 4px;
-  right: 0;
-  bottom: 4px;
-  width: 0;
-}
+.optiscroll-v { right: 0; }
+.optiscroll-h { bottom: 0; }
 
-.optiscroll-h {
-  left: 4px;
-  right: 4px;
-  bottom: 0;
-  height: 0;
-}
+
+/**************************************
+ *  OptiScroll tracks base style
+ */
 
 .optiscroll-vtrack,
 .optiscroll-htrack {
   display: block;
   position: absolute;
-  background: rgba(0,0,0,0.3);
-  border-radius: 2px;
   opacity: 0;
-  box-shadow: 0 0 1px #FFF;
   
   -webkit-transform: translate(0%, 0%);
   -moz-transform: translate(0%, 0%);
@@ -86,20 +61,123 @@
 }
 
 
-.optiscroll-vtrack {
-  width: 3px;
-  right: 4px; 
+/* track visible only when enabled */
+.vtrack-on > .optiscroll-v .optiscroll-vtrack { opacity: 1; }
+.htrack-on > .optiscroll-h .optiscroll-htrack { opacity: 1; }
 
-  .vtrack-on > .optiscroll-v & { opacity: 1; }
+
+
+/**************************************
+ *  Prevent iOS page bounce
+ *  even when content is not longer enough.
+ *
+ *  Remember: enabling the page bounce fix will prevent 
+ *  nested scroll areas to scroll the parent.
+ */
+
+/* Uncomment to prevent VERTICAL iOS page bounce. */
+/*
+.optiscroll-nobounce > .optiscroll-content:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  border-bottom: 2px solid transparent;
+
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+*/
+
+
+/* Uncomment to prevent HORIZONTAL iOS page bounce. */
+/*
+.optiscroll-nobounce > .optiscroll-content:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  border-right: 2px solid transparent;
+
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+*/
+
+
+
+/**************************************
+ *  CUSTOM STYLE
+ *  feel free to change stuff
+ **************************************/
+
+/***
+ ***  Scrollbars style  ***/
+$scrollbar-size: 0px;
+
+.optiscroll-v,
+.optiscroll-h {
+  background: transparent;
+  
+  /* Scrollbars are visible only on hover */ 
+  opacity: 0; 
+  -webkit-transition: opacity 0.2s ease 0s;
+  -moz-transition: opacity 0.2s ease 0s;
+  -ms-transition: opacity 0.2s ease 0s;
+  -o-transition: opacity 0.2s ease 0s;
+  transition: opacity 0.2s ease 0s;
+}
+
+.optiscroll.vtrack-on:hover > .optiscroll-v { opacity: 1; }
+.optiscroll.htrack-on:hover > .optiscroll-h { opacity: 1; }
+
+.optiscroll-v {
+  top: 4px;
+  bottom: 4px;
+  width: $scrollbar-size;
+}
+
+.optiscroll-h {
+  left: 4px;
+  right: 4px;
+  height: $scrollbar-size;
+}
+
+/* Avoid overapping while both scrollbars are enabled */
+.vtrack-on.htrack-on > .optiscroll-v { 
+  bottom: 8px;
+}
+.vtrack-on.htrack-on > .optiscroll-h { 
+  right: 8px;
+}
+
+
+/***
+ ***  Tracks style  ***/
+$track-size: 3px;
+
+
+.optiscroll-vtrack,
+.optiscroll-htrack {
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
+  box-shadow: 0 0 1px #FFF;
+}
+
+.optiscroll-vtrack {
+  width: $track-size;
+  right: 4px;
 }
 
 .optiscroll-htrack {
-  height: 3px;
-  bottom: 4px; 
-
-  .htrack-on > .optiscroll-h & { opacity: 1; }
+  height: $track-size;
+  bottom: 4px;
 }
 
 
-.vtrack-on.htrack-on > .optiscroll-v { bottom: 8px; }
-.vtrack-on.htrack-on > .optiscroll-h { right: 8px; }
