@@ -307,7 +307,7 @@ OptiScroll.Instance.prototype.destroy = function () {
   scrollEl.removeAttribute('data-scroll');
 
   // remove classes
-  toggleClass(me.element, settings.classPrefix+'-nobounce', false);
+  toggleClass(me.element, me.settings.classPrefix+'-nobounce', false);
   
 };
 
