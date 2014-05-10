@@ -190,7 +190,7 @@ var Scrollbar = function (which, instance) {
 
     remove: function () {
       this.toggle(false);
-      if(scrollbarEl.parentNode) {
+      if(scrollbarEl && scrollbarEl.parentNode) {
         scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
     }
