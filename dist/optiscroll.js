@@ -79,30 +79,36 @@ OptiScroll.Instance = function ( element, options ) {
 
 OptiScroll.Instance.prototype.init = function () {
   var me = this,
-      settings = me.settings,
-      createScrollbars = G.nativeScrollbarSize || settings.forcedScrollbars;
+      settings = me.settings;
 
+  // add instance to global array for timed check
   if(settings.autoUpdate) {
-    // add for timed check
     G.instances.push( me );
   }
 
+  // initialize scrollbars
   me.scrollbars = { 
     v: new Scrollbar('v', me), 
     h: new Scrollbar('h', me) 
   };
 
-  if(createScrollbars) {
+  // create DOM scrollbars only if they have size or if it's forced
+  if(G.nativeScrollbarSize || settings.forcedScrollbars) {
     Utils.hideNativeScrollbars(me.scrollEl);
     _invoke(me.scrollbars, 'create');
   } 
 
+  if(G.isTouch && settings.fixTouchPageBounce) {
+    toggleClass(me.element, settings.classPrefix+'-nobounce', true);
+  }
+
   // calculate scrollbars
   me.update();
 
-  // bind events
+  // bind container events
   me.bind();
 
+  // start the timed check if it is not already running
   if(settings.autoUpdate && !G.checkTimer) {
     Utils.checkLoop();
   }
@@ -161,8 +167,8 @@ OptiScroll.Instance.prototype.update = function () {
     cache.scrollW = sW;
     cache.clientW = cW;
 
+    // only fire if cache was defined
     if( oldcH !== undefined ) {
-      // don't fire on init
       me.fireCustomEvent('sizechange');
     }
 
@@ -254,9 +260,6 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   if(topEdge < startY || bottomEdge > startY) {
     endY = (topEdge < startY) ? topEdge : bottomEdge;
   }
-
-  // if(endX < 0) { endX = 0; }
-  // if(endY < 0) { endY = 0; }
   
   // animate
   me.animateScroll(startX, endX, startY, endY, duration);
@@ -333,6 +336,10 @@ OptiScroll.Instance.prototype.destroy = function () {
   // restore style
   scrollEl.removeAttribute('style');
   scrollEl.removeAttribute('data-scroll');
+
+  // remove classes
+  toggleClass(me.element, settings.classPrefix+'-nobounce', false);
+  
 };
 
 
