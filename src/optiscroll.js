@@ -289,11 +289,6 @@ OptiScroll.Instance.prototype.destroy = function () {
       listeners = me.listeners,
       index = G.instances.indexOf( me );
 
-  // remove instance from global timed check
-  if (index > -1) {
-    G.instances.splice(index, 1);
-  }
-
   // unbind events
   for (var ev in listeners) {
     scrollEl.removeEventListener(ev, listeners[ev]);
@@ -309,6 +304,13 @@ OptiScroll.Instance.prototype.destroy = function () {
   // remove classes
   toggleClass(me.element, me.settings.classPrefix+'-nobounce', false);
   
+  // defer instance removal from global array
+  // to not affect checkLoop _invoke
+  if (index > -1) {
+    animationTimeout(function () {
+      G.instances.splice(index, 1);
+    });
+  }
 };
 
 
