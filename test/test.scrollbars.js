@@ -1,6 +1,6 @@
 module("Scrollbars", {
   setup: function() {
-    os = new window.OptiScroll(document.querySelector('#os'), { forcedScrollbars: true, autoUpdate: false });
+    os = new window.OptiScroll(document.querySelector('#os'), { forceScrollbars: true, autoUpdate: false });
   }, teardown: function() {
     os.destroy();
     os = null;

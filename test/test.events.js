@@ -1,6 +1,6 @@
 module("Custom events", {
   setup: function() {
-    os = new window.OptiScroll(document.querySelector('#os'), { forcedScrollbars: true, autoUpdate: false });
+    os = new window.OptiScroll(document.querySelector('#os'), { autoUpdate: false });
   }, teardown: function() {
     os.destroy();
     os = null;
