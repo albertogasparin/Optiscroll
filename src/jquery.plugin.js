@@ -27,7 +27,7 @@
 
       // start new optiscroll instance
       if(!inst) {
-        inst = new OptiScroll(this, options || {});
+        inst = new window.OptiScroll(this, options || {});
         el.data('optiScroll', inst);
       }
       // allow exec method on instance 
