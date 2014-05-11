@@ -97,7 +97,10 @@ asyncTest("It should update tracks", function () {
   os.scrollEl.scrollLeft = 10;
   os.element.style.width = '150px';
   os.element.style.height = '150px';
-  os.update();
+  
+  setTimeout(function () {
+    os.update();
+  })
 
   setTimeout(function () {
     equal(os.cache.v.size, 0.75);
@@ -105,7 +108,7 @@ asyncTest("It should update tracks", function () {
     equal(os.cache.h.size, 0.75);
     equal(os.cache.h.percent, 20);
     start();
-  }, 50)
+  }, 100);
   
 });
 
