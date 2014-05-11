@@ -41,8 +41,8 @@ Utils.exposedData = function (obj) {
     // scroll position
     scrollTop: obj.v.position * sH,
     scrollLeft: obj.h.position * sW,
-    scrollBottom: (1 - obj.v.position) * sH,
-    scrollRight: (1 - obj.h.position) * sW,
+    scrollBottom: (1 - obj.v.position - obj.v.size) * sH,
+    scrollRight: (1 - obj.h.position - obj.h.size) * sW,
 
     // element size
     scrollWidth: sW,
