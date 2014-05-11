@@ -19,7 +19,7 @@ var GS = OptiScroll.globalSettings = {
 
 OptiScroll.defaults = {
   fixTouchPageBounce: true,
-  forcedScrollbars: false,
+  forceScrollbars: false,
   scrollStopDelay: 300,
   maxTrackSize: 95,
   minTrackSize: 5,
@@ -61,8 +61,14 @@ OptiScroll.Instance.prototype.init = function () {
     h: new Scrollbar('h', me) 
   };
 
+  // disable forced scrollbars if Firefox 
+  // because we cannot hide native scrollbars yet
+  if(G.nativeScrollbarSize === 0 && 'mozRequestAnimationFrame' in window) {
+    settings.forceScrollbars = false;
+  }
+
   // create DOM scrollbars only if they have size or if it's forced
-  if(G.nativeScrollbarSize || settings.forcedScrollbars) {
+  if(G.nativeScrollbarSize || settings.forceScrollbars) {
     Utils.hideNativeScrollbars(me.scrollEl);
     _invoke(me.scrollbars, 'create');
   } 

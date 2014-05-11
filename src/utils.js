@@ -60,16 +60,13 @@ Utils.addCssRule = function (selector, rules) {
 
   if ( !styleSheet ) {
     styleSheet = document.createElement("style");
-    styleSheet.appendChild(document.createTextNode("")); // WebKit hack
     styleSheet.id = 'scroll-sheet';
     document.head.appendChild(styleSheet);
   } 
 
-  if(styleSheet.sheet.insertRule) {
-    styleSheet.sheet.insertRule(selector + "{" + rules + "}", 0);
-  } else {
-    styleSheet.sheet.addRule(selector, rules);
-  }
+  // do not use sheet.insertRule because FF throws an error
+  // if the selector is not supported
+  styleSheet.innerHTML += selector + "{" + rules + "} ";
 }
 
 
