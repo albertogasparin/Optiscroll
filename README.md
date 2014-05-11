@@ -1,6 +1,6 @@
 # OptiScroll
 
-OptiScroll is an highly optimized custom scrollbar library for modern web apps.
+OptiScroll is an tiny (**9kB**) and highly optimized custom scrollbar library for modern web apps.
 
 OptiScroll aims to be as light as possible in order to not affect the performace of your webapp. OptiScroll does **not** replace the scrolling logic with Javascript, it only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, OptiScroll implements custom events and methods to extend browser scroll functionalities. 
 
@@ -29,7 +29,7 @@ Moreover, OptiScroll has been properly tested on:
 - Chrome 32, Chrome 34
 - Opera 12.16, Opera 20
 - Firefox 27
-- Android 4.0, 4.1
+- Android 4.1
 - iOS 6.1, 7.1
 
 

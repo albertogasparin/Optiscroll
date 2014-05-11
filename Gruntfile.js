@@ -29,6 +29,13 @@ module.exports = exports = function(grunt) {
                     'src/outro.js',
                 ],
                 dest: 'dist/optiscroll.js'
+            },
+            jquery: {
+                src: [
+                    'dist/optiscroll.js',
+                    'src/jquery.plugin.js'
+                ],
+                dest: 'dist/jquery.optiscroll.js'
             }
         },
         jshint: {
@@ -41,7 +48,8 @@ module.exports = exports = function(grunt) {
         uglify: {
             nojquery: {
                 files: {
-                    'dist/optiscroll.min.js': ['dist/optiscroll.js']
+                    'dist/optiscroll.min.js': ['dist/optiscroll.js'],
+                    'dist/jquery.optiscroll.min.js': ['dist/jquery.optiscroll.js']
                 }
             }
         },
