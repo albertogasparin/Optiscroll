@@ -34,6 +34,9 @@ var Scrollbar = function (which, instance) {
           trackEl.style[G.cssTransition] = trackTransition;
         }
       }
+
+      // expose enabled
+      scrollbarCache.enabled = enabled;
     },
 
 
