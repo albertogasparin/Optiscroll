@@ -18,6 +18,7 @@ test("It should be initialized", function () {
   ok(OptiScroll.G.checkTimer);
 });
 
+
 asyncTest("OptiScroll should be destroyed", function () {
   expect(4);
   os.destroy();
@@ -31,7 +32,33 @@ asyncTest("OptiScroll should be destroyed", function () {
     equal(OptiScroll.G.checkTimer, null);
     start();
   }, 700);
-
-  
 });
 
+
+asyncTest("OptiScroll should auto update itself", function () {
+  expect(4);
+  os.element.style.width = '300px';
+  os.element.style.height = '300px';
+
+  setTimeout(function () {
+    equal(os.cache.clientW, 300);
+    equal(os.cache.clientH, 300);
+    equal(os.cache.scrollW, 300);
+    equal(os.cache.scrollH, 300);
+
+    start();
+  }, 700);
+});
+
+
+asyncTest("OptiScroll should auto destroy itself", function () {
+  expect(2);
+  os.element.parentNode.removeChild(os.element);
+
+  setTimeout(function () {
+    // check globals
+    equal(OptiScroll.G.instances.length, 0);
+    equal(OptiScroll.G.checkTimer, null);
+    start();
+  }, 1000);
+});
