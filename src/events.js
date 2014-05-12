@@ -17,13 +17,13 @@ var Events = {
     if( !cache.now || now > cache.now + GS.scrollMinUpdateInterval ) {
       cache.now = now;
       
-      clearTimeout(me.timerScroll);
-      me.timerScroll = setTimeout(function () {
+      clearTimeout(cache.timerScroll);
+      cache.timerScroll = setTimeout(function () {
         _invoke(me.scrollbars, 'update');
       }, GS.scrollMinUpdateInterval);
 
-      clearTimeout(me.timerStop);
-      me.timerStop = setTimeout(function () {
+      clearTimeout(cache.timerStop);
+      cache.timerStop = setTimeout(function () {
         Events.scrollStop(me);
       }, me.settings.scrollStopDelay);
     }
@@ -41,7 +41,7 @@ var Events = {
   touchend: function (ev, me) {
     // prevents touchmove generate scroll event to call
     // scrollstop  while the page is still momentum scrolling
-    clearTimeout(me.timerStop);
+    clearTimeout(me.cache.timerStop);
   },
 
 
