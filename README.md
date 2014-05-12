@@ -2,7 +2,7 @@
 
 OptiScroll is an tiny (**9kB**) and highly optimized custom scrollbar library for modern web apps.
 
-OptiScroll aims to be as light as possible in order to not affect the performace of your webapp. OptiScroll does **not** replace the scrolling logic with Javascript, it only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, OptiScroll implements custom events and methods to extend browser scroll functionalities. 
+OptiScroll aims to be as light as possible in order to not affect the performace of your webapp. OptiScroll does **not** replace the scrolling logic with Javascript it only hides native scrollbars and allows you to style the fake scrollbars as you like. OptiScroll implements custom events and methods to extend browser scroll functionalities. 
 
 
 
@@ -22,7 +22,7 @@ OptiScroll aims to be as light as possible in order to not affect the performace
 
 ## Browser support
 
-OptiScroll works in all modern browsers (IE9 and above). IE8 support is under evaluation. Keep in mind that if OptiScroll does not work, your web page will fallback to default scrollbars.
+OptiScroll works in all modern browsers (IE9 and above). IE8 support is under evaluation. Keep in mind that if OptiScroll does not work your web page will fallback to default scrollbars.
 
 Moreover, OptiScroll has been properly tested on:
 - IE9, IE11
@@ -38,7 +38,7 @@ Moreover, OptiScroll has been properly tested on:
 
 - `forceScrollbars` is ignored on Firefox under OSX with trackpad. Currently, there is no way to hide the "Lion style" scrollbars under Firefox. So, OptiScroll always disable them to avoid double scrollbars.
 
-- on iOS, custom events (and scrollbars if enabled with `forceScrollbars:true`) are fired/updated when the momentum scrolling ends.  
+- on iOS custom events (and scrollbars if enabled with `forceScrollbars:true`) are fired/updated when the momentum scrolling ends.  
 
 
 
@@ -112,7 +112,8 @@ $('#scroll').optiScroll({ forceScrollbars: true });
 
 ### scrollTo ( destX, destY [, duration] )
 
-Scroll to a specific point with a nice animation. If you need to scroll a single axis, then set the opposite axis detination to `false`. By default, the duration is calculated based on the distance (es: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). However, you can set your fixed duration in milliseconds. 
+Scroll to a specific point with a nice animation. If you need to scroll a single axis then set the opposite axis destination to `false`. 
+By default the duration is calculated based on the distance (eg: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). Alternatively you can set your fixed duration in milliseconds. 
 
 | Arguments | Allowed values
 |-----------|----------------
@@ -139,7 +140,7 @@ $('#scroll').optiScroll('scrollTo', 500, 'bottom', 'auto');
 
 ### scrollIntoView (elem [, duration, delta])
 
-Scrolls the element into view. The alignmet will be automatic, driven by the nearest edge. By default, the duration is calculated based on the distance (es: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). `delta` is the optional distance in px from the edge. Per edge distances can be defined.
+Scrolls the element into view. The alignment will be automatic driven by the nearest edge. By default the duration is calculated based on the distance (eg: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). `delta` is the optional distance in px from the edge. Per edge distances can be defined.
 
 | Arguments | Allowed values
 |-----------|----------------
@@ -166,12 +167,12 @@ $('#scroll').optiScroll('scrollIntoView', $el, 'auto', { bottom: 20, right: 30 }
 
 ### update ()
 
-By design, OptiScroll caches some DOM properties (like `scrollHeight`, `clientHeight`, ...) in order to avoid quering the DOM (and trigger a layout) each time the user scrolls. Usually, the `update` method is called by an internal timer (see the `checkFrequency` global option). So you should not care about it.   However, if you have disabled the auto update feature for an instance (via the `autoUpdate` option) or globally (via the `checkFrequency` option), you have to call the `update` method in your code.
+OptiScroll caches some DOM properties (like `scrollHeight`, `clientHeight`, ...) in order to avoid quering the DOM (and trigger a layout) each time the user scrolls. Usually the `update` method is called by an internal timer (see the `checkFrequency` global option). So you should not care about it.   However if you have disabled the auto update feature for an instance (via the `autoUpdate` option) or globally (via the `checkFrequency` option), you have to call the `update` method in your code.
 
 
 ### destroy ()
 
-If you want to remove OptiScroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. However, OptiScroll tries to be clever enough to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
+If you want to remove OptiScroll, this method will clean up the class names, unbind all events and remove the scrollbar elements. OptiScroll is clever enough to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
 
 
 ## Instance events
@@ -228,8 +229,8 @@ $('#scroll').on('scrollstop', function (ev) {
 
 | Option name | Default | Purpose  
 |-------------|---------|----------
-| scrollMinUpdateInterval | 25 (ms) | By default, scrollbars position is updated up to 40 times per second. By increasing this time, scroll tracks will be updated less frequently. Smallest interval is 16, which means scroll tracks are updated up to 60 times per second.
-| checkFrequency | 1000 (ms) | How often scroll areas are checked for size or content changes. To disable the check timer (and the scrollbars auto update feature), set this value to 0. 
+| scrollMinUpdateInterval | 25 (ms) | By default the scrollbars position is updated up to 40 times per second. By increasing this time the scroll tracks will be updated less frequently. The smallest interval is 16, which means scroll tracks are updated up to 60 times per second.
+| checkFrequency | 1000 (ms) | How often scroll areas are checked for size or content changes. To disable the check timer (and the scrollbars auto update feature) set this value to 0. 
 
 Examples:
 
@@ -245,7 +246,7 @@ OptiScroll.globalSettings.checkFrequency = 0;
 
 ## Running Tests
 
-OptiScroll is designed to run in the browser, so the tests explicitly require
+OptiScroll is designed to run in the browser so the tests explicitly require
 a browser environment instead of any JavaScript environment (i.e. node.js).
 You can simply load test/index.html in any browser to run all the tests.
 
