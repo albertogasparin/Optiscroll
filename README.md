@@ -112,7 +112,7 @@ $('#scroll').optiScroll({ forceScrollbars: true });
 
 ### scrollTo ( destX, destY [, duration] )
 
-Scroll to a specific point with a nice animation. If you need to scroll a single axis, then set the opposit axis detination to `false`. By default, the duration is calculated based on the distance (es: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). However, you can set your fixed duration in milliseconds. 
+Scroll to a specific point with a nice animation. If you need to scroll a single axis, then set the opposite axis detination to `false`. By default, the duration is calculated based on the distance (es: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). However, you can set your fixed duration in milliseconds. 
 
 | Arguments | Allowed values
 |-----------|----------------
@@ -171,7 +171,7 @@ By design, OptiScroll caches some DOM properties (like `scrollHeight`, `clientHe
 
 ### destroy ()
 
-If you want to remove OptiScroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. However, OptiScroll tries to be clever enought to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
+If you want to remove OptiScroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. However, OptiScroll tries to be clever enough to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
 
 
 ## Instance events
