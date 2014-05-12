@@ -43,7 +43,7 @@ var OptiScroll = function OptiScroll(element, options) {
 
   
 var GS = OptiScroll.globalSettings = {
-  scrollMinUpdateInterval: 16, // 60 FPS
+  scrollMinUpdateInterval: 1000 / 40, // 40 FPS
   checkFrequency: 1000,
   pauseCheck: false
 };
@@ -363,66 +363,66 @@ OptiScroll.Instance.prototype.fireCustomEvent = function (eventName) {
 
 
 
-var Events = OptiScroll.Events = {};
+var Events = {
 
+  scrollTimer: null,
+  stopTimer: null,
 
-Events.scroll = function (ev, me) {
-  var cache = me.cache,
-      now = getTime();
-  
-  if(me.disableScrollEv) { return; }
-
-  if (!G.pauseCheck) {
-    me.fireCustomEvent('scrollstart');
-  }
-  G.pauseCheck = true;
-
-  if( now - (cache.now || 0) >= GS.scrollMinUpdateInterval ) {
-
-    _invoke(me.scrollbars, 'update');
-
-    cache.now = now;
+  scroll: function (ev, me) {
+    var cache = me.cache,
+        now = getTime();
     
-    clearTimeout(me.sTimer);
-    me.sTimer = setTimeout(function () {
-      Events.scrollStop(me);
-    }, me.settings.scrollStopDelay);
+    if(me.disableScrollEv) { return; }
+
+    if (!G.pauseCheck) {
+      me.fireCustomEvent('scrollstart');
+    }
+    G.pauseCheck = true;
+    
+    if( !cache.now || now > cache.now + GS.scrollMinUpdateInterval ) {
+      cache.now = now;
+      
+      clearTimeout(me.timerScroll);
+      me.timerScroll = setTimeout(function () {
+        _invoke(me.scrollbars, 'update');
+      }, GS.scrollMinUpdateInterval);
+
+      clearTimeout(me.timerStop);
+      me.timerStop = setTimeout(function () {
+        Events.scrollStop(me);
+      }, me.settings.scrollStopDelay);
+    }
+  },
+
+
+  touchstart: function (ev, me) {
+    G.pauseCheck = false;
+    if(me.settings.fixTouchPageBounce) {
+      _invoke(me.scrollbars, 'update', [true]);
+    }
+  },
+
+
+  touchend: function (ev, me) {
+    // prevents touchmove generate scroll event to call
+    // scrollstop  while the page is still momentum scrolling
+    clearTimeout(me.timerStop);
+  },
+
+
+  scrollStop: function (me) {
+    // update position, cache and detect edge
+    // _invoke(me.scrollbars, 'update');
+
+    // fire custom event
+    me.fireCustomEvent('scrollstop');
+
+    // restore check loop
+    G.pauseCheck = false;
   }
 
+
 };
-
-
-
-Events.touchstart = function (ev, me) {
-  G.pauseCheck = false;
-  if(me.settings.fixTouchPageBounce) {
-    _invoke(me.scrollbars, 'update', [true]);
-  }
-  me.cache.now = getTime();
-};
-
-
-
-Events.touchend = function (ev, me) {
-  // prevents touchmove generate scroll event to call
-  // scrollstop  while the page is still momentum scrolling
-  clearTimeout(me.sTimer);
-};
-
-
-
-Events.scrollStop = function (me) {
-  // update position, cache and detect edge
-  _invoke(me.scrollbars, 'update');
-
-  // fire custom event
-  me.fireCustomEvent('scrollstop');
-
-  // restore check loop
-  G.pauseCheck = false;
-};
-
-
 
 
 var Scrollbar = function (which, instance) {
@@ -630,115 +630,100 @@ var Scrollbar = function (which, instance) {
 
 };
 
-var Utils = OptiScroll.Utils = {};
+var Utils = {
 
-
-
-Utils.hideNativeScrollbars = function (scrollEl) {
-  if( G.nativeScrollbarSize === 0 ) {
-    // hide Webkit/touch scrollbars
-    var time = getTime();
-    scrollEl.setAttribute('data-scroll', time);
-    
-    if( G.isTouch ) {
-      // force scrollbars disappear on iOS
+  hideNativeScrollbars: function (scrollEl) {
+    if( G.nativeScrollbarSize === 0 ) {
+      // hide Webkit/touch scrollbars
+      var time = getTime();
+      scrollEl.setAttribute('data-scroll', time);
+      
+      // force scrollbars update on Webkit
       scrollEl.style.display = 'none';
-      Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'display: none;');
+      
+      if( G.isTouch ) {
+        Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'display: none;');
+      } else {
+        Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'width: 0; height: 0;');
+      }
 
       animationTimeout(function () { 
         scrollEl.style.display = 'block'; 
       });
+      
     } else {
-      Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'width: 0; height: 0;');
+      // force scrollbars and hide them
+      scrollEl.style.overflow = 'scroll';
+      scrollEl.style.right = -G.nativeScrollbarSize + 'px';
+      scrollEl.style.bottom = -G.nativeScrollbarSize + 'px';
+    }
+  },
+
+
+  exposedData: function (obj) {
+    var sH = obj.scrollH, sW = obj.scrollW;
+    return {
+      // scrollbars data
+      scrollbarV: _extend({}, obj.v),
+      scrollbarH: _extend({}, obj.h),
+
+      // scroll position
+      scrollTop: obj.v.position * sH,
+      scrollLeft: obj.h.position * sW,
+      scrollBottom: (1 - obj.v.position - obj.v.size) * sH,
+      scrollRight: (1 - obj.h.position - obj.h.size) * sW,
+
+      // element size
+      scrollWidth: sW,
+      scrollHeight: sH,
+      clientWidth: obj.clientW,
+      clientHeight: obj.clientH
+    }
+  },
+
+
+  addCssRule: function (selector, rules) {
+    var styleSheet = document.getElementById('scroll-sheet');
+
+    if ( !styleSheet ) {
+      styleSheet = document.createElement("style");
+      styleSheet.id = 'scroll-sheet';
+      document.head.appendChild(styleSheet);
+    } 
+    // do not use sheet.insertRule because FF throws an error
+    // if the selector is not supported
+    styleSheet.innerHTML += selector + "{" + rules + "} ";
+  },
+
+
+  // Global height checker
+  // looped to listen element changes
+  checkLoop: function () {
+    
+    if(!G.instances.length) {
+      G.checkTimer = null;
+      return;
+    }
+
+    if(!G.pauseCheck) { // check size only if not scrolling
+      _invoke(G.instances, 'update');
     }
     
-  } else {
-    // force scrollbars and hide them
-    scrollEl.style.overflow = 'scroll';
-    scrollEl.style.right = -G.nativeScrollbarSize + 'px';
-    scrollEl.style.bottom = -G.nativeScrollbarSize + 'px';
+    if(GS.checkFrequency) {
+      G.checkTimer = setTimeout(function () {
+        Utils.checkLoop();
+      }, GS.checkFrequency);
+    }
+  },
+
+
+  // easeOutCubic function
+  easingFunction: function (t) { 
+    return (--t) * t * t + 1; 
   }
+
+
 };
-
-
-
-
-Utils.exposedData = function (obj) {
-  var sH = obj.scrollH, sW = obj.scrollW;
-  return {
-    // scrollbars data
-    scrollbarV: _extend({}, obj.v),
-    scrollbarH: _extend({}, obj.h),
-
-    // scroll position
-    scrollTop: obj.v.position * sH,
-    scrollLeft: obj.h.position * sW,
-    scrollBottom: (1 - obj.v.position - obj.v.size) * sH,
-    scrollRight: (1 - obj.h.position - obj.h.size) * sW,
-
-    // element size
-    scrollWidth: sW,
-    scrollHeight: sH,
-    clientWidth: obj.clientW,
-    clientHeight: obj.clientH
-  };
-};
-
-
-
-
-Utils.addCssRule = function (selector, rules) {
-  var styleSheet = document.getElementById('scroll-sheet');
-
-  if ( !styleSheet ) {
-    styleSheet = document.createElement("style");
-    styleSheet.id = 'scroll-sheet';
-    document.head.appendChild(styleSheet);
-  } 
-
-  // do not use sheet.insertRule because FF throws an error
-  // if the selector is not supported
-  styleSheet.innerHTML += selector + "{" + rules + "} ";
-}
-
-
-
-
-// Global height checker
-// looped to listen element changes
-Utils.checkLoop = function () {
-  
-  if(!G.instances.length) {
-    G.checkTimer = null;
-    return;
-  }
-
-  if(!G.pauseCheck) { // check size only if not scrolling
-    _invoke(G.instances, 'update');
-  }
-  
-  if(GS.checkFrequency) {
-    G.checkTimer = setTimeout(function () {
-      Utils.checkLoop();
-    }, GS.checkFrequency);
-  }
-};
-
-
-
-
-
-
-// easeOutCubic function
-Utils.easingFunction = function (t) { 
-  return (--t) * t * t + 1; 
-}
-
-
-
-
-
-
 
 
 // Global variables
