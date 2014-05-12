@@ -228,7 +228,7 @@ $('#scroll').on('scrollstop', function (ev) {
 
 | Option name | Default | Purpose  
 |-------------|---------|----------
-| scrollMinUpdateInterval | 16 (ms) | By default, scrollbars position is updated up to 60 times per second. By increasing this time you will reduce the update rate of the scroll track.  
+| scrollMinUpdateInterval | 25 (ms) | By default, scrollbars position is updated up to 40 times per second. By increasing this time, scroll tracks will be updated less frequently. Smallest interval is 16, which means scroll tracks are updated up to 60 times per second.
 | checkFrequency | 1000 (ms) | How often scroll areas are checked for size or content changes. To disable the check timer (and the scrollbars auto update feature), set this value to 0. 
 
 Examples:
