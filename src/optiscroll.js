@@ -149,7 +149,7 @@ OptiScroll.Instance.prototype.update = function () {
 
     // this will update the scrollbar
     // and check if bottom is reached
-    Events.scrollStop(me);
+    _invoke(me.scrollbars, 'update');
   }
 };
 
