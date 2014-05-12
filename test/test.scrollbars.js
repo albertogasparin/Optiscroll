@@ -1,6 +1,21 @@
 module("Scrollbars", {
   setup: function() {
-    os = new window.OptiScroll(document.querySelector('#os'), { forceScrollbars: true, autoUpdate: false });
+    os = new window.OptiScroll(document.querySelector('#os'), { autoUpdate: false });
+    // force scrollbars creation and setup
+    if(!os.element.querySelector('.optiscroll-v')) {
+      // create
+      os.scrollbars.v.create();
+      os.scrollbars.h.create();
+      // reset data
+      os.cache.v.size = 0;
+      os.cache.h.size = 0;
+      os.scrollbars.v.toggle(false);
+      os.scrollbars.h.toggle(false);
+
+      os.scrollbars.v.update();
+      os.scrollbars.h.update();
+    }
+
   }, teardown: function() {
     os.destroy();
     os = null;
@@ -15,6 +30,7 @@ test("It should create scrollbars", function () {
   // DOM elements
   ok( os.element.querySelector('.optiscroll-v'), "Vertical scrollbar element created");
   ok( os.element.querySelector('.optiscroll-h'), "Horizontal scrollbar element created");
+  
   // Classes
   notEqual( os.element.className.indexOf('vtrack-on'), -1);
   notEqual( os.element.className.indexOf('htrack-on'), -1);
@@ -23,6 +39,7 @@ test("It should create scrollbars", function () {
 test("It should set the track size", function () {
   var vTrack = os.element.querySelector('.optiscroll-vtrack'),
       hTrack = os.element.querySelector('.optiscroll-htrack');
+  
   // size
   equal(os.cache.v.size, 0.5);
   equal(vTrack.style.height, '50%');
@@ -32,7 +49,6 @@ test("It should set the track size", function () {
 
 
 asyncTest("It should move the tracks on scroll", function () {
-  expect(6);
   var vTrack = os.element.querySelector('.optiscroll-vtrack'),
       hTrack = os.element.querySelector('.optiscroll-htrack');
 
@@ -42,12 +58,12 @@ asyncTest("It should move the tracks on scroll", function () {
   setTimeout(function () {
     equal(os.cache.v.position, 0.5);
     equal(os.cache.v.percent, 100);
-    equal(vTrack.style[OptiScroll.G.cssTransform], 'translate(0%, 100%)');
     equal(os.cache.h.position, 0.25);
     equal(os.cache.h.percent, 50);
+    equal(vTrack.style[OptiScroll.G.cssTransform], 'translate(0%, 100%)');
     equal(hTrack.style[OptiScroll.G.cssTransform], 'translate(50%, 0%)');
     start();
-  }, 10)
+  }, 100);
   
 });
 
@@ -58,6 +74,12 @@ asyncTest("Vertical track should be draggable", function () {
   
   os.scrollEl.scrollTop = 0;
 
+  // usign both jquery.simulate and Syn.js to make drag work across all browsers
+  $(vTrack).simulate('mousedown', { 
+    clientX: $(vTrack).offset().left + $(vTrack).outerWidth() / 2,
+    clientY: $(vTrack).offset().top + $(vTrack).outerHeight() / 2
+  });
+
   Syn.drag('+0 +25', vTrack, function () {
     setTimeout(function () {
       equal(os.scrollEl.scrollTop, 50);
@@ -65,8 +87,8 @@ asyncTest("Vertical track should be draggable", function () {
       equal(os.cache.v.percent, 50);
       equal(vTrack.style[OptiScroll.G.cssTransform], 'translate(0%, 50%)');
       start();
-    }, 500); // wait for scrollStop to fire
-  })
+    }, 50);
+  });
   
 });
 
@@ -75,6 +97,12 @@ asyncTest("Horizontal track should be draggable", function () {
   var hTrack = os.element.querySelector('.optiscroll-htrack');
 
   os.scrollEl.scrollLeft = 0;
+
+  // usign both jquery.simulate and Syn.js to make drag work across all browsers
+  $(hTrack).simulate('mousedown', { 
+    clientX: $(hTrack).offset().left + $(hTrack).outerWidth() / 2,
+    clientY: $(hTrack).offset().top + $(hTrack).outerHeight() / 2
+  });
 
   Syn.drag('+25 +0', hTrack, function () {
     setTimeout(function () {

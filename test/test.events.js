@@ -11,6 +11,8 @@ module("Custom events", {
 asyncTest("It should fire scrollstart", function () {
   expect(4);
 
+  os.scrollEl.scrollTop = 0;
+  
   os.element.addEventListener('scrollstart', function (ev) {
     equal(ev.type, 'scrollstart');
     equal(ev.detail.scrollTop, 0);
@@ -20,7 +22,10 @@ asyncTest("It should fire scrollstart", function () {
     start();
   });
 
-  os.scrollEl.scrollTop = 50;
+  setTimeout(function () {
+    os.scrollEl.scrollTop = 20;
+  }, 50);
+  
 });
 
 
