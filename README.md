@@ -1,8 +1,8 @@
-# OptiScroll
+# Optiscroll
 
-OptiScroll is an tiny (**9kB**) and highly optimized custom scrollbar library for modern web apps.
+Optiscroll is an tiny (**9kB**) and highly optimized custom scrollbar library for modern web apps.
 
-OptiScroll aims to be as light as possible in order to not affect the performace of your webapp. OptiScroll does **not** replace the scrolling logic with Javascript, it only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, OptiScroll implements custom events and methods to extend browser scroll functionalities. 
+Optiscroll aims to be as light as possible in order to not affect the performace of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript, it only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, Optiscroll implements custom events and methods to extend browser scroll functionalities. 
 
 
 
@@ -22,9 +22,9 @@ OptiScroll aims to be as light as possible in order to not affect the performace
 
 ## Browser support
 
-OptiScroll works in all modern browsers (IE9 and above). IE8 support is under evaluation. Keep in mind that if OptiScroll does not work, your web page will fallback to default scrollbars.
+Optiscroll works in all modern browsers (IE9 and above). IE8 support is under evaluation. Keep in mind that if Optiscroll does not work, your web page will fallback to default scrollbars.
 
-Moreover, OptiScroll has been properly tested on:
+Moreover, Optiscroll has been properly tested on:
 - IE9, IE11
 - Chrome 32, Chrome 34
 - Opera 12.16, Opera 20
@@ -36,18 +36,18 @@ Moreover, OptiScroll has been properly tested on:
 
 ## Known limitations
 
-- `forceScrollbars` is ignored on Firefox under OSX with trackpad. Currently, there is no way to hide the "Lion style" scrollbars under Firefox. So, OptiScroll always disable them to avoid double scrollbars.
+- `forceScrollbars` is ignored on Firefox under OSX with trackpad. Currently, there is no way to hide the "Lion style" scrollbars under Firefox. So, Optiscroll always disable them to avoid double scrollbars.
 
 - on iOS, custom events (and scrollbars if enabled with `forceScrollbars:true`) are fired/updated when the momentum scrolling ends.  
 
 
 
-# How to use OptiScroll
+# How to use Optiscroll
 
 
 ## Basic usage
 
-Include OptiScroll library and stylesheet
+Include Optiscroll library and stylesheet
 
 ```html
 <link rel="stylesheet" href="optiscroll.css">
@@ -57,7 +57,7 @@ Include OptiScroll library and stylesheet
 <script src="jquery.optiscroll.js"></script>
 ```
 
-Add OptiScroll containers around your content. The library does **not** add them for you.
+Add Optiscroll containers around your content. The library does **not** add them for you.
 
 ```html
 <div id="scroll" class="optiscroll">
@@ -74,10 +74,10 @@ Initialize it in your JS code
 ```javascript
 // plain JS version
 var element = document.querySelector('#scroll')
-var myOptiScrollInstance = new OptiScroll(element);
+var myOptiscrollInstance = new Optiscroll(element);
 
 // jQuery plugin
-$('#scroll').optiScroll()
+$('#scroll').optiscroll()
 ```
 
 
@@ -99,10 +99,10 @@ Examples:
 
 ```javascript
 // change min and max track size - plain JS version
-var myOptiScrollInstance = new OptiScroll(element, { maxTrackSize: 50, minTrackSize: 20 });
+var myOptiscrollInstance = new Optiscroll(element, { maxTrackSize: 50, minTrackSize: 20 });
 
 // Force scrollbars on touch devices - jQuery plugin
-$('#scroll').optiScroll({ forceScrollbars: true });
+$('#scroll').optiscroll({ forceScrollbars: true });
 ```
 
 
@@ -124,15 +124,15 @@ Examples:
 
 ```javascript
 // scroll vertically by 500px (scroll duration will be auto) - plain JS version
-myOptiScrollInstance.scrollTo(false, 500);
+myOptiscrollInstance.scrollTo(false, 500);
 
 /* The jQuery plugin allows you to call a method in two ways */
 
 // scroll horizontally to right in 100ms
-$('#scroll').data('optiScroll').scrollTo('right', false, 100);
+$('#scroll').data('optiscroll').scrollTo('right', false, 100);
 
 // scroll horizontally by 500px and vertically to bottom with 'auto' duration
-$('#scroll').optiScroll('scrollTo', 500, 'bottom', 'auto');
+$('#scroll').optiscroll('scrollTo', 500, 'bottom', 'auto');
 ```
 
 
@@ -151,27 +151,27 @@ Examples:
 
 ```javascript
 // scrolls element with id anchor-1 into view (scroll duration will be auto) - plain JS version
-myOptiScrollInstance.scrollIntoView('#anchor-1');
+myOptiscrollInstance.scrollIntoView('#anchor-1');
 
 /* The jQuery plugin allows you to call a method in two ways */
 
 // scrolls jQuery element into view in 500ms and with a distance from the edges of 20px
 var $el = $('.my-element').last();
-$('#scroll').data('optiScroll').scrollIntoView($el, 500, 20);
+$('#scroll').data('optiscroll').scrollIntoView($el, 500, 20);
 
 // scrolls jQuery element into view with a custom bottom and right distance
-$('#scroll').optiScroll('scrollIntoView', $el, 'auto', { bottom: 20, right: 30 });
+$('#scroll').optiscroll('scrollIntoView', $el, 'auto', { bottom: 20, right: 30 });
 ```
 
 
 ### update ()
 
-By design, OptiScroll caches some DOM properties (like `scrollHeight`, `clientHeight`, ...) in order to avoid quering the DOM (and trigger a layout) each time the user scrolls. Usually, the `update` method is called by an internal timer (see the `checkFrequency` global option). So you should not care about it.   However, if you have disabled the auto update feature for an instance (via the `autoUpdate` option) or globally (via the `checkFrequency` option), you have to call the `update` method in your code.
+By design, Optiscroll caches some DOM properties (like `scrollHeight`, `clientHeight`, ...) in order to avoid quering the DOM (and trigger a layout) each time the user scrolls. Usually, the `update` method is called by an internal timer (see the `checkFrequency` global option). So you should not care about it.   However, if you have disabled the auto update feature for an instance (via the `autoUpdate` option) or globally (via the `checkFrequency` option), you have to call the `update` method in your code.
 
 
 ### destroy ()
 
-If you want to remove OptiScroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. However, OptiScroll tries to be clever enought to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
+If you want to remove Optiscroll, this method will clean up the class names, unbind all events and  remove the scrollbar elements. However, Optiscroll tries to be clever enought to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
 
 
 ## Instance events
@@ -180,9 +180,10 @@ Each instance will fire a set of custom events after user interaction. Each even
 
 | Event name        | Fired when...  
 |-------------------|-------------------
-| sizechange        | changes `clientWidth`/`clientHeight` of the optiScroll element, or changes `scrollWidth`/`scrollHeight` of the scroll area
+| sizechange        | changes `clientWidth`/`clientHeight` of the optiscroll element, or changes `scrollWidth`/`scrollHeight` of the scroll area
+| scrollstart       | the user starts scrolling
 | scrollstop        | the user stops scrolling. The wait time before firing this event is defined by the `scrollStopDelay` option
-| scrollreachedge   | the user scrolls to any edge (top or left or right or bottom)  
+| scrollreachedge   | the user scrolls to any edge (top/left/right/bottom)
 | scrollreachtop    | the user scrolls to top
 | scrollreachbottom | the user scrolls to bottom
 | scrollreachleft   | the user scrolls to left
@@ -235,17 +236,17 @@ Examples:
 
 ```javascript
 // set the scrollbar update interval to 30 FPS
-OptiScroll.globalSettings.scrollMinUpdateInterval = 1000 / 30;
+Optiscroll.globalSettings.scrollMinUpdateInterval = 1000 / 30;
 
-// disable auto update for all OptiScroll instances
-OptiScroll.globalSettings.checkFrequency = 0;
+// disable auto update for all Optiscroll instances
+Optiscroll.globalSettings.checkFrequency = 0;
 ```
 
 
 
 ## Running Tests
 
-OptiScroll is designed to run in the browser, so the tests explicitly require
+Optiscroll is designed to run in the browser, so the tests explicitly require
 a browser environment instead of any JavaScript environment (i.e. node.js).
 You can simply load test/index.html in any browser to run all the tests.
 
@@ -255,9 +256,9 @@ You can simply load test/index.html in any browser to run all the tests.
 # License
 
 This program is free software; it is distributed under an
-[MIT License](https://github.com/wilsonfletcher/optiScroll/blob/master/LICENSE).
+[MIT License](https://github.com/wilsonfletcher/optiscroll/blob/master/LICENSE).
 
 ---
 
 Copyright (c) 2013-2014 [Wilson Fletcher](http://wilsonfletcher.com/)
-([Contributors](https://github.com/wilsonfletcher/optiScroll/graphs/contributors)).
+([Contributors](https://github.com/wilsonfletcher/optiscroll/graphs/contributors)).

@@ -1,5 +1,5 @@
 /**
- * OptiScroll.js v0.8.2
+ * Optiscroll.js v0.8.2
  * Alberto Gasparin
  */
 

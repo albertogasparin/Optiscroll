@@ -1,19 +1,19 @@
 /**
  * jQuery plugin
- * create instance of OptiScroll
+ * create instance of Optiscroll
  * and when called again you can call functions
  * or change instance settings
  *
  * ~~~
- * $(el).optiScroll({ option })
- * $(el).optiScroll('method', arg) 
- * $(el).optiScroll({ newOptions }) 
+ * $(el).optiscroll({ option })
+ * $(el).optiscroll('method', arg) 
+ * $(el).optiscroll({ newOptions }) 
  * ~~~
  */
 
 (function ($) {
   
-  $.fn.optiScroll = function(options) {
+  $.fn.optiscroll = function(options) {
     var method, args;
     
     if( typeof options === 'string' ) {
@@ -23,12 +23,12 @@
 
     return this.each(function() {
       var el = $(this);
-      var inst = el.data('optiScroll');
+      var inst = el.data('optiscroll');
 
       // start new optiscroll instance
       if(!inst) {
-        inst = new window.OptiScroll(this, options || {});
-        el.data('optiScroll', inst);
+        inst = new window.Optiscroll(this, options || {});
+        el.data('optiscroll', inst);
       }
       // allow exec method on instance 
       else if( inst && typeof method === 'string' ) {

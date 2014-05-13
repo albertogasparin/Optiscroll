@@ -1,7 +1,7 @@
 module("Basics", {
   setup: function() {
-    OptiScroll.globalSettings.checkFrequency = 300;
-    os = new window.OptiScroll(document.querySelector('#os'));
+    Optiscroll.globalSettings.checkFrequency = 300;
+    os = new window.Optiscroll(document.querySelector('#os'));
   }, teardown: function() {
     os = null;
   }
@@ -14,12 +14,12 @@ test("It should be initialized", function () {
   equal(os.element.toString(), '[object HTMLDivElement]');
   equal(os.scrollEl.toString(), '[object HTMLDivElement]');
   // check globals
-  equal(OptiScroll.G.instances.length, 1);
-  ok(OptiScroll.G.checkTimer);
+  equal(Optiscroll.G.instances.length, 1);
+  ok(Optiscroll.G.checkTimer);
 });
 
 
-asyncTest("OptiScroll should be destroyed", function () {
+asyncTest("Optiscroll should be destroyed", function () {
   expect(4);
   os.destroy();
 
@@ -28,14 +28,14 @@ asyncTest("OptiScroll should be destroyed", function () {
     ok( !os.scrollEl.getAttribute('style') );
     ok( !os.scrollEl.getAttribute('data-scroll') );
     // check globals
-    equal(OptiScroll.G.instances.length, 0);
-    equal(OptiScroll.G.checkTimer, null);
+    equal(Optiscroll.G.instances.length, 0);
+    equal(Optiscroll.G.checkTimer, null);
     start();
   }, 700);
 });
 
 
-asyncTest("OptiScroll should auto update itself", function () {
+asyncTest("Optiscroll should auto update itself", function () {
   expect(4);
   os.element.style.width = '300px';
   os.element.style.height = '300px';
@@ -51,14 +51,14 @@ asyncTest("OptiScroll should auto update itself", function () {
 });
 
 
-asyncTest("OptiScroll should auto destroy itself", function () {
+asyncTest("Optiscroll should auto destroy itself", function () {
   expect(2);
   os.element.parentNode.removeChild(os.element);
 
   setTimeout(function () {
     // check globals
-    equal(OptiScroll.G.instances.length, 0);
-    equal(OptiScroll.G.checkTimer, null);
+    equal(Optiscroll.G.instances.length, 0);
+    equal(Optiscroll.G.checkTimer, null);
     start();
   }, 1000);
 });

@@ -1,6 +1,6 @@
 module("Scrollbars", {
   setup: function() {
-    os = new window.OptiScroll(document.querySelector('#os'), { autoUpdate: false });
+    os = new window.Optiscroll(document.querySelector('#os'), { autoUpdate: false });
     // force scrollbars creation and setup
     if(!os.element.querySelector('.optiscroll-v')) {
       // create
@@ -60,8 +60,8 @@ asyncTest("It should move the tracks on scroll", function () {
     equal(os.cache.v.percent, 100);
     equal(os.cache.h.position, 0.25);
     equal(os.cache.h.percent, 50);
-    equal(vTrack.style[OptiScroll.G.cssTransform], 'translate(0%, 100%)');
-    equal(hTrack.style[OptiScroll.G.cssTransform], 'translate(50%, 0%)');
+    equal(vTrack.style[Optiscroll.G.cssTransform], 'translate(0%, 100%)');
+    equal(hTrack.style[Optiscroll.G.cssTransform], 'translate(50%, 0%)');
     start();
   }, 100);
   
@@ -85,7 +85,7 @@ asyncTest("Vertical track should be draggable", function () {
       equal(os.scrollEl.scrollTop, 50);
       equal(os.cache.v.position, 0.25);
       equal(os.cache.v.percent, 50);
-      equal(vTrack.style[OptiScroll.G.cssTransform], 'translate(0%, 50%)');
+      equal(vTrack.style[Optiscroll.G.cssTransform], 'translate(0%, 50%)');
       start();
     }, 50);
   });
@@ -109,7 +109,7 @@ asyncTest("Horizontal track should be draggable", function () {
       equal(os.scrollEl.scrollLeft, 50);
       equal(os.cache.h.position, 0.25);
       equal(os.cache.h.percent, 50);
-      equal(hTrack.style[OptiScroll.G.cssTransform], 'translate(50%, 0%)');
+      equal(hTrack.style[Optiscroll.G.cssTransform], 'translate(50%, 0%)');
       start();
     }, 500); // wait for scrollStop to fire
   })

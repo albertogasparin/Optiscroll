@@ -21,7 +21,7 @@
 
   "globals": {
     "define": true,
-    "OptiScroll": true,
+    "Optiscroll": true,
     "module": true,
     "require": true
   }

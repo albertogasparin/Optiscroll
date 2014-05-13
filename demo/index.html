@@ -5,7 +5,7 @@
   <meta name="MobileOptimized" content="320">
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
-  <title>OptiScroll.js</title>
+  <title>Optiscroll.js</title>
   <link rel="stylesheet" href="../dist/optiscroll.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <script type="text/javascript" src="../dist/optiscroll.js"></script>
@@ -35,11 +35,11 @@
         </div>
 
         <script type="text/javascript">
-          var os1 = new OptiScroll(document.getElementById('os1'));
+          var os1 = new Optiscroll(document.getElementById('os1'));
         </script>
 
         <h3>Default settings</h3>
-        <pre><code>new OptiScroll(element)</code></pre>
+        <pre><code>new Optiscroll(element)</code></pre>
         <p>No custom scrollbars on iOS, Android and OSX w/ trackpad.<br>
         You can easily listen for custom events. Try scrolling (and open Console):</p>
         <p id="os1ev"></p>
@@ -69,7 +69,7 @@
         </div>
 
         <script type="text/javascript">
-          var os2 = new OptiScroll(document.getElementById('os2'), { forceScrollbars: true, maxTrackSize: 50, minTrackSize: 20 });
+          var os2 = new Optiscroll(document.getElementById('os2'), { forceScrollbars: true, maxTrackSize: 50, minTrackSize: 20 });
         </script>
 
         <h3>Scrollbars forced, with max/min track size</h3>
@@ -78,7 +78,7 @@
   maxTrackSize: 50, 
   minTrackSize: 20 
 };</code>
-<code>new OptiScroll(element, options)</code></pre>
+<code>new Optiscroll(element, options)</code></pre>
         <p>Custom scrollbars on all platforms. Min/max track size (percentage value). 
           On iOS, due to scrolling limitations, the scrollbars are animated when scroll stops</p>
       </div>
@@ -96,11 +96,11 @@
         </div>
 
         <script type="text/javascript">
-          var os3 = new OptiScroll(document.getElementById('os3'), { forceScrollbars: true });
+          var os3 = new Optiscroll(document.getElementById('os3'), { forceScrollbars: true });
         </script>
 
         <h3>Scrollbars inline</h3>
-        <pre><code>new OptiScroll(element)</code></pre>
+        <pre><code>new Optiscroll(element)</code></pre>
         <p>If you need scrollbars always on, no Javascript options needed, only few css changes</p>
         <p>Check out how scrollbars automatically update on content change:</p>
         <button id="changesize">Change content size</button>
@@ -118,7 +118,7 @@
   </div></div>
 
   <script type="text/javascript">
-    var wr = new OptiScroll(document.getElementById('wrapper'));
+    var wr = new Optiscroll(document.getElementById('wrapper'));
   </script>
 </body>
 </html>

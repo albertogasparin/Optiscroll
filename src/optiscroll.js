@@ -1,23 +1,23 @@
 
 /**
- * OptiScroll, use this to create instances
+ * Optiscroll, use this to create instances
  * ```
- * var scrolltime = new OptiScroll(element);
+ * var scrolltime = new Optiscroll(element);
  * ```
  */
-var OptiScroll = function OptiScroll(element, options) {
-  return new OptiScroll.Instance(element, options || {});
+var Optiscroll = function Optiscroll(element, options) {
+  return new Optiscroll.Instance(element, options || {});
 };
 
 
   
-var GS = OptiScroll.globalSettings = {
+var GS = Optiscroll.globalSettings = {
   scrollMinUpdateInterval: 1000 / 40, // 40 FPS
   checkFrequency: 1000,
   pauseCheck: false
 };
 
-OptiScroll.defaults = {
+Optiscroll.defaults = {
   fixTouchPageBounce: true,
   forceScrollbars: false,
   scrollStopDelay: 300,
@@ -30,14 +30,14 @@ OptiScroll.defaults = {
 
 
 
-OptiScroll.Instance = function ( element, options ) {
+Optiscroll.Instance = function ( element, options ) {
   var me = this;
   
   me.element = element;
   me.scrollEl = element.children[0];
   
   // instance variables
-  me.settings = _extend( _extend({}, OptiScroll.defaults), options || {});
+  me.settings = _extend( _extend({}, Optiscroll.defaults), options || {});
   
   me.cache = {};
   
@@ -46,7 +46,7 @@ OptiScroll.Instance = function ( element, options ) {
 
 
 
-OptiScroll.Instance.prototype.init = function () {
+Optiscroll.Instance.prototype.init = function () {
   var me = this,
       settings = me.settings;
 
@@ -92,7 +92,7 @@ OptiScroll.Instance.prototype.init = function () {
 
   
 
-OptiScroll.Instance.prototype.bind = function () {
+Optiscroll.Instance.prototype.bind = function () {
   var me = this,
       listeners = me.listeners = {},
       scrollEl = me.scrollEl;
@@ -118,7 +118,7 @@ OptiScroll.Instance.prototype.bind = function () {
 
 
 
-OptiScroll.Instance.prototype.update = function () {
+Optiscroll.Instance.prototype.update = function () {
   var me = this,
       oldcH = me.cache.clientH,
       scrollEl = me.scrollEl,
@@ -159,10 +159,10 @@ OptiScroll.Instance.prototype.update = function () {
 /**
  * Animate scrollTo
  * ```
- * $(el).optiScroll('scrollTo', 'left', 100, 200) // scrolls x,y in 200ms
+ * $(el).optiscroll('scrollTo', 'left', 100, 200) // scrolls x,y in 200ms
  * ```
  */
-OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disableEvents) {
+Optiscroll.Instance.prototype.scrollTo = function (destX, destY, duration, disableEvents) {
   var me = this,
       cache = me.cache,
       startX, startY, endX, endY;
@@ -194,7 +194,7 @@ OptiScroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
 };
 
 
-OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) {
+Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) {
   var me = this,
       scrollEl = me.scrollEl,
       eDim, sDim,
@@ -243,7 +243,7 @@ OptiScroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 
 
 
-OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, endY, duration) {
+Optiscroll.Instance.prototype.animateScroll = function (startX, endX, startY, endY, duration) {
   var me = this,
       scrollEl = me.scrollEl,
       startTime = getTime();
@@ -289,7 +289,7 @@ OptiScroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
 
 
 
-OptiScroll.Instance.prototype.destroy = function () {
+Optiscroll.Instance.prototype.destroy = function () {
   var me = this,
       scrollEl = me.scrollEl,
       listeners = me.listeners,
@@ -322,7 +322,7 @@ OptiScroll.Instance.prototype.destroy = function () {
 
 
 
-OptiScroll.Instance.prototype.fireCustomEvent = function (eventName) {
+Optiscroll.Instance.prototype.fireCustomEvent = function (eventName) {
   var eventData = Utils.exposedData(this.cache),
       cEvent = new CustomEvent(eventName, { detail: eventData });
   

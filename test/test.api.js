@@ -1,6 +1,6 @@
 module("Public APIs", {
   setup: function() {
-    os = new window.OptiScroll(document.querySelector('#os'), { autoUpdate: false });
+    os = new window.Optiscroll(document.querySelector('#os'), { autoUpdate: false });
   }, teardown: function() {
     os.destroy();
     os = null;

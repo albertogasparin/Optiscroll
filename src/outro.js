@@ -1,15 +1,15 @@
   // AMD export
   if(typeof define == 'function' && define.amd) {
     define(function(){
-      return OptiScroll;
+      return Optiscroll;
     });
   }
   
   // commonjs export
   if(typeof module !== 'undefined' && module.exports) {
-    module.exports = OptiScroll;
+    module.exports = Optiscroll;
   }
   
-  window.OptiScroll = OptiScroll;
+  window.Optiscroll = Optiscroll;
 
 })(window, document);
