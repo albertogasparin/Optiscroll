@@ -86,7 +86,7 @@ $('#scroll').optiscroll()
 
 | Option name | Default | Purpose  
 |-------------|---------|----------
-| fixTouchPageBounce | true | Prevents scrolling parent container (or body) on iOS
+| preventPageScrolling | true | Prevents scrolling parent container (or body). Works also on iOS preventing the page bounce. 
 | forceScrollbars | false | Use custom scrollbars also on iOS, Android and OSX (w/ trackpad)
 | scrollStopDelay | 300 (ms) | Time before presuming that the scroll is ended, then fire `scrollstop` event
 | maxTrackSize | 95 (%) | Maximum size (width or height) of the track

@@ -18,7 +18,7 @@ var GS = Optiscroll.globalSettings = {
 };
 
 Optiscroll.defaults = {
-  fixTouchPageBounce: true,
+  preventPageScrolling: true,
   forceScrollbars: false,
   scrollStopDelay: 300,
   maxTrackSize: 95,
@@ -73,7 +73,7 @@ Optiscroll.Instance.prototype.init = function () {
     _invoke(me.scrollbars, 'create');
   } 
 
-  if(G.isTouch && settings.fixTouchPageBounce) {
+  if(G.isTouch && settings.preventPageScrolling) {
     toggleClass(me.element, settings.classPrefix+'-nobounce', true);
   }
 
