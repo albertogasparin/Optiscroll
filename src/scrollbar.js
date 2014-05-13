@@ -20,6 +20,31 @@ var Scrollbar = function (which, instance) {
       dragData = null,
       animated = false;
 
+  var events = {
+    dragData: null,
+
+    dragStart: function (ev) {
+      var evData = ev.touches ? ev.touches[0] : ev;
+      events.dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
+    },
+
+    dragMove: function (ev) {
+      var evData = ev.touches ? ev.touches[0] : ev,
+          delta, deltaRatio;
+      
+      if(!events.dragData) { return; }
+
+      ev.preventDefault();
+      delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
+      deltaRatio = delta / cache[clientSize];
+      
+      scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize];
+    },
+
+    dragEnd: function (ev) {
+      events.dragData = null;
+    }
+  }
   
   return {
 
@@ -50,7 +75,7 @@ var Scrollbar = function (which, instance) {
       parentEl.appendChild(scrollbarEl);
 
       if(settings.draggableTracks) {
-        this.bind();
+        this.bind(true);
       }
     },
 
@@ -99,39 +124,19 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    bind: function () {
-      var on = 'addEventListener';
+    bind: function (on) {
+      var method = on ? 'addEventListener' : 'removeEventListener';
 
-      var dragStart = function (ev) {
-        var evData = ev.touches ? ev.touches[0] : ev;
-        dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
+      if( G.isTouch ) {
+        if (trackEl) { trackEl[method]('touchstart', events.dragStart); }
+        document[method]('touchmove', events.dragMove);
+        document[method]('mouseup', events.dragEnd);
+      } else {
+        if (trackEl) { trackEl[method]('mousedown', events.dragStart); }
+        document[method]('mousemove', events.dragMove);
+        document[method]('touchend', events.dragEnd);
       }
-
-      var dragMove = function (ev) {
-        var evData = ev.touches ? ev.touches[0] : ev,
-            delta, deltaRatio;
-        
-        if(!dragData) { return; }
-
-        ev.preventDefault();
-        delta = isVertical ? evData.pageY - dragData.y : evData.pageX - dragData.x;
-        deltaRatio = delta / cache[clientSize];
-        
-        scrollEl[scrollProp] = dragData.scroll + deltaRatio * cache[scrollSize];
-      }
-
-      var dragEnd = function (ev) {
-        dragData = null;
-      }
-
-      trackEl[on]('mousedown', dragStart);
-      trackEl[on]('touchstart', dragStart);
-
-      scrollbarEl[on]('mousemove', dragMove);
-      scrollbarEl[on]('touchmove', dragMove);
-
-      scrollbarEl[on]('mouseup', dragEnd);
-      scrollbarEl[on]('touchend', dragEnd);
+      
     },
 
 
@@ -196,6 +201,8 @@ var Scrollbar = function (which, instance) {
       if(scrollbarEl && scrollbarEl.parentNode) {
         scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
+
+      this.bind(false);
     }
 
 
