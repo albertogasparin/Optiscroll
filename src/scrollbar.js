@@ -88,7 +88,7 @@ var Scrollbar = function (which, instance) {
 
       newDim = this.calc(scrollEl[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
-      deltaPos = Math.abs(newDim.position - scrollbarCache.position || 0) * cache[clientSize];
+      deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
       if(newDim.size === 1 && enabled) {
         me.toggle(false);
@@ -197,12 +197,14 @@ var Scrollbar = function (which, instance) {
 
 
     remove: function () {
+      // remove parent custom classes
       this.toggle(false);
+      // unbind drag events
+      this.bind(false);
+      // remove elements
       if(scrollbarEl && scrollbarEl.parentNode) {
         scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
-
-      this.bind(false);
     }
 
 
