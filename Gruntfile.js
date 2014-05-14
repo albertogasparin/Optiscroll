@@ -19,8 +19,8 @@ module.exports = exports = function(grunt) {
             },
             nojquery: {
                 src: [
-                    'src/polyfills/*.js',
                     'src/intro.js',
+                    'src/polyfills/*.js',
                     'src/optiscroll.js',
                     'src/events.js',
                     'src/scrollbar.js',
@@ -46,7 +46,10 @@ module.exports = exports = function(grunt) {
             source: ['dist/optiscroll.js']
         },
         uglify: {
-            nojquery: {
+            dist: {
+                options: {
+                    preserveComments: 'some'
+                },
                 files: {
                     'dist/optiscroll.min.js': ['dist/optiscroll.js'],
                     'dist/jquery.optiscroll.min.js': ['dist/jquery.optiscroll.js']
