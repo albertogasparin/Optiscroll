@@ -12,4 +12,4 @@
   
   window.Optiscroll = Optiscroll;
 
-})(window, document);
+})(window, document, Math);

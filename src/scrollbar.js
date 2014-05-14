@@ -186,7 +186,7 @@ var Scrollbar = function (which, instance) {
         instance.fireCustomEvent('scrollreach'+ evNames[percent/100] );
       }
 
-      if(percent % 100 === 0 && isOnTouch && settings.fixTouchPageBounce) {
+      if(percent % 100 === 0 && isOnTouch && settings.preventParentScroll) {
         scrollFixPosition = percent ? scrollbarCache.position * cache[scrollSize] - 1 : 1;
         instance.scrollTo( isVertical ? false : scrollFixPosition, isVertical ? scrollFixPosition : false , 0, true);
       }

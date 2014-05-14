@@ -18,7 +18,7 @@ var GS = Optiscroll.globalSettings = {
 };
 
 Optiscroll.defaults = {
-  preventPageScrolling: true,
+  preventParentScroll: false,
   forceScrollbars: false,
   scrollStopDelay: 300,
   maxTrackSize: 95,
@@ -73,7 +73,7 @@ Optiscroll.Instance.prototype.init = function () {
     _invoke(me.scrollbars, 'create');
   } 
 
-  if(G.isTouch && settings.preventPageScrolling) {
+  if(G.isTouch && settings.preventParentScroll) {
     toggleClass(me.element, settings.classPrefix+'-nobounce', true);
   }
 
@@ -107,6 +107,11 @@ Optiscroll.Instance.prototype.bind = function () {
   if(G.isTouch) {
     listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
     listeners.touchend = function (ev) { Events.touchend(ev, me); };
+  }
+
+  if(me.settings.preventParentScroll) {
+     // Safari does not support wheel event
+    listeners.mousewheel = listeners.wheel = function (ev) { Events.wheel(ev, me); };
   }
 
   for (var ev in listeners) {

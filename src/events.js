@@ -33,7 +33,7 @@ var Events = {
 
   touchstart: function (ev, me) {
     G.pauseCheck = false;
-    if(me.settings.fixTouchPageBounce) {
+    if(me.settings.preventParentScroll) {
       _invoke(me.scrollbars, 'update', [true]);
     }
   },
@@ -47,14 +47,35 @@ var Events = {
 
 
   scrollStop: function (me) {
-    // update position, cache and detect edge
-    // _invoke(me.scrollbars, 'update');
-
     // fire custom event
     me.fireCustomEvent('scrollstop');
 
     // restore check loop
     G.pauseCheck = false;
+  },
+
+
+  wheel: function (ev, me) {
+    // prevents scrolling only on Y axis 
+    // due to complexity on getting scroll direction
+    var cache = me.cache,
+        // deltaX = ev.deltaX || -ev.wheelDeltaX/3 || 0,
+        deltaY = ev.deltaY || -ev.wheelDeltaY/3 || 0,
+        // percentX, 
+        percentY;
+    
+    // fix Firefox returning float numbers
+    // deltaX = deltaX > 0 ? Math.ceil(deltaX) : Math.floor(deltaX);
+    deltaY = deltaY > 0 ? Math.ceil(deltaY) : Math.floor(deltaY);
+
+    // percentX = cache.h.percent + deltaX / cache.scrollW;
+    percentY = cache.v.percent + deltaY / cache.scrollH;
+
+    if( //(deltaX && (percentX <= 0 || percentX >= 100)) || 
+        (deltaY && (percentY <= 0 || percentY >= 100))) {
+      ev.preventDefault();
+    }
+    ev.stopPropagation();
   }
 
 
