@@ -9,69 +9,242 @@ html, body {
   margin: 0;
   padding: 0;
   border: none;
-  font: 14px/1.35 Helvetica, sans-serif; 
-
+  font: 18px/1.35 'Titillium Web', Helvetica, sans-serif; 
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-.main-header {
+
+h1 {
+  margin: 0;
+  font-weight: 300;
+  color: #F66242;
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 300;
+  color: #F66242;
+}
+
+h3 {
+  font-weight: 400;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+pre {
+  color: #F66242;
+  font-size: 0.8em;
+}
+
+
+
+.btn {
+  display: inline-block;
+  background: #F66242;
+  color: #FFF;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 30px;
+}
+
+
+
+/* 
+ * MAIN CONTAINER 
+ */
+
+.m-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.m-wrapper > .optiscroll-content {
+  padding-top: 300px;
+}
+
+
+
+/* 
+ * MAIN HEADER 
+ */
+
+.m-header {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
-  background: #444;
-  color: #F60;
+  height: 280px;
+  padding-top: 40px;
+  background: #F6F2F2;
+  text-align: center;
   z-index: 5;
-  border-bottom: 5px solid #F60;
-}
-
-#wrapper {
-  width: 100%;
-  height: 100%;
-  border-top: 60px solid transparent;
 }
 
 
-h2 {
+.m-header p {
+  margin: 1.4em 0 1.5em;
+}
+
+.m-header .btn {
+  padding: 0.8em 2.5em;
+}
+
+
+/* 
+ * MAIN NAV 
+ */
+
+.m-nav {
+  position: absolute;
+  top: 280px;
+  left: 0;
+  right: 0;
+  background: #4A4A4A;
+  color: #FFF;
+  line-height: 34px;
+}
+
+.m-nav ul {
   max-width: 1000px;
+  list-style: none;
   margin: 0 auto;
-  padding: 40px 20px 20px;
+  padding: 0 2em;
 }
+
+.m-nav li {
+  display: inline-block;
+  margin-right: 2em;
+}
+
+.m-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* 
+ * SECTIONS
+ */
 
 .section {
-  background: #f4f4f6;
-  border-top: 1px solid #DDD;
-  border-bottom: 1px solid #DDD;
+  margin: 0 auto;
+  padding: 2em 1em 4em;
+  border-bottom: 2px solid #DDD;
+  max-width: 1000px;  
 }
 
-.section:after,
-.example:after { 
+.section:after { 
   content: ''; 
   clear: both;
   display: table;
 }
 
 
-.example {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
+
+
+
+/* 
+ * FEATURES SECTION
+ */
+
+.s-features {
+  text-align: center;
 }
 
-.example + .example {
-  border-top: 1px solid #DDD;
-}
-
-.example h3 {
+.s-features ul {
+  display: inline-block;
   margin: 0;
+  text-align: left;
+  font-size: 1.2em;
 }
 
-pre {
-  color: #44C;
+.s-features li {
+  margin-bottom: 0.4em;
 }
+
+
+/* 
+ * USAGE SECTION
+ */
+
+.s-usage {}
+
+.s-usage .optiscroll {
+  float: left;
+  width: 48%;
+  height: 200px;
+  background: #F6F2F2;
+}
+
+#os2 {
+  float: right;
+}
+
+.s-usage .optiscroll-content {
+  padding: 0 1em 1em;
+}
+
+
+/* STYLE FOR INLINE SCROLLBARS */
+#os2.vtrack-on .optiscroll-content {
+  margin-right: 12px; /* scrollbar size */
+}
+
+#os2.htrack-on .optiscroll-content {
+  margin-bottom: 12px; /* scrollbar size */
+}
+
+#os2.vtrack-on .optiscroll-v,
+#os2.htrack-on .optiscroll-h { opacity: 1; } 
+
+#os2 .optiscroll-v {
+  top: 0;
+  bottom: 0;
+  width: 12px; /* scrollbar size */
+  background: #DADDDD;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+}
+
+#os2 .optiscroll-vtrack {
+  width: 8px;
+  right: 2px;
+}
+
+#os2 .optiscroll-h {
+  left: 0;
+  right: 0;
+  height: 12px; /* scrollbar size */
+  background: #DADDDD;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+}
+
+#os2 .optiscroll-htrack {
+  height: 8px;
+  bottom: 2px;
+}
+
+#os2.vtrack-on.htrack-on .optiscroll-v { border-bottom: 12px solid transparent; } /* scrollbar size */
+#os2.vtrack-on.htrack-on .optiscroll-h { border-right: 12px solid transparent; } /* scrollbar size */
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -109,53 +282,7 @@ pre {
 }
 
 
-#os3.vtrack-on .optiscroll-content {
-  margin-right: 10px; /* scrollbar width */
-}
 
-#os3.htrack-on .optiscroll-content {
-  margin-bottom: 10px; /* scrollbar height */
-}
-
-#os3.vtrack-on .optiscroll-v,
-#os3.htrack-on .optiscroll-h {
-  opacity: 1;
-} 
-
-#os3 .optiscroll-v {
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  background: #c5d3dc; /* Old browsers */
-}
-
-#os3 .optiscroll-vtrack {
-  width: 6px;
-  right: 2px;
-}
-
-#os3 .optiscroll-h {
-  left: 0;
-  right: 0;
-  height: 10px;
-  background: #c5d3dc; /* Old browsers */
-}
-
-#os3 .optiscroll-htrack {
-  height: 6px;
-  bottom: 2px;
-}
-
-#os3.vtrack-on.htrack-on .optiscroll-v { border-bottom: 10px solid transparent; }
-#os3.vtrack-on.htrack-on .optiscroll-h { border-right: 10px solid transparent; }
-
-#os3.size-0 .optiscroll-content p {
-  width: 120%;
-}
-
-#os3.size-1 .optiscroll-content p {
-  width: 300%;
-}
 
 
 

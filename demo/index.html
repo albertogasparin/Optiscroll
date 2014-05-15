@@ -6,18 +6,130 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
   <title>Optiscroll.js</title>
-  <link rel="stylesheet" href="../dist/optiscroll.css">
+
+  <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="assets/css/optiscroll.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <script type="text/javascript" src="../dist/optiscroll.js"></script>
+  
+  <!-- This script tag should be added after the content.
+  It's in the header to allow Optiscroll initialization immediately after the HTML  -->
+  <script type="text/javascript" src="assets/js/optiscroll.min.js"></script>
 </head>
 <body>
 
-  <header class="main-header">
-    <h1>Optiscroll</h1>
-  </header>
+  <nav class="m-nav">
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#usage">Usage</a></li>
+      <li><a href="#api">API</a></li>
+      <li><a href="#events">Events</a></li>
+    </ul>
+  </nav>
 
-  <div id="wrapper" class="wrapper optiscroll">
+  <div id="m-wrapper" class="m-wrapper optiscroll">
     <div class="optiscroll-content">
+
+      <header class="m-header">
+        <h1>Optiscroll</h1>
+        <p>Custom scrollbars for modern webapps</p>
+        <a href="" class="btn">Download</a>
+      </header>
+
+      <div class="m-sections">
+
+        <section id="features" class="section s-features">
+          <h2>Features</h2>
+          <ul>
+            <li>Only 9kB and framework-independent</li>
+            <li>Highly optimized</li>
+            <li>Vertical and horizontal scrollbars support</li>
+            <li>Nested scrollbars support</li>
+            <li>Custom events</li>
+            <li>Animated scrollTo and scrollIntoView</li>
+            <li>Auto update on content/scroll area change</li>
+            <li>Integrated page bounce fix for iOS</li>
+            <li>Works on any modern browser (IE9+)</li>
+            <li>Optional jQuery plugin</li>
+          </ul>
+        </section>
+
+
+        <section id="usage" class="section s-usage">
+          <h2>Usage</h2>
+
+          
+          <!-- 
+          SIMPLE USE CASE EXAMPLE 
+          -->
+
+          <div id="os1" class="optiscroll">
+            <div class="optiscroll-content">
+              <h3>Simple use case</h3>
+              <pre><code>new Optiscroll(element)</code></pre>
+              or if you prefer the jQuery flavour
+              <pre><code>$(element).optiscroll()</code></pre>
+              <p>Try it out:<p>
+              <button id="os1-init">Initialize!</button>
+              <button id="os1-destroy">Destroy</button>
+              <p>
+                By default Optiscroll does not create custom scrollbars on iOS, Android 
+                and OSX w/ trackpad. So you will not see any difference here.
+                However, the API and the custom events will work across all platforms.
+              </p>
+            </div>
+          </div>
+
+          <script type="text/javascript">
+            var os1;
+            document.getElementById('os1-init').addEventListener('click', function () {
+              os1 = new Optiscroll(document.getElementById('os1'));
+            });
+            document.getElementById('os1-destroy').addEventListener('click', function () {
+              os1.destroy();
+              os1 = null;
+            });
+          </script>
+
+
+          <!-- 
+          FORCED SCROLLBARS EXAMPLE 
+          -->
+  
+          <div id="os2" class="optiscroll">
+            <div class="optiscroll-content">
+              <h3>Forced scrollbars with inline appearance</h3>
+              <pre><code>new Optiscroll(element, { forceScrollbars: true })</code></pre>
+              or if you prefer the jQuery flavour
+              <pre><code>$(element).optiscroll({ forceScrollbars: true })</code></pre>
+              <p>Try it out:<p>
+              <button id="os1-init">Initialize!</button>
+              <button id="os1-destroy">Destroy</button>
+              <p>
+                If you decide to force the scrollbars, they will be created on all platform. 
+                However, this is not recommended because on iOS the position will be updated
+                when the momentum scrolling ends.
+              </p>
+            </div>
+          </div>
+
+          <script type="text/javascript">
+            var os2 = new Optiscroll(document.getElementById('os2'), { forceScrollbars: true });
+          </script>
+
+
+        </section>
+
+
+        <section id="api" class="section">
+          <h2>API</h2>
+        </section>
+
+
+        <section id="events" class="section">
+          <h2>Custom events</h2>
+        </section>
+        
+      </div>
 
     <h2>Optiscroll basics</h2>
 
@@ -34,9 +146,7 @@
           </div>
         </div>
 
-        <script type="text/javascript">
-          var os1 = new Optiscroll(document.getElementById('os1'));
-        </script>
+        
 
         <h3>Default settings</h3>
         <pre><code>new Optiscroll(element)</code></pre>
@@ -48,11 +158,11 @@
           var printEl = document.getElementById('os1ev'),
               callback = function(ev) { printEl.innerHTML = ev.type+'<br>'+printEl.innerHTML; console.log(ev); };
 
-          os1.element.addEventListener('scrollstart', callback);
-          os1.element.addEventListener('scrollstop', callback);
-          os1.element.addEventListener('sizechange', callback);
-          os1.element.addEventListener('scrollreachtop', callback);
-          os1.element.addEventListener('scrollreachbottom', callback);
+          // os1.element.addEventListener('scrollstart', callback);
+          // os1.element.addEventListener('scrollstop', callback);
+          // os1.element.addEventListener('sizechange', callback);
+          // os1.element.addEventListener('scrollreachtop', callback);
+          // os1.element.addEventListener('scrollreachbottom', callback);
         </script>
       </div>
 
@@ -68,9 +178,7 @@
           </div>
         </div>
 
-        <script type="text/javascript">
-          var os2 = new Optiscroll(document.getElementById('os2'), { forceScrollbars: true, maxTrackSize: 50, minTrackSize: 20 });
-        </script>
+        
 
         <h3>Scrollbars forced, with max/min track size</h3>
 <pre><code>options = { 
@@ -95,9 +203,6 @@
           </div>
         </div>
 
-        <script type="text/javascript">
-          var os3 = new Optiscroll(document.getElementById('os3'), { forceScrollbars: true });
-        </script>
 
         <h3>Scrollbars inline</h3>
         <pre><code>new Optiscroll(element)</code></pre>
@@ -118,7 +223,7 @@
   </div></div>
 
   <script type="text/javascript">
-    var wr = new Optiscroll(document.getElementById('wrapper'));
+    var wr = new Optiscroll(document.getElementById('m-wrapper'), { maxTrackSize: 20, preventParentScroll: true });
   </script>
 </body>
 </html>
