@@ -43,6 +43,13 @@ pre {
   font-size: 0.8em;
 }
 
+code {
+  background: #FFF;
+  border: 1px solid #D5D5D5;
+  padding: 0.2em 0.8em 0.3em;
+  border-radius: 3px;
+}
+
 
 
 .btn {
@@ -55,55 +62,13 @@ pre {
 }
 
 
-
-/* 
- * MAIN CONTAINER 
- */
-
-.m-wrapper {
-  width: 100%;
-  height: 100%;
-}
-
-.m-wrapper > .optiscroll-content {
-  padding-top: 300px;
-}
-
-
-
-/* 
- * MAIN HEADER 
- */
-
-.m-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 280px;
-  padding-top: 40px;
-  background: #F6F2F2;
-  text-align: center;
-  z-index: 5;
-}
-
-
-.m-header p {
-  margin: 1.4em 0 1.5em;
-}
-
-.m-header .btn {
-  padding: 0.8em 2.5em;
-}
-
-
 /* 
  * MAIN NAV 
  */
 
 .m-nav {
   position: absolute;
-  top: 280px;
+  top: 0;
   left: 0;
   right: 0;
   background: #4A4A4A;
@@ -127,6 +92,62 @@ pre {
   color: inherit;
   text-decoration: none;
 }
+
+
+
+/* 
+ * MAIN CONTAINER 
+ */
+
+.m-wrapper {
+  width: 100%;
+  height: 100%;
+  border-top: 34px solid transparent;
+}
+
+.m-wrapper > .optiscroll-v .optiscroll-vtrack {
+  width: 20px;
+  background: #F66242;
+  border-radius: 20px;
+}
+
+.m-wrapper > .optiscroll-h .optiscroll-htrack {
+  height: 20px;
+  background: #F66242;
+  border-radius: 20px;
+}
+
+
+
+
+/* 
+ * MAIN HEADER 
+ */
+
+.m-header {
+  padding: 60px 0;
+  background: #F6F2F2;
+  text-align: center;
+  z-index: 5;
+}
+
+
+.m-header p {
+  margin: 1.4em 0 1.5em;
+}
+
+.m-header .btn {
+  display: block;
+  width: 200px;
+  margin: 0 auto 0.5em;
+  padding: 0.8em 0;
+}
+
+.m-header pre {
+  margin-top: 0.5em;
+}
+
+
 
 
 /* 
