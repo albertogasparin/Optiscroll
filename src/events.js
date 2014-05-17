@@ -1,8 +1,5 @@
 var Events = {
 
-  scrollTimer: null,
-  stopTimer: null,
-
   scroll: function (ev, me) {
     var cache = me.cache,
         now = getTime(),
@@ -69,7 +66,7 @@ var Events = {
     deltaY = deltaY > 0 ? Math.ceil(deltaY) : Math.floor(deltaY);
 
     // percentX = cache.h.percent + deltaX / cache.scrollW;
-    percentY = cache.v.percent + deltaY / cache.scrollH;
+    percentY = ~~cache.v.percent + deltaY / cache.scrollH;
 
     if( //(deltaX && (percentX <= 0 || percentX >= 100)) || 
         (deltaY && (percentY <= 0 || percentY >= 100))) {
