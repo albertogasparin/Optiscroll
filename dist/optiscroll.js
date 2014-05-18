@@ -1,3 +1,15 @@
+/*!
+* Optiscroll.js v1.0.1
+* https://github.com/wilsonfletcher/Optiscroll/
+* by Alberto Gasparin
+* 
+* @copyright 2014 Wilson Fletcher
+* @license Released under MIT LICENSE
+*/
+
+;(function ( window, document, Math, undefined ) {
+  'use strict';
+
 /*
  * CustomEvent polyfill for IE9
  * By MDN
@@ -20,15 +32,6 @@ typeof window.CustomEvent === 'function' || (function (window) {
 
 })(window);
 
-/**
- * Optiscroll.js v0.8.2
- * Alberto Gasparin
- */
-
-
-;(function ( window, document, undefined ) {
-  'use strict';
-
 
 /**
  * Optiscroll, use this to create instances
@@ -49,7 +52,7 @@ var GS = Optiscroll.globalSettings = {
 };
 
 Optiscroll.defaults = {
-  fixTouchPageBounce: true,
+  preventParentScroll: false,
   forceScrollbars: false,
   scrollStopDelay: 300,
   maxTrackSize: 95,
@@ -104,7 +107,7 @@ Optiscroll.Instance.prototype.init = function () {
     _invoke(me.scrollbars, 'create');
   } 
 
-  if(G.isTouch && settings.fixTouchPageBounce) {
+  if(G.isTouch && settings.preventParentScroll) {
     toggleClass(me.element, settings.classPrefix+'-nobounce', true);
   }
 
@@ -129,7 +132,9 @@ Optiscroll.Instance.prototype.bind = function () {
       scrollEl = me.scrollEl;
 
   // scroll event binding
-  listeners.scroll = function (ev) { Events.scroll(ev, me); };
+  listeners.scroll = _throttle(function (ev) { 
+    Events.scroll(ev, me); 
+  }, GS.scrollMinUpdateInterval);
 
   // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
@@ -138,6 +143,11 @@ Optiscroll.Instance.prototype.bind = function () {
   if(G.isTouch) {
     listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
     listeners.touchend = function (ev) { Events.touchend(ev, me); };
+  }
+
+  if(me.settings.preventParentScroll) {
+     // Safari does not support wheel event
+    listeners.mousewheel = listeners.wheel = function (ev) { Events.wheel(ev, me); };
   }
 
   for (var ev in listeners) {
@@ -202,25 +212,23 @@ Optiscroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
   // force update
   me.update();
 
-  startX = endX = me.scrollEl.scrollLeft;
-  startY = endY = me.scrollEl.scrollTop;
+  startX = me.scrollEl.scrollLeft;
+  startY = me.scrollEl.scrollTop;
   
-  if (typeof destX === 'string') { // left or right
-    endX = (destX === 'left') ? 0 : cache.scrollW - cache.clientW;
-  } else if (typeof destX === 'number') {
-    endX = destX;
-  }
+  endX = +destX;
+  if(destX == 'left') { endX = 0; }
+  if(destX == 'right') { endX = cache.scrollW - cache.clientW; }
+  if(destX === false) { endX = startX; }
 
-  if (typeof destY === 'string') { // top or bottom
-    endY = (destY === 'top') ? 0 : cache.scrollH - cache.clientH;
-  } else if (typeof destY === 'number') {
-    endY = destY;
-  }
+  endY = +destY;
+  if(destY == 'top') { endY = 0; }
+  if(destY == 'bottom') { endY = cache.scrollH - cache.clientH; }
+  if(destY === false) { endY = startY; }
 
   me.disableScrollEv = disableEvents;
 
   // animate
-  me.animateScroll(startX, endX, startY, endY, duration);
+  me.animateScroll(startX, endX, startY, endY, +duration);
   
 };
 
@@ -238,9 +246,7 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 
   if(typeof elem === 'string') { // selector
     elem = scrollEl.querySelector(elem);
-  }
-
-  if(elem.length && elem.jquery) { // jquery element
+  } else if(elem.length && elem.jquery) { // jquery element
     elem = elem[0];
   }
 
@@ -259,16 +265,14 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   rightEdge = startX + eDim.left - sDim.left + eDim.width - me.cache.clientW + (delta.right || 0);
   bottomEdge = startY + eDim.top - sDim.top + eDim.height - me.cache.clientH + (delta.bottom || 0);
   
-  if(leftEdge < startX || rightEdge > startX) {
-    endX = (leftEdge < startX) ? leftEdge : rightEdge;
-  }
+  if(leftEdge < startX) { endX = leftEdge; }
+  if(rightEdge > startX) { endX = rightEdge; }
 
-  if(topEdge < startY || bottomEdge > startY) {
-    endY = (topEdge < startY) ? topEdge : bottomEdge;
-  }
-  
+  if(topEdge < startY) { endY = topEdge; }
+  if(bottomEdge > startY) { endY = bottomEdge; }
+
   // animate
-  me.animateScroll(startX, endX, startY, endY, duration);
+  me.animateScroll(startX, endX, startY, endY, +duration);
 };
 
 
@@ -277,7 +281,7 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 Optiscroll.Instance.prototype.animateScroll = function (startX, endX, startY, endY, duration) {
   var me = this,
       scrollEl = me.scrollEl,
-      startTime = getTime();
+      startTime = Date.now();
 
   if(endX === startX && endY === startY) {
     return;
@@ -290,13 +294,13 @@ Optiscroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
     return;
   }
 
-  if(typeof duration !== 'number') { // undefined or auto
-    // 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms
-    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.62) * 15;
+  if(isNaN(duration)) { // undefined or auto
+    // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
+    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.54) * 15;
   }
 
   var scrollAnimation = function () {
-    var time = Math.min(1, ((getTime() - startTime) / duration)),
+    var time = Math.min(1, ((Date.now() - startTime) / duration)),
         easedTime = Utils.easingFunction(time);
     
     if( endY !== startY ) {
@@ -365,14 +369,7 @@ Optiscroll.Instance.prototype.fireCustomEvent = function (eventName) {
 
 var Events = {
 
-  scrollTimer: null,
-  stopTimer: null,
-
   scroll: function (ev, me) {
-    var cache = me.cache,
-        now = getTime(),
-        waitBeforeUpdate = 'matchMedia' in window ? GS.scrollMinUpdateInterval : 0; // IE9 fix
-    
     if(me.disableScrollEv) { return; }
 
     if (!G.pauseCheck) {
@@ -380,25 +377,18 @@ var Events = {
     }
     G.pauseCheck = true;
     
-    if( !cache.now || now > cache.now + GS.scrollMinUpdateInterval ) {
-      cache.now = now;
-      
-      clearTimeout(cache.timerScroll);
-      cache.timerScroll = setTimeout(function () {
-        _invoke(me.scrollbars, 'update');
-      }, waitBeforeUpdate);
-
-      clearTimeout(cache.timerStop);
-      cache.timerStop = setTimeout(function () {
-        Events.scrollStop(me);
-      }, me.settings.scrollStopDelay);
-    }
+    _invoke(me.scrollbars, 'update');
+    
+    clearTimeout(me.cache.timerStop);
+    me.cache.timerStop = setTimeout(function () {
+      Events.scrollStop(me);
+    }, me.settings.scrollStopDelay);
   },
 
 
   touchstart: function (ev, me) {
     G.pauseCheck = false;
-    if(me.settings.fixTouchPageBounce) {
+    if(me.settings.preventParentScroll) {
       _invoke(me.scrollbars, 'update', [true]);
     }
   },
@@ -412,14 +402,35 @@ var Events = {
 
 
   scrollStop: function (me) {
-    // update position, cache and detect edge
-    // _invoke(me.scrollbars, 'update');
-
     // fire custom event
     me.fireCustomEvent('scrollstop');
 
     // restore check loop
     G.pauseCheck = false;
+  },
+
+
+  wheel: function (ev, me) {
+    // prevents scrolling only on Y axis 
+    // due to complexity on getting scroll direction
+    var cache = me.cache,
+        // deltaX = ev.deltaX || -ev.wheelDeltaX/3 || 0,
+        deltaY = ev.deltaY || -ev.wheelDeltaY/3 || 0,
+        // percentX, 
+        percentY;
+    
+    // fix Firefox returning float numbers
+    // deltaX = deltaX > 0 ? Math.ceil(deltaX) : Math.floor(deltaX);
+    deltaY = deltaY > 0 ? Math.ceil(deltaY) : Math.floor(deltaY);
+
+    // percentX = cache.h.percent + deltaX / cache.scrollW;
+    percentY = ~~cache.v.percent + deltaY / cache.scrollH;
+
+    if( //(deltaX && (percentX <= 0 || percentX >= 100)) || 
+        (deltaY && (percentY <= 0 || percentY >= 100))) {
+      ev.preventDefault();
+    }
+    ev.stopPropagation();
   }
 
 
@@ -448,6 +459,31 @@ var Scrollbar = function (which, instance) {
       dragData = null,
       animated = false;
 
+  var events = {
+    dragData: null,
+
+    dragStart: function (ev) {
+      var evData = ev.touches ? ev.touches[0] : ev;
+      events.dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
+    },
+
+    dragMove: function (ev) {
+      var evData = ev.touches ? ev.touches[0] : ev,
+          delta, deltaRatio;
+      
+      if(!events.dragData) { return; }
+
+      ev.preventDefault();
+      delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
+      deltaRatio = delta / cache[clientSize];
+      
+      scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize];
+    },
+
+    dragEnd: function (ev) {
+      events.dragData = null;
+    }
+  }
   
   return {
 
@@ -478,7 +514,7 @@ var Scrollbar = function (which, instance) {
       parentEl.appendChild(scrollbarEl);
 
       if(settings.draggableTracks) {
-        this.bind();
+        this.bind(true);
       }
     },
 
@@ -491,7 +527,7 @@ var Scrollbar = function (which, instance) {
 
       newDim = this.calc(scrollEl[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
-      deltaPos = Math.abs(newDim.position - scrollbarCache.position || 0) * cache[clientSize];
+      deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
       if(newDim.size === 1 && enabled) {
         me.toggle(false);
@@ -527,39 +563,14 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    bind: function () {
-      var on = 'addEventListener';
+    bind: function (on) {
+      var method = (on ? 'add' : 'remove') + 'EventListener',
+          type = G.isTouch ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 
-      var dragStart = function (ev) {
-        var evData = ev.touches ? ev.touches[0] : ev;
-        dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
-      }
-
-      var dragMove = function (ev) {
-        var evData = ev.touches ? ev.touches[0] : ev,
-            delta, deltaRatio;
-        
-        if(!dragData) { return; }
-
-        ev.preventDefault();
-        delta = isVertical ? evData.pageY - dragData.y : evData.pageX - dragData.x;
-        deltaRatio = delta / cache[clientSize];
-        
-        scrollEl[scrollProp] = dragData.scroll + deltaRatio * cache[scrollSize];
-      }
-
-      var dragEnd = function (ev) {
-        dragData = null;
-      }
-
-      trackEl[on]('mousedown', dragStart);
-      trackEl[on]('touchstart', dragStart);
-
-      scrollbarEl[on]('mousemove', dragMove);
-      scrollbarEl[on]('touchmove', dragMove);
-
-      scrollbarEl[on]('mouseup', dragEnd);
-      scrollbarEl[on]('touchend', dragEnd);
+      if (trackEl) { trackEl[method](type[0], events.dragStart); }
+      document[method](type[1], events.dragMove);
+      document[method](type[2], events.dragEnd);
+      
     },
 
 
@@ -609,7 +620,7 @@ var Scrollbar = function (which, instance) {
         instance.fireCustomEvent('scrollreach'+ evNames[percent/100] );
       }
 
-      if(percent % 100 === 0 && isOnTouch && settings.fixTouchPageBounce) {
+      if(percent % 100 === 0 && isOnTouch && settings.preventParentScroll) {
         scrollFixPosition = percent ? scrollbarCache.position * cache[scrollSize] - 1 : 1;
         instance.scrollTo( isVertical ? false : scrollFixPosition, isVertical ? scrollFixPosition : false , 0, true);
       }
@@ -620,7 +631,11 @@ var Scrollbar = function (which, instance) {
 
 
     remove: function () {
+      // remove parent custom classes
       this.toggle(false);
+      // unbind drag events
+      this.bind(false);
+      // remove elements
       if(scrollbarEl && scrollbarEl.parentNode) {
         scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
@@ -634,13 +649,15 @@ var Scrollbar = function (which, instance) {
 var Utils = {
 
   hideNativeScrollbars: function (scrollEl) {
-    if( G.nativeScrollbarSize === 0 ) {
+    var size = G.nativeScrollbarSize,
+        scrollElStyle = scrollEl.style;
+    if( size === 0 ) {
       // hide Webkit/touch scrollbars
-      var time = getTime();
+      var time = Date.now();
       scrollEl.setAttribute('data-scroll', time);
       
       // force scrollbars update on Webkit
-      scrollEl.style.display = 'none';
+      scrollElStyle.display = 'none';
       
       if( G.isTouch ) {
         Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'display: none;');
@@ -649,14 +666,14 @@ var Utils = {
       }
 
       animationTimeout(function () { 
-        scrollEl.style.display = 'block'; 
+        scrollElStyle.display = 'block'; 
       });
       
     } else {
       // force scrollbars and hide them
-      scrollEl.style.overflow = 'scroll';
-      scrollEl.style.right = -G.nativeScrollbarSize + 'px';
-      scrollEl.style.bottom = -G.nativeScrollbarSize + 'px';
+      scrollElStyle.overflow = 'scroll';
+      scrollElStyle.right = -size + 'px';
+      scrollElStyle.bottom = -size + 'px';
     }
   },
 
@@ -743,9 +760,6 @@ G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-'+G
 
 
 
-var getTime = Date.now || function() { return new Date().getTime(); };
-
-
 var animationTimeout = (function () {
   return window.requestAnimationFrame || 
     window.webkitRequestAnimationFrame || 
@@ -830,6 +844,28 @@ function _invoke (collection, fn, args) {
   }
 }
 
+function _throttle(fn, threshhold) {
+  var last, deferTimer;
+  return function () {
+    var context = this,
+        now = Date.now(),
+        args = arguments;
+    if (last && now < last + threshhold) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(function () {
+        last = now;
+        fn.apply(context, args);
+      }, threshhold);
+    } else {
+      last = now;
+      fn.apply(context, args);
+    }
+  };
+}
+
+
+
   // AMD export
   if(typeof define == 'function' && define.amd) {
     define(function(){
@@ -844,4 +880,4 @@ function _invoke (collection, fn, args) {
   
   window.Optiscroll = Optiscroll;
 
-})(window, document);
+})(window, document, Math);
