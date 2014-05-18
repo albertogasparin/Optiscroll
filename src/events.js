@@ -1,10 +1,6 @@
 var Events = {
 
   scroll: function (ev, me) {
-    var cache = me.cache,
-        now = getTime(),
-        waitBeforeUpdate = 'matchMedia' in window ? GS.scrollMinUpdateInterval : 0; // IE9 fix
-    
     if(me.disableScrollEv) { return; }
 
     if (!G.pauseCheck) {
@@ -12,19 +8,12 @@ var Events = {
     }
     G.pauseCheck = true;
     
-    if( !cache.now || now > cache.now + GS.scrollMinUpdateInterval ) {
-      cache.now = now;
-      
-      clearTimeout(cache.timerScroll);
-      cache.timerScroll = setTimeout(function () {
-        _invoke(me.scrollbars, 'update');
-      }, waitBeforeUpdate);
-
-      clearTimeout(cache.timerStop);
-      cache.timerStop = setTimeout(function () {
-        Events.scrollStop(me);
-      }, me.settings.scrollStopDelay);
-    }
+    _invoke(me.scrollbars, 'update');
+    
+    clearTimeout(me.cache.timerStop);
+    me.cache.timerStop = setTimeout(function () {
+      Events.scrollStop(me);
+    }, me.settings.scrollStopDelay);
   },
 
 

@@ -14,9 +14,6 @@ G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-'+G
 
 
 
-var getTime = Date.now || function() { return new Date().getTime(); };
-
-
 var animationTimeout = (function () {
   return window.requestAnimationFrame || 
     window.webkitRequestAnimationFrame || 
@@ -100,3 +97,24 @@ function _invoke (collection, fn, args) {
     }
   }
 }
+
+function _throttle(fn, threshhold) {
+  var last, deferTimer;
+  return function () {
+    var context = this,
+        now = Date.now(),
+        args = arguments;
+    if (last && now < last + threshhold) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(function () {
+        last = now;
+        fn.apply(context, args);
+      }, threshhold);
+    } else {
+      last = now;
+      fn.apply(context, args);
+    }
+  };
+}
+

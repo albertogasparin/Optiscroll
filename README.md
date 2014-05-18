@@ -34,14 +34,6 @@ Moreover, Optiscroll has been properly tested on:
 
 
 
-## Known limitations
-
-- `forceScrollbars` is ignored on Firefox under OSX with trackpad. Currently, there is no way to hide the "Lion style" scrollbars under Firefox. So, Optiscroll always disable them to avoid double scrollbars.
-
-- on iOS custom events (and scrollbars if enabled with `forceScrollbars:true`) are fired/updated when the momentum scrolling ends.  
-
-
-
 # How to use Optiscroll
 
 
@@ -86,7 +78,7 @@ $('#scroll').optiscroll()
 
 | Option name | Default | Purpose  
 |-------------|---------|----------
-| preventParentScroll | true | Prevents scrolling parent container (or body). Works also on iOS preventing the page bounce. 
+| preventParentScroll | false | Prevents scrolling parent container (or body) when scroll reach top or bottom. Works also on iOS preventing the page bounce. 
 | forceScrollbars | false | Use custom scrollbars also on iOS, Android and OSX (w/ trackpad)
 | scrollStopDelay | 300 (ms) | Time before presuming that the scroll is ended, then fire `scrollstop` event
 | maxTrackSize | 95 (%) | Maximum size (width or height) of the track
@@ -243,6 +235,15 @@ Optiscroll.globalSettings.scrollMinUpdateInterval = 1000 / 30;
 Optiscroll.globalSettings.checkFrequency = 0;
 ```
 
+
+
+## Known limitations
+
+- `forceScrollbars` is ignored on Firefox under OSX because there is no way to hide the "Lion style" scrollbars under Firefox. So, Optiscroll always disable custom scrollbars to avoid double scrollbars.
+
+- On iOS, custom events (and scrollbars if enabled with `forceScrollbars: true`) are fired/updated when the momentum scrolling ends.  
+
+- If parent Optiscroll has `forceScrollbars: true` and nested Optiscroll has `forceScrollbars: false` the "Lion style" scrollbars will not appear on Chrome/Safari.
 
 
 ## Running Tests

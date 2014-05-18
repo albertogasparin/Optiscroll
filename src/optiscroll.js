@@ -98,7 +98,9 @@ Optiscroll.Instance.prototype.bind = function () {
       scrollEl = me.scrollEl;
 
   // scroll event binding
-  listeners.scroll = function (ev) { Events.scroll(ev, me); };
+  listeners.scroll = _throttle(function (ev) { 
+    Events.scroll(ev, me); 
+  }, GS.scrollMinUpdateInterval);
 
   // overflow events bindings (non standard, moz + webkit)
   // to update scrollbars immediately 
@@ -181,13 +183,13 @@ Optiscroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
   
   if (typeof destX === 'string') { // left or right
     endX = (destX === 'left') ? 0 : cache.scrollW - cache.clientW;
-  } else if (typeof destX === 'number') {
+  } else if (typeof destX === 'number') { // num - not false
     endX = destX;
   }
 
   if (typeof destY === 'string') { // top or bottom
     endY = (destY === 'top') ? 0 : cache.scrollH - cache.clientH;
-  } else if (typeof destY === 'number') {
+  } else if (typeof destY === 'number') { // num - not false
     endY = destY;
   }
 
@@ -233,14 +235,12 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   rightEdge = startX + eDim.left - sDim.left + eDim.width - me.cache.clientW + (delta.right || 0);
   bottomEdge = startY + eDim.top - sDim.top + eDim.height - me.cache.clientH + (delta.bottom || 0);
   
-  if(leftEdge < startX || rightEdge > startX) {
-    endX = (leftEdge < startX) ? leftEdge : rightEdge;
-  }
+  if(leftEdge < startX) { endX = leftEdge; }
+  if(rightEdge > startX) { endX = rightEdge; }
 
-  if(topEdge < startY || bottomEdge > startY) {
-    endY = (topEdge < startY) ? topEdge : bottomEdge;
-  }
-  
+  if(topEdge < startY) { endY = topEdge; }
+  if(bottomEdge > startY) { endY = bottomEdge; }
+
   // animate
   me.animateScroll(startX, endX, startY, endY, duration);
 };
@@ -251,7 +251,7 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 Optiscroll.Instance.prototype.animateScroll = function (startX, endX, startY, endY, duration) {
   var me = this,
       scrollEl = me.scrollEl,
-      startTime = getTime();
+      startTime = Date.now();
 
   if(endX === startX && endY === startY) {
     return;
@@ -265,12 +265,12 @@ Optiscroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
   }
 
   if(typeof duration !== 'number') { // undefined or auto
-    // 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms
-    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.62) * 15;
+    // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
+    duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.54) * 15;
   }
 
   var scrollAnimation = function () {
-    var time = Math.min(1, ((getTime() - startTime) / duration)),
+    var time = Math.min(1, ((Date.now() - startTime) / duration)),
         easedTime = Utils.easingFunction(time);
     
     if( endY !== startY ) {

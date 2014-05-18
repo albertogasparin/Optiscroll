@@ -1,13 +1,15 @@
 var Utils = {
 
   hideNativeScrollbars: function (scrollEl) {
-    if( G.nativeScrollbarSize === 0 ) {
+    var size = G.nativeScrollbarSize,
+        scrollElStyle = scrollEl.style;
+    if( size === 0 ) {
       // hide Webkit/touch scrollbars
-      var time = getTime();
+      var time = Date.now();
       scrollEl.setAttribute('data-scroll', time);
       
       // force scrollbars update on Webkit
-      scrollEl.style.display = 'none';
+      scrollElStyle.display = 'none';
       
       if( G.isTouch ) {
         Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'display: none;');
@@ -16,14 +18,14 @@ var Utils = {
       }
 
       animationTimeout(function () { 
-        scrollEl.style.display = 'block'; 
+        scrollElStyle.display = 'block'; 
       });
       
     } else {
       // force scrollbars and hide them
-      scrollEl.style.overflow = 'scroll';
-      scrollEl.style.right = -G.nativeScrollbarSize + 'px';
-      scrollEl.style.bottom = -G.nativeScrollbarSize + 'px';
+      scrollElStyle.overflow = 'scroll';
+      scrollElStyle.right = -size + 'px';
+      scrollElStyle.bottom = -size + 'px';
     }
   },
 
