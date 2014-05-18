@@ -212,9 +212,7 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
 
   if(typeof elem === 'string') { // selector
     elem = scrollEl.querySelector(elem);
-  }
-
-  if(elem.length && elem.jquery) { // jquery element
+  } else if(elem.length && elem.jquery) { // jquery element
     elem = elem[0];
   }
 
