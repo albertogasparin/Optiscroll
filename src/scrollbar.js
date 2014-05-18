@@ -125,17 +125,12 @@ var Scrollbar = function (which, instance) {
 
 
     bind: function (on) {
-      var method = on ? 'addEventListener' : 'removeEventListener';
+      var method = (on ? 'add' : 'remove') + 'EventListener',
+          type = G.isTouch ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 
-      if( G.isTouch ) {
-        if (trackEl) { trackEl[method]('touchstart', events.dragStart); }
-        document[method]('touchmove', events.dragMove);
-        document[method]('mouseup', events.dragEnd);
-      } else {
-        if (trackEl) { trackEl[method]('mousedown', events.dragStart); }
-        document[method]('mousemove', events.dragMove);
-        document[method]('touchend', events.dragEnd);
-      }
+      if (trackEl) { trackEl[method](type[0], events.dragStart); }
+      document[method](type[1], events.dragMove);
+      document[method](type[2], events.dragEnd);
       
     },
 
