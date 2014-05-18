@@ -12,7 +12,12 @@ html, body {
   font: 18px/1.35 'Titillium Web', Helvetica, sans-serif; 
   width: 100%;
   height: 100%;
+  background: #4A4A4A;
   overflow: hidden;
+}
+
+@media (max-width: 500px) {
+  html, body { font-size: 16px; }
 }
 
 
@@ -58,7 +63,22 @@ code {
   color: #FFF;
   text-decoration: none;
   text-transform: uppercase;
+  font-size: 1em;
+  border: none;
   border-radius: 30px;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.btn:focus { outline: none; }
+
+.column {
+  float: left;
+  width: 100%;
+}
+
+@media (min-width: 500px) {
+  .mid-50 { width: 50%; }
 }
 
 
@@ -80,12 +100,12 @@ code {
   max-width: 1000px;
   list-style: none;
   margin: 0 auto;
-  padding: 0 2em;
+  padding: 0;
 }
 
 .m-nav li {
   display: inline-block;
-  margin-right: 2em;
+  margin-left: 1.5em;
 }
 
 .m-nav a {
@@ -154,6 +174,10 @@ code {
  * SECTIONS
  */
 
+.m-sections {
+  background: #FFF;
+}
+
 .section {
   margin: 0 auto;
   padding: 2em 1em 4em;
@@ -167,7 +191,31 @@ code {
   display: table;
 }
 
+.section .mid-50 {
+  border-right: 1em solid #FFF;
+  border-bottom: 1em solid #FFF;
+}
 
+.section .mid-50 ~ .mid-50 {
+  border-right: none;
+  border-left: 1em solid #FFF;
+}
+
+@media (max-width: 500px) {
+  .section .mid-50 { 
+    border-right: none; 
+    border-left: none !important; 
+  }
+}
+
+.section .optiscroll {
+  height: 200px;
+  background: #F6F2F2;
+}
+
+.section .optiscroll-content {
+  padding: 0 1em 1em;
+}
 
 
 
@@ -196,21 +244,6 @@ code {
  */
 
 .s-usage {}
-
-.s-usage .optiscroll {
-  float: left;
-  width: 48%;
-  height: 200px;
-  background: #F6F2F2;
-}
-
-#os2 {
-  float: right;
-}
-
-.s-usage .optiscroll-content {
-  padding: 0 1em 1em;
-}
 
 
 /* STYLE FOR INLINE SCROLLBARS */
@@ -260,46 +293,55 @@ code {
 
 
 
+/* 
+ * API SECTION
+ */
+
+.s-api h3 {
+  clear: both;
+}
 
 
+.s-api .demo-form {
+  font-size: 1.2em;
+  text-align: center;
+} 
 
-
-
-
-
-
-
-
-.example .optiscroll {
-  float: right;
-  margin-left: 20px;
-  width: 45%;
-  height: 200px;
+.s-api .demo-form input {
+  width: 3.5em;
+  padding: 0.2em 0.3em;
   font-size: 18px;
-  line-height: 1.6;
-  border: 1px solid #DDD;
-  background: #FFF;
+  border: 1px solid #CCC;
+  border-radius: 20px;
+  vertical-align: text-top;
 }
 
-.example .optiscroll-content p {
-  padding: 0 20px;
-  font-family: serif;
+.s-api .demo-form input:focus {
+  outline: none;
+  border-color: #F66242;
+}
+
+.s-api .demo-form .btn {
+  padding: 0.3em 1em;
+  font-size: 18px;
+  display: block;
+  margin: 1em auto 0;
+}
+
+#os4-el {
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: 0 0 0 100%;
+  background: #F66242;
+  border: 5px solid #FFF;
 }
 
 
-
-#os1ev {
-  height: 5.2em;
-  overflow: hidden;
-  color: #777;
-}
-
-
-
-
-
-#os2 .optiscroll-content p {
-  width: 120%;
+.s-api .optiscroll-content p {
+  width: 200%;
+  font-size: 1.2em;
+  color: #999;
 }
 
 
