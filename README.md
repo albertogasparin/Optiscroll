@@ -132,7 +132,7 @@ $('#scroll').optiscroll('scrollTo', 500, 'bottom', 'auto');
 
 ### scrollIntoView (elem [, duration, delta])
 
-Scrolls the element into view. The alignment will be automatic driven by the nearest edge. By default the duration is calculated based on the distance (eg: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). `delta` is the optional distance in px from the edge. Per edge distances can be defined.
+Scrolls the element into view. The alignment will be driven by the nearest edge. By default the duration is calculated based on the distance (eg: 500px in 700ms, 1000px in 1080ms, 2000px in 1670ms, ...). `delta` is the optional distance in px from the edge. Per edge distances can be defined.
 
 | Arguments | Allowed values
 |-----------|----------------

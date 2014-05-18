@@ -178,25 +178,23 @@ Optiscroll.Instance.prototype.scrollTo = function (destX, destY, duration, disab
   // force update
   me.update();
 
-  startX = endX = me.scrollEl.scrollLeft;
-  startY = endY = me.scrollEl.scrollTop;
+  startX = me.scrollEl.scrollLeft;
+  startY = me.scrollEl.scrollTop;
   
-  if (typeof destX === 'string') { // left or right
-    endX = (destX === 'left') ? 0 : cache.scrollW - cache.clientW;
-  } else if (typeof destX === 'number') { // num - not false
-    endX = destX;
-  }
+  endX = +destX;
+  if(destX == 'left') { endX = 0; }
+  if(destX == 'right') { endX = cache.scrollW - cache.clientW; }
+  if(destX === false) { endX = startX; }
 
-  if (typeof destY === 'string') { // top or bottom
-    endY = (destY === 'top') ? 0 : cache.scrollH - cache.clientH;
-  } else if (typeof destY === 'number') { // num - not false
-    endY = destY;
-  }
+  endY = +destY;
+  if(destY == 'top') { endY = 0; }
+  if(destY == 'bottom') { endY = cache.scrollH - cache.clientH; }
+  if(destY === false) { endY = startY; }
 
   me.disableScrollEv = disableEvents;
 
   // animate
-  me.animateScroll(startX, endX, startY, endY, duration);
+  me.animateScroll(startX, endX, startY, endY, +duration);
   
 };
 
@@ -242,7 +240,7 @@ Optiscroll.Instance.prototype.scrollIntoView = function (elem, duration, delta) 
   if(bottomEdge > startY) { endY = bottomEdge; }
 
   // animate
-  me.animateScroll(startX, endX, startY, endY, duration);
+  me.animateScroll(startX, endX, startY, endY, +duration);
 };
 
 
@@ -264,7 +262,7 @@ Optiscroll.Instance.prototype.animateScroll = function (startX, endX, startY, en
     return;
   }
 
-  if(typeof duration !== 'number') { // undefined or auto
+  if(isNaN(duration)) { // undefined or auto
     // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
     duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.54) * 15;
   }
