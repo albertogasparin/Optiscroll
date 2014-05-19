@@ -94,6 +94,7 @@ code {
   background: #4A4A4A;
   color: #FFF;
   line-height: 34px;
+  z-index: 5;
 }
 
 .m-nav ul {

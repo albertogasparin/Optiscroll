@@ -18,7 +18,7 @@
 </head>
 <body>
 
-  <nav class="m-nav">
+  <nav id="m-nav" class="m-nav">
     <ul>
       <li><a href="#features">Features</a></li>
       <li><a href="#usage">Usage</a></li>
@@ -178,6 +178,16 @@
   </script>
 
   <script type="text/javascript">
+    // Nav 
+    var navLinks = document.querySelectorAll('#m-nav a');
+    for (var i = 0; i < navLinks.length; i++) {
+      navLinks[i].addEventListener('click', function (ev) {
+        var hash = ev.target.hash;
+        wr.scrollIntoView(hash + ' h2', 'auto', { top: 10, bottom: document.documentElement.clientHeight-100 });
+      })
+    };
+
+
     // Toggle buttons for OS1
     document.getElementById('os1-init').addEventListener('click', function () {
       if(!os1) os1 = new Optiscroll(document.getElementById('os1'));
