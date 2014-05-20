@@ -18,9 +18,19 @@ var Events = {
 
 
   touchstart: function (ev, me) {
+    var cache = me.cache,
+        cacheV = cache.v, cacheH = cache.h;
+
     G.pauseCheck = false;
+    _invoke(me.scrollbars, 'update', [true]);
+    
     if(me.settings.preventParentScroll) {
-      _invoke(me.scrollbars, 'update', [true]);
+      if(cacheV.enabled && cacheV.percent % 100 === 0) {
+        me.scrollTo( false, cacheV.percent ? (cacheV.position * cache.scrollH - 1) : 1, 0, true);
+      }
+      if(cacheH.enabled && cacheH.percent % 100 === 0) {
+        me.scrollTo( cacheH.percent ? (cacheH.position * cache.scrollW - 1) : 1, false, 0, true);
+      }
     }
   },
 
