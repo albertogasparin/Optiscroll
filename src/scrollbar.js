@@ -82,11 +82,14 @@ var Scrollbar = function (which, instance) {
 
     update: function (isOnTouch) {
       var me = this,
-          trackMin = settings.minTrackSize || 0,
-          trackMax = settings.maxTrackSize || 100,
           newDim, newRelPos, deltaPos;
 
-      newDim = this.calc(scrollEl[scrollProp], cache[clientSize], cache[scrollSize], trackMin, trackMax);
+      // if scrollbar is disabled and no scroll
+      if(!enabled && cache[clientSize] === cache[scrollSize]) {
+        return;
+      }
+
+      newDim = this.calc();
       newRelPos = ((1 / newDim.size) * newDim.position * 100);
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
@@ -112,7 +115,10 @@ var Scrollbar = function (which, instance) {
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
 
-      me.checkEdges(isOnTouch);
+      if(enabled && !isOnTouch) {
+        me.fireEdgeEv();
+      }
+      
     },
 
 
@@ -135,19 +141,22 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    calc: function (position, viewSize, scrollSize, min, max) {
-      var minTrackR = min / 100,
-          maxTrackR = max / 100,
+    calc: function () {
+      var position = scrollEl[scrollProp],
+          viewS = cache[clientSize], 
+          scrollS = cache[scrollSize], 
+          minTrackR = settings.minTrackSize / 100,
+          maxTrackR = settings.maxTrackSize / 100,
           sizeRatio, positionRatio, percent;
 
-      sizeRatio = viewSize / scrollSize;
+      sizeRatio = viewS / scrollS;
 
-      if(sizeRatio === 1 || scrollSize === 0) { // no scrollbars needed
+      if(sizeRatio === 1 || scrollS === 0) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
       }
 
-      positionRatio = position / scrollSize;
-      percent = 100 * position / (scrollSize - viewSize);
+      positionRatio = position / scrollS;
+      percent = 100 * position / (scrollS - viewS);
 
       if( sizeRatio > maxTrackR ) {
         positionRatio += (sizeRatio - maxTrackR) * (percent / 100);
@@ -171,23 +180,15 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    checkEdges: function (isOnTouch) {
-      var percent = scrollbarCache.percent, scrollFixPosition;
+    fireEdgeEv: function () {
+      var percent = scrollbarCache.percent;
 
-      if(!enabled) { return; }
-
-      if(scrollbarCache.was !== percent && percent % 100 === 0 && !isOnTouch) {
+      if(scrollbarCache.was !== percent && percent % 100 === 0) {
         instance.fireCustomEvent('scrollreachedge');
         instance.fireCustomEvent('scrollreach'+ evNames[percent/100] );
       }
 
-      if(percent % 100 === 0 && isOnTouch && settings.preventParentScroll) {
-        scrollFixPosition = percent ? scrollbarCache.position * cache[scrollSize] - 1 : 1;
-        instance.scrollTo( isVertical ? false : scrollFixPosition, isVertical ? scrollFixPosition : false , 0, true);
-      }
-
-      // if(percent > 0 && percent < 100) // update only if not overscroll
-        scrollbarCache.was = percent;
+      scrollbarCache.was = percent;
     },
 
 
