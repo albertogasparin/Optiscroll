@@ -30,28 +30,6 @@ var Utils = {
   },
 
 
-  exposedData: function (obj) {
-    var sH = obj.scrollH, sW = obj.scrollW;
-    return {
-      // scrollbars data
-      scrollbarV: _extend({}, obj.v),
-      scrollbarH: _extend({}, obj.h),
-
-      // scroll position
-      scrollTop: obj.v.position * sH,
-      scrollLeft: obj.h.position * sW,
-      scrollBottom: (1 - obj.v.position - obj.v.size) * sH,
-      scrollRight: (1 - obj.h.position - obj.h.size) * sW,
-
-      // element size
-      scrollWidth: sW,
-      scrollHeight: sH,
-      clientWidth: obj.clientW,
-      clientHeight: obj.clientH
-    }
-  },
-
-
   addCssRule: function (selector, rules) {
     var styleSheet = document.getElementById('scroll-sheet');
 
