@@ -22,15 +22,10 @@ var Events = {
         cacheV = cache.v, cacheH = cache.h;
 
     G.pauseCheck = false;
-    _invoke(me.scrollbars, 'update', [true]);
+    _invoke(me.scrollbars, 'update');
     
     if(me.settings.preventParentScroll) {
-      if(cacheV.enabled && cacheV.percent % 100 === 0) {
-        me.scrollTo( false, cacheV.percent ? (cacheV.position * cache.scrollH - 1) : 1, 0, true);
-      }
-      if(cacheH.enabled && cacheH.percent % 100 === 0) {
-        me.scrollTo( cacheH.percent ? (cacheH.position * cache.scrollW - 1) : 1, false, 0, true);
-      }
+      Events.wheel(ev, me);
     }
   },
 
@@ -52,26 +47,15 @@ var Events = {
 
 
   wheel: function (ev, me) {
-    // prevents scrolling only on Y axis 
-    // due to complexity on getting scroll direction
     var cache = me.cache,
-        // deltaX = ev.deltaX || -ev.wheelDeltaX/3 || 0,
-        deltaY = ev.deltaY || -ev.wheelDeltaY/3 || 0,
-        // percentX, 
-        percentY;
-    
-    // fix Firefox returning float numbers
-    // deltaX = deltaX > 0 ? Math.ceil(deltaX) : Math.floor(deltaX);
-    deltaY = deltaY > 0 ? Math.ceil(deltaY) : Math.floor(deltaY);
+        cacheV = cache.v, cacheH = cache.h;
 
-    // percentX = cache.h.percent + deltaX / cache.scrollW;
-    percentY = ~~cache.v.percent + deltaY / cache.scrollH;
-
-    if( //(deltaX && (percentX <= 0 || percentX >= 100)) || 
-        (deltaY && (percentY <= 0 || percentY >= 100))) {
-      ev.preventDefault();
+    if(cacheV.enabled && cacheV.percent % 100 === 0) {
+      me.scrollEl.scrollTop = cacheV.percent ? (cache.scrollH - cache.clientH - 1) : 1;
     }
-    ev.stopPropagation();
+    if(cacheH.enabled && cacheH.percent % 100 === 0) {
+      me.scrollEl.scrollLeft = cacheH.percent ? (cache.scrollW - cache.clientW - 1) : 1;
+    }
   }
 
 

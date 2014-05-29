@@ -80,7 +80,7 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    update: function (isOnTouch) {
+    update: function () {
       var me = this,
           newDim, newRelPos, deltaPos;
 
@@ -115,7 +115,7 @@ var Scrollbar = function (which, instance) {
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
 
-      if(enabled && !isOnTouch) {
+      if(enabled) {
         me.fireEdgeEv();
       }
       
@@ -147,35 +147,27 @@ var Scrollbar = function (which, instance) {
           scrollS = cache[scrollSize], 
           minTrackR = settings.minTrackSize / 100,
           maxTrackR = settings.maxTrackSize / 100,
-          sizeRatio, positionRatio, percent;
-
-      sizeRatio = viewS / scrollS;
+          sizeRatio = viewS / scrollS,
+          sizeDiff = scrollS - viewS,
+          positionRatio, percent;
 
       if(sizeRatio === 1 || scrollS === 0) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
       }
 
-      positionRatio = position / scrollS;
-      percent = 100 * position / (scrollS - viewS);
+      percent = 100 * position / sizeDiff;
 
-      if( sizeRatio > maxTrackR ) {
-        positionRatio += (sizeRatio - maxTrackR) * (percent / 100);
-        sizeRatio = maxTrackR;
-      }
-
-      if( sizeRatio < minTrackR ) {
-        positionRatio += (sizeRatio - minTrackR) * (percent / 100);
-        sizeRatio = minTrackR;
-      }
-
-      if(percent < 0) { // overscroll
-        positionRatio = 0;
-      }
-
-      if(percent > 100) { // overscroll
-        positionRatio = 1 - sizeRatio;
-      }
+      // prevent overscroll effetcs (negative percent) 
+      // and keep 1px tolerance near the edges
+      if(position <= 1) percent = 0;
+      if(position >= sizeDiff - 1) percent = 100;
       
+      // Capped size based on min/max track percentage 
+      sizeRatio = Math.max(sizeRatio, minTrackR);
+      sizeRatio = Math.min(sizeRatio, maxTrackR);
+
+      positionRatio = (percent / 100 * sizeDiff) / scrollS;
+
       return { position: positionRatio, size: sizeRatio, percent: percent };
     },
 
