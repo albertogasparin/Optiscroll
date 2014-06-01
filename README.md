@@ -175,6 +175,7 @@ Each instance will fire a set of custom events after user interaction. Each even
 |-------------------|-------------------
 | sizechange        | changes `clientWidth`/`clientHeight` of the optiscroll element, or changes `scrollWidth`/`scrollHeight` of the scroll area
 | scrollstart       | the user starts scrolling
+| scroll            | the user scrolls. This event is already throttled, fired accordingly with the `scrollMinUpdateInterval` value. 
 | scrollstop        | the user stops scrolling. The wait time before firing this event is defined by the `scrollStopDelay` option
 | scrollreachedge   | the user scrolls to any edge (top/left/right/bottom)
 | scrollreachtop    | the user scrolls to top

@@ -1,14 +1,15 @@
 var Events = {
 
   scroll: function (ev, me) {
-    if(me.disableScrollEv) { return; }
-
+    
     if (!G.pauseCheck) {
       me.fireCustomEvent('scrollstart');
     }
     G.pauseCheck = true;
     
     _invoke(me.scrollbars, 'update');
+
+    me.fireCustomEvent('scroll');
     
     clearTimeout(me.cache.timerStop);
     me.cache.timerStop = setTimeout(function () {
