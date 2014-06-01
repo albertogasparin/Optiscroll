@@ -182,6 +182,7 @@
     var navLinks = document.querySelectorAll('#m-nav a');
     for (var i = 0; i < navLinks.length; i++) {
       navLinks[i].addEventListener('click', function (ev) {
+        ev.preventDefault();
         var hash = ev.target.hash;
         wr.scrollIntoView(hash + ' h2', 'auto', { top: 10, bottom: document.documentElement.clientHeight-100 });
       })

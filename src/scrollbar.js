@@ -82,6 +82,7 @@ var Scrollbar = function (which, instance) {
 
     update: function () {
       var me = this,
+          newSize, oldSize,
           newDim, newRelPos, deltaPos;
 
       // if scrollbar is disabled and no scroll
@@ -90,26 +91,23 @@ var Scrollbar = function (which, instance) {
       }
 
       newDim = this.calc();
-      newRelPos = ((1 / newDim.size) * newDim.position * 100);
+      newSize = newDim.size;
+      oldSize = scrollbarCache.size;
+      newRelPos = ((1 / newSize) * newDim.position * 100);
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
-      if(newDim.size === 1 && enabled) {
+      if(newSize === 1 && enabled) {
         me.toggle(false);
       }
 
-      if(newDim.size < 1 && !enabled) {
+      if(newSize < 1 && !enabled) {
         me.toggle(true);
       }
 
       if(trackEl && enabled) {
-        if(scrollbarCache.size !== newDim.size) {
-          trackEl.style[ isVertical ? 'height':'width' ] = newDim.size * 100 + '%';
-        }
-
-        if(deltaPos) { // only if position has changed
-          me.animateTrack( G.isTouch && deltaPos > 20 );
-          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
-        }
+        // animationTimeout(function () {
+        me.style(newRelPos, deltaPos, newSize, oldSize);
+        // });
       }
 
       // update cache values
@@ -119,6 +117,20 @@ var Scrollbar = function (which, instance) {
         me.fireEdgeEv();
       }
       
+    },
+
+
+    style: function (newRelPos, deltaPos, newSize, oldSize) {
+      var me = this;
+
+      if(newSize !== oldSize) {
+        trackEl.style[ isVertical ? 'height':'width' ] = newSize * 100 + '%';
+      }
+
+      if(deltaPos) { // only if position has changed
+        me.animateTrack( G.isTouch && deltaPos > 20 );
+        trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
+      }
     },
 
 
