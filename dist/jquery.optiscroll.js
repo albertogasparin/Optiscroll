@@ -1,5 +1,5 @@
 /*!
-* Optiscroll.js v1.0.2
+* Optiscroll.js v1.0.3
 * https://github.com/wilsonfletcher/Optiscroll/
 * by Alberto Gasparin
 * 
@@ -203,7 +203,7 @@ Optiscroll.Instance.prototype = {
   /**
    * Animate scrollTo
    */
-  scrollTo: function (destX, destY, duration, disableEvents) {
+  scrollTo: function (destX, destY, duration) {
     var me = this,
         cache = me.cache,
         startX, startY, endX, endY;
@@ -225,8 +225,6 @@ Optiscroll.Instance.prototype = {
     if(destY == 'bottom') { endY = cache.scrollH - cache.clientH; }
     if(destY === false) { endY = startY; }
 
-    me.disableScrollEv = disableEvents;
-
     // animate
     me.animateScroll(startX, endX, startY, endY, +duration);
     
@@ -239,6 +237,7 @@ Optiscroll.Instance.prototype = {
         scrollEl = me.scrollEl,
         eDim, sDim,
         leftEdge, topEdge, rightEdge, bottomEdge,
+        offsetX, offsetY,
         startX, startY, endX, endY;
 
     G.pauseCheck = true;
@@ -261,10 +260,13 @@ Optiscroll.Instance.prototype = {
 
     startX = endX = scrollEl.scrollLeft;
     startY = endY = scrollEl.scrollTop;
-    leftEdge = startX + eDim.left - sDim.left - (delta.left || 0);
-    topEdge = startY + eDim.top - sDim.top - (delta.top || 0);
-    rightEdge = startX + eDim.left - sDim.left + eDim.width - me.cache.clientW + (delta.right || 0);
-    bottomEdge = startY + eDim.top - sDim.top + eDim.height - me.cache.clientH + (delta.bottom || 0);
+    offsetX = startX + eDim.left - sDim.left;
+    offsetY = startY + eDim.top - sDim.top;
+    
+    leftEdge = offsetX - (delta.left || 0);
+    topEdge = offsetY - (delta.top || 0);
+    rightEdge = offsetX + eDim.width - me.cache.clientW + (delta.right || 0);
+    bottomEdge = offsetY + eDim.height - me.cache.clientH + (delta.bottom || 0);
     
     if(leftEdge < startX) { endX = leftEdge; }
     if(rightEdge > startX) { endX = rightEdge; }
@@ -291,7 +293,6 @@ Optiscroll.Instance.prototype = {
     if(duration === 0) {
       scrollEl.scrollLeft = endX;
       scrollEl.scrollTop = endY;
-      animationTimeout( function () { me.disableScrollEv = false; }); // restore
       return;
     }
 
@@ -299,23 +300,20 @@ Optiscroll.Instance.prototype = {
       // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
       duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.54) * 15;
     }
-
+    
     var scrollAnimation = function () {
       var time = Math.min(1, ((Date.now() - startTime) / duration)),
           easedTime = Utils.easingFunction(time);
       
       if( endY !== startY ) {
-        scrollEl.scrollTop = (easedTime * (endY - startY)) + startY;
+        scrollEl.scrollTop = ~~(easedTime * (endY - startY)) + startY;
       }
       if( endX !== startX ) {
-        scrollEl.scrollLeft = (easedTime * (endX - startX)) + startX;
+        scrollEl.scrollLeft = ~~(easedTime * (endX - startX)) + startX;
       }
 
       if(time < 1) {
         animationTimeout(scrollAnimation);
-      } else {
-        me.disableScrollEv = false;
-        // now the internal scroll event will fire
       }
     };
     
@@ -393,14 +391,15 @@ Optiscroll.Instance.prototype = {
 var Events = {
 
   scroll: function (ev, me) {
-    if(me.disableScrollEv) { return; }
-
+    
     if (!G.pauseCheck) {
       me.fireCustomEvent('scrollstart');
     }
     G.pauseCheck = true;
     
     _invoke(me.scrollbars, 'update');
+
+    me.fireCustomEvent('scroll');
     
     clearTimeout(me.cache.timerStop);
     me.cache.timerStop = setTimeout(function () {
@@ -538,6 +537,7 @@ var Scrollbar = function (which, instance) {
 
     update: function () {
       var me = this,
+          newSize, oldSize,
           newDim, newRelPos, deltaPos;
 
       // if scrollbar is disabled and no scroll
@@ -546,26 +546,23 @@ var Scrollbar = function (which, instance) {
       }
 
       newDim = this.calc();
-      newRelPos = ((1 / newDim.size) * newDim.position * 100);
+      newSize = newDim.size;
+      oldSize = scrollbarCache.size;
+      newRelPos = ((1 / newSize) * newDim.position * 100);
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
-      if(newDim.size === 1 && enabled) {
+      if(newSize === 1 && enabled) {
         me.toggle(false);
       }
 
-      if(newDim.size < 1 && !enabled) {
+      if(newSize < 1 && !enabled) {
         me.toggle(true);
       }
 
       if(trackEl && enabled) {
-        if(scrollbarCache.size !== newDim.size) {
-          trackEl.style[ isVertical ? 'height':'width' ] = newDim.size * 100 + '%';
-        }
-
-        if(deltaPos) { // only if position has changed
-          me.animateTrack( G.isTouch && deltaPos > 20 );
-          trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
-        }
+        // animationTimeout(function () {
+        me.style(newRelPos, deltaPos, newSize, oldSize);
+        // });
       }
 
       // update cache values
@@ -575,6 +572,20 @@ var Scrollbar = function (which, instance) {
         me.fireEdgeEv();
       }
       
+    },
+
+
+    style: function (newRelPos, deltaPos, newSize, oldSize) {
+      var me = this;
+
+      if(newSize !== oldSize) {
+        trackEl.style[ isVertical ? 'height':'width' ] = newSize * 100 + '%';
+      }
+
+      if(deltaPos) { // only if position has changed
+        me.animateTrack( G.isTouch && deltaPos > 20 );
+        trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
+      }
     },
 
 
@@ -876,16 +887,17 @@ function _throttle(fn, threshhold) {
  * and when called again you can call functions
  * or change instance settings
  *
- * ~~~
- * $(el).optiscroll({ option })
- * $(el).optiscroll('method', arg) 
- * $(el).optiscroll({ newOptions }) 
- * ~~~
+ * ```
+ * $(el).optiscroll({ options })
+ * $(el).optiscroll('method', arg)
+ * ```
  */
 
 (function ($) {
   
-  $.fn.optiscroll = function(options) {
+  var pluginName = 'optiscroll';
+
+  $.fn[pluginName] = function(options) {
     var method, args;
     
     if( typeof options === 'string' ) {
@@ -894,22 +906,20 @@ function _throttle(fn, threshhold) {
     }
 
     return this.each(function() {
-      var el = $(this);
-      var inst = el.data('optiscroll');
+      var $el = $(this);
+      var inst = $el.data(pluginName);
 
       // start new optiscroll instance
       if(!inst) {
         inst = new window.Optiscroll(this, options || {});
-        el.data('optiscroll', inst);
+        $el.data(pluginName, inst);
       }
       // allow exec method on instance 
       else if( inst && typeof method === 'string' ) {
-        if( inst[method] )
-          inst[method].apply(inst, args);
-      }
-      // change the options
-      else if(inst && options) {
-        $.extend(inst.settings, options);
+        inst[method].apply(inst, args);
+        if(method === 'destroy') {
+          $el.removeData(pluginName);
+        }
       }
     });
   };
