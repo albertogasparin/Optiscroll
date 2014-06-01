@@ -169,7 +169,7 @@ Optiscroll.Instance.prototype = {
   /**
    * Animate scrollTo
    */
-  scrollTo: function (destX, destY, duration, disableEvents) {
+  scrollTo: function (destX, destY, duration) {
     var me = this,
         cache = me.cache,
         startX, startY, endX, endY;
@@ -191,8 +191,6 @@ Optiscroll.Instance.prototype = {
     if(destY == 'bottom') { endY = cache.scrollH - cache.clientH; }
     if(destY === false) { endY = startY; }
 
-    me.disableScrollEv = disableEvents;
-
     // animate
     me.animateScroll(startX, endX, startY, endY, +duration);
     
@@ -205,6 +203,7 @@ Optiscroll.Instance.prototype = {
         scrollEl = me.scrollEl,
         eDim, sDim,
         leftEdge, topEdge, rightEdge, bottomEdge,
+        offsetX, offsetY,
         startX, startY, endX, endY;
 
     G.pauseCheck = true;
@@ -227,10 +226,13 @@ Optiscroll.Instance.prototype = {
 
     startX = endX = scrollEl.scrollLeft;
     startY = endY = scrollEl.scrollTop;
-    leftEdge = startX + eDim.left - sDim.left - (delta.left || 0);
-    topEdge = startY + eDim.top - sDim.top - (delta.top || 0);
-    rightEdge = startX + eDim.left - sDim.left + eDim.width - me.cache.clientW + (delta.right || 0);
-    bottomEdge = startY + eDim.top - sDim.top + eDim.height - me.cache.clientH + (delta.bottom || 0);
+    offsetX = startX + eDim.left - sDim.left;
+    offsetY = startY + eDim.top - sDim.top;
+    
+    leftEdge = offsetX - (delta.left || 0);
+    topEdge = offsetY - (delta.top || 0);
+    rightEdge = offsetX + eDim.width - me.cache.clientW + (delta.right || 0);
+    bottomEdge = offsetY + eDim.height - me.cache.clientH + (delta.bottom || 0);
     
     if(leftEdge < startX) { endX = leftEdge; }
     if(rightEdge > startX) { endX = rightEdge; }
@@ -257,7 +259,6 @@ Optiscroll.Instance.prototype = {
     if(duration === 0) {
       scrollEl.scrollLeft = endX;
       scrollEl.scrollTop = endY;
-      animationTimeout( function () { me.disableScrollEv = false; }); // restore
       return;
     }
 
@@ -265,23 +266,20 @@ Optiscroll.Instance.prototype = {
       // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
       duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.54) * 15;
     }
-
+    
     var scrollAnimation = function () {
       var time = Math.min(1, ((Date.now() - startTime) / duration)),
           easedTime = Utils.easingFunction(time);
       
       if( endY !== startY ) {
-        scrollEl.scrollTop = (easedTime * (endY - startY)) + startY;
+        scrollEl.scrollTop = ~~(easedTime * (endY - startY)) + startY;
       }
       if( endX !== startX ) {
-        scrollEl.scrollLeft = (easedTime * (endX - startX)) + startX;
+        scrollEl.scrollLeft = ~~(easedTime * (endX - startX)) + startX;
       }
 
       if(time < 1) {
         animationTimeout(scrollAnimation);
-      } else {
-        me.disableScrollEv = false;
-        // now the internal scroll event will fire
       }
     };
     
