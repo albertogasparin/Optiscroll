@@ -4,16 +4,17 @@
  * and when called again you can call functions
  * or change instance settings
  *
- * ~~~
- * $(el).optiscroll({ option })
- * $(el).optiscroll('method', arg) 
- * $(el).optiscroll({ newOptions }) 
- * ~~~
+ * ```
+ * $(el).optiscroll({ options })
+ * $(el).optiscroll('method', arg)
+ * ```
  */
 
 (function ($) {
   
-  $.fn.optiscroll = function(options) {
+  var pluginName = 'optiscroll';
+
+  $.fn[pluginName] = function(options) {
     var method, args;
     
     if( typeof options === 'string' ) {
@@ -22,22 +23,20 @@
     }
 
     return this.each(function() {
-      var el = $(this);
-      var inst = el.data('optiscroll');
+      var $el = $(this);
+      var inst = $el.data(pluginName);
 
       // start new optiscroll instance
       if(!inst) {
         inst = new window.Optiscroll(this, options || {});
-        el.data('optiscroll', inst);
+        $el.data(pluginName, inst);
       }
       // allow exec method on instance 
       else if( inst && typeof method === 'string' ) {
-        if( inst[method] )
-          inst[method].apply(inst, args);
-      }
-      // change the options
-      else if(inst && options) {
-        $.extend(inst.settings, options);
+        inst[method].apply(inst, args);
+        if(method === 'destroy') {
+          $el.removeData(pluginName);
+        }
       }
     });
   };
