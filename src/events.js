@@ -7,7 +7,8 @@ var Events = {
     }
     G.pauseCheck = true;
     
-    _invoke(me.scrollbars, 'update');
+    me.scrollbars.v.update();
+    me.scrollbars.h.update();
 
     me.fireCustomEvent('scroll');
     
@@ -19,11 +20,10 @@ var Events = {
 
 
   touchstart: function (ev, me) {
-    var cache = me.cache,
-        cacheV = cache.v, cacheH = cache.h;
-
+    
     G.pauseCheck = false;
-    _invoke(me.scrollbars, 'update');
+    me.scrollbars.v.update();
+    me.scrollbars.h.update();
     
     if(me.settings.preventParentScroll) {
       Events.wheel(ev, me);

@@ -17,7 +17,6 @@ var Scrollbar = function (which, instance) {
       enabled = false,
       scrollbarEl = null,
       trackEl = null,
-      dragData = null,
       animated = false;
 
   var events = {
@@ -157,8 +156,6 @@ var Scrollbar = function (which, instance) {
       var position = scrollEl[scrollProp],
           viewS = cache[clientSize], 
           scrollS = cache[scrollSize], 
-          minTrackR = settings.minTrackSize / 100,
-          maxTrackR = settings.maxTrackSize / 100,
           sizeRatio = viewS / scrollS,
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
@@ -171,12 +168,12 @@ var Scrollbar = function (which, instance) {
 
       // prevent overscroll effetcs (negative percent) 
       // and keep 1px tolerance near the edges
-      if(position <= 1) percent = 0;
-      if(position >= sizeDiff - 1) percent = 100;
+      if(position <= 1) { percent = 0; }
+      if(position >= sizeDiff - 1) { percent = 100; }
       
       // Capped size based on min/max track percentage 
-      sizeRatio = Math.max(sizeRatio, minTrackR);
-      sizeRatio = Math.min(sizeRatio, maxTrackR);
+      sizeRatio = Math.max(sizeRatio, settings.minTrackSize / 100);
+      sizeRatio = Math.min(sizeRatio, settings.maxTrackSize / 100);
 
       positionRatio = (percent / 100 * sizeDiff) / scrollS;
 

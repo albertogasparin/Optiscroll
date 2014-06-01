@@ -182,13 +182,13 @@ Optiscroll.Instance.prototype = {
     startY = me.scrollEl.scrollTop;
     
     endX = +destX;
-    if(destX == 'left') { endX = 0; }
-    if(destX == 'right') { endX = cache.scrollW - cache.clientW; }
+    if(destX === 'left') { endX = 0; }
+    if(destX === 'right') { endX = cache.scrollW - cache.clientW; }
     if(destX === false) { endX = startX; }
 
     endY = +destY;
-    if(destY == 'top') { endY = 0; }
-    if(destY == 'bottom') { endY = cache.scrollH - cache.clientH; }
+    if(destY === 'top') { endY = 0; }
+    if(destY === 'bottom') { endY = cache.scrollH - cache.clientH; }
     if(destY === false) { endY = startY; }
 
     // animate
@@ -228,7 +228,7 @@ Optiscroll.Instance.prototype = {
     startY = endY = scrollEl.scrollTop;
     offsetX = startX + eDim.left - sDim.left;
     offsetY = startY + eDim.top - sDim.top;
-    
+
     leftEdge = offsetX - (delta.left || 0);
     topEdge = offsetY - (delta.top || 0);
     rightEdge = offsetX + eDim.width - me.cache.clientW + (delta.right || 0);
@@ -349,6 +349,6 @@ Optiscroll.Instance.prototype = {
     me.element.dispatchEvent( new CustomEvent(eventName, { detail: eventData }) );
   }
 
-}
+};
 
 
