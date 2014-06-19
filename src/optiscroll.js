@@ -141,12 +141,6 @@ Optiscroll.Instance.prototype = {
     if( sH !== cache.scrollH || cH !== cache.clientH || 
       sW !== cache.scrollW || cW !== cache.clientW ) {
       
-      // if the element is no more in the DOM
-      if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
-        me.destroy();
-        return false;
-      }
-
       cache.scrollH = sH;
       cache.clientH = cH;
       cache.scrollW = sW;
@@ -154,6 +148,13 @@ Optiscroll.Instance.prototype = {
 
       // only fire if cache was defined
       if( oldcH !== undefined ) {
+
+        // if the element is no more in the DOM
+        if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
+          me.destroy();
+          return false;
+        }
+
         me.fireCustomEvent('sizechange');
       }
 
