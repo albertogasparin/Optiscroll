@@ -68,16 +68,13 @@
 
 
 /**************************************
- *  Prevent iOS page bounce
+ *  Prevent parent scroll
  *  even when content is not longer enough.
- *
- *  Remember: enabling the page bounce fix will prevent 
- *  nested scroll areas to scroll the parent.
  */
 
-/* Uncomment to prevent VERTICAL iOS page bounce. */
+/* Uncomment to prevent VERTICAL scrolling. */
 /*
-.optiscroll-nobounce > .optiscroll-content:before {
+.optiscroll-prevent > .optiscroll-content:before {
   content: '';
   position: absolute;
   top: 0;
@@ -93,9 +90,9 @@
 */
 
 
-/* Uncomment to prevent HORIZONTAL iOS page bounce. */
+/* Uncomment to prevent HORIZONTAL scrolling. */
 /*
-.optiscroll-nobounce > .optiscroll-content:before {
+.optiscroll-prevent > .optiscroll-content:before {
   content: '';
   position: absolute;
   top: 0;
