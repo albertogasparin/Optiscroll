@@ -3,6 +3,8 @@ module("Basics", {
     Optiscroll.globalSettings.checkFrequency = 300;
     os = new window.Optiscroll(document.querySelector('#os'));
   }, teardown: function() {
+    os.destroy();
+    Optiscroll.G.instances.length = 0;
     os = null;
   }
 });
@@ -22,7 +24,7 @@ test("It should be initialized", function () {
 asyncTest("Optiscroll should be destroyed", function () {
   expect(4);
   os.destroy();
-
+  
   setTimeout(function () {
     // check DOM elements style
     ok( !os.scrollEl.getAttribute('style') );
@@ -31,7 +33,7 @@ asyncTest("Optiscroll should be destroyed", function () {
     equal(Optiscroll.G.instances.length, 0);
     equal(Optiscroll.G.checkTimer, null);
     start();
-  }, 700);
+  }, 1000);
 });
 
 
