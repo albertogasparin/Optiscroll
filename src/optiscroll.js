@@ -107,7 +107,7 @@ Optiscroll.Instance.prototype = {
 
     // overflow events bindings (non standard, moz + webkit)
     // to update scrollbars immediately 
-    listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update(); };
+    listeners.overflow = listeners.underflow = listeners.overflowchanged = function () { me.update(); };
 
     if(G.isTouch) {
       listeners.touchstart = function (ev) { Events.touchstart(ev, me); };

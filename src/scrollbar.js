@@ -40,10 +40,10 @@ var Scrollbar = function (which, instance) {
       scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize];
     },
 
-    dragEnd: function (ev) {
+    dragEnd: function () {
       events.dragData = null;
     }
-  }
+  };
   
   return {
 
@@ -92,7 +92,7 @@ var Scrollbar = function (which, instance) {
       newDim = this.calc();
       newSize = newDim.size;
       oldSize = scrollbarCache.size;
-      newRelPos = ((1 / newSize) * newDim.position * 100);
+      newRelPos = (1 / newSize) * newDim.position * 100;
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
       if(newSize === 1 && enabled) {
@@ -175,7 +175,7 @@ var Scrollbar = function (which, instance) {
       sizeRatio = Math.max(sizeRatio, settings.minTrackSize / 100);
       sizeRatio = Math.min(sizeRatio, settings.maxTrackSize / 100);
 
-      positionRatio = (percent / 100 * sizeDiff) / scrollS;
+      positionRatio = (1 - sizeRatio) * (percent / 100);
 
       return { position: positionRatio, size: sizeRatio, percent: percent };
     },
