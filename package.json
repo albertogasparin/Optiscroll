@@ -6,7 +6,7 @@
     "scrollbars",
     "user interface"
   ],
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/wilsonfletcher/optiscroll",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   },
   "browser": "dist/optiscroll.js",
   "main": "dist/optiscroll.js",
-  "licence": "Apache-2.0",
+  "licence": "MIT",
   "bugs": {
     "url": "http://github.com/wilsonfletcher/optiscroll/issues"
   }

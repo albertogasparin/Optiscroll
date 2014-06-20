@@ -1,5 +1,5 @@
 /*!
-* Optiscroll.js v1.0.3
+* Optiscroll.js v1.0.4
 * https://github.com/wilsonfletcher/Optiscroll/
 * by Alberto Gasparin
 * 
@@ -141,7 +141,7 @@ Optiscroll.Instance.prototype = {
 
     // overflow events bindings (non standard, moz + webkit)
     // to update scrollbars immediately 
-    listeners.overflow = listeners.underflow = listeners.overflowchanged = function (ev) { me.update(); };
+    listeners.overflow = listeners.underflow = listeners.overflowchanged = function () { me.update(); };
 
     if(G.isTouch) {
       listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
@@ -175,12 +175,6 @@ Optiscroll.Instance.prototype = {
     if( sH !== cache.scrollH || cH !== cache.clientH || 
       sW !== cache.scrollW || cW !== cache.clientW ) {
       
-      // if the element is no more in the DOM
-      if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
-        me.destroy();
-        return false;
-      }
-
       cache.scrollH = sH;
       cache.clientH = cH;
       cache.scrollW = sW;
@@ -188,6 +182,13 @@ Optiscroll.Instance.prototype = {
 
       // only fire if cache was defined
       if( oldcH !== undefined ) {
+
+        // if the element is no more in the DOM
+        if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
+          me.destroy();
+          return false;
+        }
+
         me.fireCustomEvent('sizechange');
       }
 
@@ -216,13 +217,13 @@ Optiscroll.Instance.prototype = {
     startY = me.scrollEl.scrollTop;
     
     endX = +destX;
-    if(destX == 'left') { endX = 0; }
-    if(destX == 'right') { endX = cache.scrollW - cache.clientW; }
+    if(destX === 'left') { endX = 0; }
+    if(destX === 'right') { endX = cache.scrollW - cache.clientW; }
     if(destX === false) { endX = startX; }
 
     endY = +destY;
-    if(destY == 'top') { endY = 0; }
-    if(destY == 'bottom') { endY = cache.scrollH - cache.clientH; }
+    if(destY === 'top') { endY = 0; }
+    if(destY === 'bottom') { endY = cache.scrollH - cache.clientH; }
     if(destY === false) { endY = startY; }
 
     // animate
@@ -262,7 +263,7 @@ Optiscroll.Instance.prototype = {
     startY = endY = scrollEl.scrollTop;
     offsetX = startX + eDim.left - sDim.left;
     offsetY = startY + eDim.top - sDim.top;
-    
+
     leftEdge = offsetX - (delta.left || 0);
     topEdge = offsetY - (delta.top || 0);
     rightEdge = offsetX + eDim.width - me.cache.clientW + (delta.right || 0);
@@ -383,7 +384,7 @@ Optiscroll.Instance.prototype = {
     me.element.dispatchEvent( new CustomEvent(eventName, { detail: eventData }) );
   }
 
-}
+};
 
 
 
@@ -397,7 +398,8 @@ var Events = {
     }
     G.pauseCheck = true;
     
-    _invoke(me.scrollbars, 'update');
+    me.scrollbars.v.update();
+    me.scrollbars.h.update();
 
     me.fireCustomEvent('scroll');
     
@@ -409,11 +411,10 @@ var Events = {
 
 
   touchstart: function (ev, me) {
-    var cache = me.cache,
-        cacheV = cache.v, cacheH = cache.h;
-
+    
     G.pauseCheck = false;
-    _invoke(me.scrollbars, 'update');
+    me.scrollbars.v.update();
+    me.scrollbars.h.update();
     
     if(me.settings.preventParentScroll) {
       Events.wheel(ev, me);
@@ -472,7 +473,6 @@ var Scrollbar = function (which, instance) {
       enabled = false,
       scrollbarEl = null,
       trackEl = null,
-      dragData = null,
       animated = false;
 
   var events = {
@@ -496,10 +496,10 @@ var Scrollbar = function (which, instance) {
       scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize];
     },
 
-    dragEnd: function (ev) {
+    dragEnd: function () {
       events.dragData = null;
     }
-  }
+  };
   
   return {
 
@@ -548,7 +548,7 @@ var Scrollbar = function (which, instance) {
       newDim = this.calc();
       newSize = newDim.size;
       oldSize = scrollbarCache.size;
-      newRelPos = ((1 / newSize) * newDim.position * 100);
+      newRelPos = (1 / newSize) * newDim.position * 100;
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
       if(newSize === 1 && enabled) {
@@ -612,8 +612,6 @@ var Scrollbar = function (which, instance) {
       var position = scrollEl[scrollProp],
           viewS = cache[clientSize], 
           scrollS = cache[scrollSize], 
-          minTrackR = settings.minTrackSize / 100,
-          maxTrackR = settings.maxTrackSize / 100,
           sizeRatio = viewS / scrollS,
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
@@ -626,14 +624,14 @@ var Scrollbar = function (which, instance) {
 
       // prevent overscroll effetcs (negative percent) 
       // and keep 1px tolerance near the edges
-      if(position <= 1) percent = 0;
-      if(position >= sizeDiff - 1) percent = 100;
+      if(position <= 1) { percent = 0; }
+      if(position >= sizeDiff - 1) { percent = 100; }
       
       // Capped size based on min/max track percentage 
-      sizeRatio = Math.max(sizeRatio, minTrackR);
-      sizeRatio = Math.min(sizeRatio, maxTrackR);
+      sizeRatio = Math.max(sizeRatio, settings.minTrackSize / 100);
+      sizeRatio = Math.min(sizeRatio, settings.maxTrackSize / 100);
 
-      positionRatio = (percent / 100 * sizeDiff) / scrollS;
+      positionRatio = (1 - sizeRatio) * (percent / 100);
 
       return { position: positionRatio, size: sizeRatio, percent: percent };
     },
