@@ -150,7 +150,7 @@ Optiscroll.Instance.prototype = {
       if( oldcH !== undefined ) {
 
         // if the element is no more in the DOM
-        if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
+        if(sH === 0 && cH === 0 && !Utils.containsNode(document.body, me.element)) {
           me.destroy();
           return false;
         }

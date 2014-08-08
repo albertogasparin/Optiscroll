@@ -44,6 +44,13 @@ var Utils = {
   },
 
 
+  containsNode: function (parent, node) {
+    return parent.contains ?
+      parent != node && parent.contains(node) :
+      !!(parent.compareDocumentPosition(node) & 16);
+  },
+
+
   // Global height checker
   // looped to listen element changes
   checkLoop: function () {
