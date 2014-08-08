@@ -1,0 +1,198 @@
+/**************************************
+ *  Optiscroll container base style
+ */
+
+.optiscroll {
+  position: relative;
+  overflow: hidden;
+}
+
+.optiscroll-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/**************************************
+ *  Optiscroll scrollbars base style
+ */
+
+.optiscroll-v,
+.optiscroll-h {
+  position: absolute;
+  z-index: 2;
+  -webkit-backface-visibility: hidden;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.optiscroll-v { right: 0; }
+.optiscroll-h { bottom: 0; }
+
+
+/**************************************
+ *  Optiscroll tracks base style
+ */
+
+.optiscroll-vtrack,
+.optiscroll-htrack {
+  display: block;
+  position: absolute;
+  opacity: 0;
+  cursor: default;
+  
+  -webkit-transform: translate(0%, 0%);
+  -moz-transform: translate(0%, 0%);
+  -ms-transform: translate(0%, 0%);
+  -o-transform: translate(0%, 0%);
+  transform: translate(0%, 0%);
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+/* track visible only when enabled */
+.vtrack-on > .optiscroll-v .optiscroll-vtrack { opacity: 1; }
+.htrack-on > .optiscroll-h .optiscroll-htrack { opacity: 1; }
+
+
+/* extend draggable area while dragging */
+.optiscroll-vtrack:active:before,
+.optiscroll-htrack:active:before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  bottom: -100px;
+  right: -100px;
+  z-index: 10000;
+}
+
+
+
+/**************************************
+ *  Prevent iOS page bounce
+ *  even when content is not longer enough.
+ *
+ *  Remember: enabling the page bounce fix will prevent 
+ *  nested scroll areas to scroll the parent.
+ */
+
+/* Uncomment to prevent VERTICAL iOS page bounce. */
+/*
+.optiscroll-nobounce > .optiscroll-content:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  border-bottom: 2px solid transparent;
+
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+*/
+
+
+/* Uncomment to prevent HORIZONTAL iOS page bounce. */
+/*
+.optiscroll-nobounce > .optiscroll-content:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  border-right: 2px solid transparent;
+
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+*/
+
+
+
+/**************************************
+ *  CUSTOM STYLE
+ *  feel free to change stuff
+ **************************************/
+
+/***
+ ***  Scrollbars style  ***/
+
+.optiscroll-v,
+.optiscroll-h {
+  background: transparent;
+  
+  /* Scrollbars are visible only on hover */ 
+  opacity: 0; 
+  -webkit-transition: opacity 0.2s ease 0s;
+  -moz-transition: opacity 0.2s ease 0s;
+  -ms-transition: opacity 0.2s ease 0s;
+  -o-transition: opacity 0.2s ease 0s;
+  transition: opacity 0.2s ease 0s;
+}
+
+.optiscroll.vtrack-on:hover > .optiscroll-v { opacity: 1; }
+.optiscroll.htrack-on:hover > .optiscroll-h { opacity: 1; }
+
+.optiscroll-v {
+  top: 4px;
+  bottom: 4px;
+  width: 0;
+}
+
+.optiscroll-h {
+  left: 4px;
+  right: 4px;
+  height: 0;
+}
+
+/* Avoid overapping while both scrollbars are enabled */
+.vtrack-on.htrack-on > .optiscroll-v { 
+  bottom: 8px;
+}
+.vtrack-on.htrack-on > .optiscroll-h { 
+  right: 8px;
+}
+
+
+/***
+ ***  Tracks style  ***/
+
+.optiscroll-vtrack,
+.optiscroll-htrack {
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
+  box-shadow: 0 0 1px #FFF;
+}
+
+.optiscroll-vtrack {
+  width: 3px;
+  right: 4px;
+}
+
+.optiscroll-htrack {
+  height: 3px;
+  bottom: 4px;
+}
+
+.optiscroll-vtrack:active,
+.optiscroll-htrack:active {
+  background: rgba(0,0,0,0.5);
+}
+

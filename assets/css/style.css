@@ -1,0 +1,362 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font: 18px/1.35 'Titillium Web', Helvetica, sans-serif; 
+  width: 100%;
+  height: 100%;
+  background: #4A4A4A;
+  overflow: hidden;
+}
+
+@media (max-width: 500px) {
+  html, body { font-size: 16px; }
+}
+
+
+h1 {
+  margin: 0;
+  font-weight: 300;
+  color: #F66242;
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 300;
+  color: #F66242;
+}
+
+h3 {
+  font-weight: 400;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+pre {
+  color: #F66242;
+  font-size: 0.8em;
+}
+
+code {
+  background: #FFF;
+  border: 1px solid #D5D5D5;
+  padding: 0.2em 0.8em 0.3em;
+  border-radius: 3px;
+}
+
+
+
+.btn {
+  display: inline-block;
+  background: #F66242;
+  color: #FFF;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 1em;
+  border: none;
+  border-radius: 30px;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.btn:focus { outline: none; }
+
+.column {
+  float: left;
+  width: 100%;
+}
+
+@media (min-width: 500px) {
+  .mid-50 { width: 50%; }
+}
+
+
+/* 
+ * MAIN NAV 
+ */
+
+.m-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #4A4A4A;
+  color: #FFF;
+  line-height: 34px;
+  z-index: 5;
+}
+
+.m-nav ul {
+  max-width: 1000px;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.m-nav li {
+  display: inline-block;
+  margin-left: 1.5em;
+}
+
+.m-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+
+/* 
+ * MAIN CONTAINER 
+ */
+
+.m-wrapper {
+  width: 100%;
+  height: 100%;
+  border-top: 34px solid transparent;
+}
+
+.m-wrapper > .optiscroll-v .optiscroll-vtrack {
+  width: 20px;
+  background: #F66242;
+  border-radius: 20px;
+}
+
+.m-wrapper > .optiscroll-h .optiscroll-htrack {
+  height: 20px;
+  background: #F66242;
+  border-radius: 20px;
+}
+
+
+
+
+/* 
+ * MAIN HEADER 
+ */
+
+.m-header {
+  padding: 60px 0;
+  background: #F6F2F2;
+  text-align: center;
+  z-index: 5;
+}
+
+
+.m-header p {
+  margin: 1.4em 0 1.5em;
+}
+
+.m-header .btn {
+  display: block;
+  width: 200px;
+  margin: 0 auto 0.5em;
+  padding: 0.8em 0;
+}
+
+.m-header pre {
+  margin-top: 0.5em;
+}
+
+
+
+
+/* 
+ * SECTIONS
+ */
+
+.m-sections {
+  background: #FFF;
+}
+
+.section {
+  margin: 0 auto;
+  padding: 2em 1em 4em;
+  border-bottom: 2px solid #DDD;
+  max-width: 1000px;  
+}
+
+.section:after { 
+  content: ''; 
+  clear: both;
+  display: table;
+}
+
+.section .mid-50 {
+  border-right: 1em solid #FFF;
+  border-bottom: 1em solid #FFF;
+}
+
+.section .mid-50 ~ .mid-50 {
+  border-right: none;
+  border-left: 1em solid #FFF;
+}
+
+@media (max-width: 500px) {
+  .section .mid-50 { 
+    border-right: none; 
+    border-left: none !important; 
+  }
+}
+
+.section .optiscroll {
+  height: 200px;
+  background: #F6F2F2;
+}
+
+.section .optiscroll-content {
+  padding: 0 1em 1em;
+}
+
+
+
+/* 
+ * FEATURES SECTION
+ */
+
+.s-features {
+  text-align: center;
+}
+
+.s-features ul {
+  display: inline-block;
+  margin: 0;
+  text-align: left;
+  font-size: 1.2em;
+}
+
+.s-features li {
+  margin-bottom: 0.4em;
+}
+
+
+/* 
+ * USAGE SECTION
+ */
+
+.s-usage {}
+
+
+/* STYLE FOR INLINE SCROLLBARS */
+#os2.vtrack-on .optiscroll-content {
+  margin-right: 12px; /* scrollbar size */
+}
+
+#os2.htrack-on .optiscroll-content {
+  margin-bottom: 12px; /* scrollbar size */
+}
+
+#os2.vtrack-on .optiscroll-v,
+#os2.htrack-on .optiscroll-h { opacity: 1; } 
+
+#os2 .optiscroll-v {
+  top: 0;
+  bottom: 0;
+  width: 12px; /* scrollbar size */
+  background: #DADDDD;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+}
+
+#os2 .optiscroll-vtrack {
+  width: 8px;
+  right: 2px;
+}
+
+#os2 .optiscroll-h {
+  left: 0;
+  right: 0;
+  height: 12px; /* scrollbar size */
+  background: #DADDDD;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+}
+
+#os2 .optiscroll-htrack {
+  height: 8px;
+  bottom: 2px;
+}
+
+#os2.vtrack-on.htrack-on .optiscroll-v { border-bottom: 12px solid transparent; } /* scrollbar size */
+#os2.vtrack-on.htrack-on .optiscroll-h { border-right: 12px solid transparent; } /* scrollbar size */
+
+
+
+
+
+/* 
+ * API SECTION
+ */
+
+.s-api h3 {
+  clear: both;
+}
+
+
+.s-api .demo-form {
+  font-size: 1.2em;
+  text-align: center;
+} 
+
+.s-api .demo-form input {
+  width: 3.5em;
+  padding: 0.2em 0.3em;
+  font-size: 18px;
+  border: 1px solid #CCC;
+  border-radius: 20px;
+  vertical-align: text-top;
+}
+
+.s-api .demo-form input:focus {
+  outline: none;
+  border-color: #F66242;
+}
+
+.s-api .demo-form .btn {
+  padding: 0.3em 1em;
+  font-size: 18px;
+  display: block;
+  margin: 1em auto 0;
+}
+
+#os4-el {
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: 0 0 0 100%;
+  background: #F66242;
+  border: 5px solid #FFF;
+}
+
+
+.s-api .optiscroll-content p {
+  width: 200%;
+  font-size: 1.2em;
+  color: #999;
+}
+
+
+
+/* 
+ * EVENTS SECTION
+ */
+
+.s-events {}
+
+.s-events code {
+  padding: 0.1em 0.5em 0.2em;
+  font-size: 0.8em;
+}
+
+
+
