@@ -1,5 +1,5 @@
 /*!
-* Optiscroll.js v1.0.4
+* Optiscroll.js v1.0.5
 * https://github.com/wilsonfletcher/Optiscroll/
 * by Alberto Gasparin
 * 
@@ -87,16 +87,19 @@ Optiscroll.Instance.prototype = {
     var me = this,
         settings = me.settings;
 
-    // add instance to global array for timed check
-    if(settings.autoUpdate) {
-      G.instances.push( me );
-    }
-
     // initialize scrollbars
     me.scrollbars = { 
       v: new Scrollbar('v', me), 
       h: new Scrollbar('h', me) 
     };
+
+    // Stop initialization if old IE
+    if(!document.addEventListener) { return; }
+
+    // add instance to global array for timed check
+    if(settings.autoUpdate) {
+      G.instances.push( me );
+    }
 
     // disable forced scrollbars if Firefox 
     // because we cannot hide native scrollbars yet
@@ -184,7 +187,7 @@ Optiscroll.Instance.prototype = {
       if( oldcH !== undefined ) {
 
         // if the element is no more in the DOM
-        if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
+        if(sH === 0 && cH === 0 && !Utils.containsNode(document.body, me.element)) {
           me.destroy();
           return false;
         }
@@ -711,6 +714,13 @@ var Utils = {
   },
 
 
+  containsNode: function (parent, node) {
+    return parent.contains ?
+      parent != node && parent.contains(node) :
+      !!(parent.compareDocumentPosition(node) & 16);
+  },
+
+
   // Global height checker
   // looped to listen element changes
   checkLoop: function () {
@@ -745,7 +755,7 @@ var Utils = {
 var G = Optiscroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
-  cssTransform: cssTest('transform'),
+  cssTransform: cssTest('transform') || '',
   nativeScrollbarSize: getScrollbarWidth(),
 
   instances: [],
@@ -773,7 +783,7 @@ function getScrollbarWidth () {
       outerEl, innerEl, width = 0;
 
   outerEl = document.createElement('div');
-  outerEl.style.cssText = 'overflow:auto;width:50px;height:50px;' + 'position:absolute;left:-100px';
+  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;' + 'position:absolute;left:-100px';
 
   innerEl = document.createElement('div');
   innerEl.style.cssText = 'width:100px;height:100px';
