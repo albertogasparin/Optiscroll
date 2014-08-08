@@ -2,7 +2,7 @@
 var G = Optiscroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
-  cssTransform: cssTest('transform'),
+  cssTransform: cssTest('transform') || '',
   nativeScrollbarSize: getScrollbarWidth(),
 
   instances: [],
