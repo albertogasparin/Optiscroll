@@ -22,15 +22,15 @@ Optiscroll aims to be as light as possible in order to not affect the performace
 
 ## Browser support
 
-Optiscroll works in all modern browsers (IE9 and above). IE8 support is under evaluation. Keep in mind that if Optiscroll does not work your web page will fallback to default scrollbars.
+Optiscroll works in **all modern browsers** (IE9 and above). IE8 support is under evaluation. Keep in mind that if Optiscroll does not work your web page will fallback to default scrollbars.
 
 Moreover, Optiscroll has been properly tested on:
-- IE9, IE11
-- Chrome 32, Chrome 34
-- Opera 12.16, Opera 20
-- Firefox 27
-- Android 4.1
-- iOS 6.1, 7.1
+- IE9, IE10, IE11
+- Chrome 32, Chrome 34, Chrome 36
+- Opera 12.16, Opera 20, Opera 23
+- Firefox 7, Firefox 12, Firefox 27
+- Android 4.1, Android 4.4
+- iOS 6.1, iOS 7.0.4, iOS 7.1.2
 
 
 
