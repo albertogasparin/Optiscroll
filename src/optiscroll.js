@@ -53,16 +53,19 @@ Optiscroll.Instance.prototype = {
     var me = this,
         settings = me.settings;
 
-    // add instance to global array for timed check
-    if(settings.autoUpdate) {
-      G.instances.push( me );
-    }
-
     // initialize scrollbars
     me.scrollbars = { 
       v: new Scrollbar('v', me), 
       h: new Scrollbar('h', me) 
     };
+
+    // Stop initialization if old IE
+    if(!document.addEventListener) { return; }
+
+    // add instance to global array for timed check
+    if(settings.autoUpdate) {
+      G.instances.push( me );
+    }
 
     // disable forced scrollbars if Firefox 
     // because we cannot hide native scrollbars yet
