@@ -163,8 +163,55 @@
         </section>
 
 
-        <section id="events" class="section">
+        <section id="events" class="section s-events">
           <h2>Custom events</h2>
+          
+          <div class="column">
+            <div class="column mid-50">
+              <h3>sizechange</h3>
+            </div>
+            <div class="column mid-50">
+              This event is fired on <code>clientWidth</code>/<code>clientHeight</code> changes of the optiscroll element, or on <code>scrollWidth</code>/<code>scrollHeight</code> changes of the scroll area.
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="column mid-50">
+              <h3>scrollstart</h3>
+            </div>
+            <div class="column mid-50">
+              This event is fired when the user starts scrolling. It's not fired again until a <code>scrollstop</code> event gets fired.
+              See <code>scrollstop</code> event for further details.
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="column mid-50">
+              <h3>scroll</h3>
+            </div>
+            <div class="column mid-50">
+              This event is fired while user scrolls. This event differs from the native one as it is throttled. It's fired accordingly with the <code>scrollMinUpdateInterval</code> value.
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="column mid-50">
+              <h3>scrollstop</h3>
+            </div>
+            <div class="column mid-50">
+              This event is fired when the user stops scrolling. The wait time before this event gets fired is defined by the <code>scrollStopDelay</code> option.
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="column mid-50">
+              <h3>scrollreachedge</h3>
+            </div>
+            <div class="column mid-50">
+              This event is fired when the user scrolls to any edge (top/left/right/bottom). There are also edge specific events: <code>scrollreachtop</code>, <code>scrollreachbottom</code>, <code>scrollreachleft</code>, <code>scrollreachright</code>. The "generic" event name is fired before the specific one.
+            </div>
+          </div>
+        
         </section>
         
       </div>
