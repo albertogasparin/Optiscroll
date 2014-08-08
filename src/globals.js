@@ -30,7 +30,7 @@ function getScrollbarWidth () {
       outerEl, innerEl, width = 0;
 
   outerEl = document.createElement('div');
-  outerEl.style.cssText = 'overflow:auto;width:50px;height:50px;' + 'position:absolute;left:-100px';
+  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;' + 'position:absolute;left:-100px';
 
   innerEl = document.createElement('div');
   innerEl.style.cssText = 'width:100px;height:100px';
