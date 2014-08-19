@@ -2,7 +2,7 @@
 
 Optiscroll is an tiny (**9kB**) and highly optimized custom scrollbar library for modern web apps.
 
-Optiscroll aims to be as light as possible in order to not affect the performace of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript it only hides native scrollbars and allows you to style the fake scrollbars as you like. Optiscroll implements custom events and methods to extend browser scroll functionalities. 
+Optiscroll aims to be as light as possible in order to not affect the performace of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript. It only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, Optiscroll adds custom events and methods to extend browser scroll functionalities. 
 
 
 
