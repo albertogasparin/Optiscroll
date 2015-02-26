@@ -160,7 +160,7 @@ var Scrollbar = function (which, instance) {
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
 
-      if(sizeRatio === 1 || scrollS === 0) { // no scrollbars needed
+      if(sizeRatio >= 1 || !scrollS) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
       }
 
