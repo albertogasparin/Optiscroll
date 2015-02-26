@@ -1,9 +1,9 @@
 /*!
-* Optiscroll.js v1.0.5
+* Optiscroll.js v1.0.6
 * https://github.com/wilsonfletcher/Optiscroll/
 * by Alberto Gasparin
 * 
-* @copyright 2014 Wilson Fletcher
+* @copyright 2015 Wilson Fletcher
 * @license Released under MIT LICENSE
 */
 
@@ -619,7 +619,7 @@ var Scrollbar = function (which, instance) {
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
 
-      if(sizeRatio === 1 || scrollS === 0) { // no scrollbars needed
+      if(sizeRatio >= 1 || !scrollS) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
       }
 
