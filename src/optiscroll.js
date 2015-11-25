@@ -55,8 +55,8 @@ Optiscroll.Instance.prototype = {
 
     // initialize scrollbars
     me.scrollbars = { 
-      v: new Scrollbar('v', me), 
-      h: new Scrollbar('h', me) 
+      v: Scrollbar('v', me), 
+      h: Scrollbar('h', me) 
     };
 
     // Stop initialization if old IE
