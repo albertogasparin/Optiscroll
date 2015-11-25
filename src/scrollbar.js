@@ -52,7 +52,7 @@ var Scrollbar = function (which, instance) {
       enabled = bool;
 
       if(trackEl) {
-        toggleClass(parentEl, which+'track-on', enabled);
+        toggleClass(parentEl, 'has-' + which+'track', enabled);
 
         if(enabled) {
           trackEl.style[G.cssTransition] = trackTransition;
@@ -68,8 +68,8 @@ var Scrollbar = function (which, instance) {
       scrollbarEl = document.createElement('div');
       trackEl = document.createElement('b');
 
-      scrollbarEl.className = settings.classPrefix+'-'+which;
-      trackEl.className = settings.classPrefix+'-'+which+'track';
+      scrollbarEl.className = settings.classPrefix+which;
+      trackEl.className = settings.classPrefix+which+'track';
       scrollbarEl.appendChild(trackEl);
       parentEl.appendChild(scrollbarEl);
 

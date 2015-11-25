@@ -1,13 +1,15 @@
+$optiscroll-namespace: 'optiscroll' !default;
+$optiscroll-classPrefix: $optiscroll-namespace + '-' !default;
 /**************************************
  *  Optiscroll container base style
  */
 
-.optiscroll {
+.#{$optiscroll-namespace} {
   position: relative;
   overflow: hidden;
 }
 
-.optiscroll-content {
+.#{$optiscroll-classPrefix}content {
   position: absolute;
   top: 0;
   left: 0;
@@ -23,47 +25,35 @@
  *  Optiscroll scrollbars base style
  */
 
-.optiscroll-v,
-.optiscroll-h {
+.#{$optiscroll-classPrefix}v,
+.#{$optiscroll-classPrefix}h {
   position: absolute;
   z-index: 2;
-  -webkit-backface-visibility: hidden;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  backface-visibility: hidden;
   user-select: none;
 }
 
-.optiscroll-v { right: 0; }
-.optiscroll-h { bottom: 0; }
+.#{$optiscroll-classPrefix}v { right: 0; }
+.#{$optiscroll-classPrefix}h { bottom: 0; }
 
 
 /**************************************
  *  Optiscroll tracks base style
  */
 
-.optiscroll-vtrack,
-.optiscroll-htrack {
+.#{$optiscroll-classPrefix}vtrack,
+.#{$optiscroll-classPrefix}htrack {
   display: block;
   position: absolute;
   opacity: 0;
-  
-  -webkit-transform: translate(0%, 0%);
-  -moz-transform: translate(0%, 0%);
-  -ms-transform: translate(0%, 0%);
-  -o-transform: translate(0%, 0%);
   transform: translate(0%, 0%);
-
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 
 /* track visible only when enabled */
-.vtrack-on > .optiscroll-v .optiscroll-vtrack { opacity: 1; }
-.htrack-on > .optiscroll-h .optiscroll-htrack { opacity: 1; }
+.#{$optiscroll-namespace}.has-vtrack > .#{$optiscroll-classPrefix}v .#{$optiscroll-classPrefix}vtrack { opacity: 1; }
+.#{$optiscroll-namespace}.has-htrack > .#{$optiscroll-classPrefix}h .#{$optiscroll-classPrefix}htrack { opacity: 1; }
 
 
 
