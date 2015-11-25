@@ -1,5 +1,16 @@
+
+/* Set these values before importing optiscroll.scss 
+ * to override the defaults
+ */
+
 $optiscroll-namespace: 'optiscroll' !default;
 $optiscroll-classPrefix: $optiscroll-namespace + '-' !default;
+
+$optiscroll-forceScrollbarV: false !default;
+$optiscroll-forceScrollbarH: false !default;
+$optiscroll-defaultStyle: true !default;
+
+
 /**************************************
  *  Optiscroll container base style
  */
@@ -62,109 +73,94 @@ $optiscroll-classPrefix: $optiscroll-namespace + '-' !default;
  *  even when content is not longer enough.
  */
 
-/* Uncomment to prevent VERTICAL scrolling. */
-/*
-.optiscroll-prevent > .optiscroll-content:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 100%;
-  border-bottom: 2px solid transparent;
-
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+@if $optiscroll-forceScrollbarV {
+  .#{$optiscroll-classPrefix}content:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    border-bottom: 2px solid transparent;
+    box-sizing: content-box;
+  }
 }
-*/
 
 
-/* Uncomment to prevent HORIZONTAL scrolling. */
-/*
-.optiscroll-prevent > .optiscroll-content:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  border-right: 2px solid transparent;
-
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+@if $optiscroll-forceScrollbarH {
+  .#{$optiscroll-classPrefix}content:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-right: 2px solid transparent;
+    box-sizing: content-box;
+  }
 }
-*/
 
 
 
 /**************************************
- *  CUSTOM STYLE
- *  feel free to change stuff
+ *  DEFAULT STYLE
  **************************************/
 
-/***
- ***  Scrollbars style  ***/
-$scrollbar-size: 0px;
+@if $optiscroll-defaultStyle {
 
-.optiscroll-v,
-.optiscroll-h {
-  background: transparent;
-  
-  /* Scrollbars are visible only on hover */ 
-  opacity: 0; 
-  -webkit-transition: opacity 0.2s ease 0s;
-  -moz-transition: opacity 0.2s ease 0s;
-  -ms-transition: opacity 0.2s ease 0s;
-  -o-transition: opacity 0.2s ease 0s;
-  transition: opacity 0.2s ease 0s;
+  /***
+   ***  Scrollbars style  ***/
+
+  .#{$optiscroll-classPrefix}v,
+  .#{$optiscroll-classPrefix}h {
+    background: transparent;
+    
+    /* Scrollbars are visible only on hover */ 
+    opacity: 0; 
+    transition: opacity 0.2s ease 0s;
+  }
+
+  .#{$optiscroll-namespace}.has-vtrack:hover > .#{$optiscroll-classPrefix}v { opacity: 1; }
+  .#{$optiscroll-namespace}.has-htrack:hover > .#{$optiscroll-classPrefix}h { opacity: 1; }
+
+  .#{$optiscroll-classPrefix}v {
+    top: 4px;
+    bottom: 4px;
+    width: 0;
+  }
+
+  .#{$optiscroll-classPrefix}h {
+    left: 4px;
+    right: 4px;
+    height: 0;
+  }
+
+  /* Avoid overapping while both scrollbars are enabled */
+  .#{$optiscroll-namespace}.has-vtrack.has-htrack > .#{$optiscroll-classPrefix}v { 
+    bottom: 8px;
+  }
+  .#{$optiscroll-namespace}.has-vtrack.has-htrack > .#{$optiscroll-classPrefix}h { 
+    right: 8px;
+  }
+
+  /***
+   ***  Tracks style  ***/
+
+  .#{$optiscroll-classPrefix}vtrack,
+  .#{$optiscroll-classPrefix}htrack {
+    background: rgba(#000, 0.3);
+    border-radius: 2px;
+    box-shadow: 0 0 1px #FFF;
+  }
+
+  .#{$optiscroll-classPrefix}vtrack {
+    width: 3px;
+    right: 4px;
+  }
+
+  .#{$optiscroll-classPrefix}htrack {
+    height: 3px;
+    bottom: 4px;
+  }
+
 }
-
-.optiscroll.vtrack-on:hover > .optiscroll-v { opacity: 1; }
-.optiscroll.htrack-on:hover > .optiscroll-h { opacity: 1; }
-
-.optiscroll-v {
-  top: 4px;
-  bottom: 4px;
-  width: $scrollbar-size;
-}
-
-.optiscroll-h {
-  left: 4px;
-  right: 4px;
-  height: $scrollbar-size;
-}
-
-/* Avoid overapping while both scrollbars are enabled */
-.vtrack-on.htrack-on > .optiscroll-v { 
-  bottom: 8px;
-}
-.vtrack-on.htrack-on > .optiscroll-h { 
-  right: 8px;
-}
-
-
-/***
- ***  Tracks style  ***/
-$track-size: 3px;
-
-
-.optiscroll-vtrack,
-.optiscroll-htrack {
-  background: rgba(0,0,0,0.3);
-  border-radius: 2px;
-  box-shadow: 0 0 1px #FFF;
-}
-
-.optiscroll-vtrack {
-  width: $track-size;
-  right: 4px;
-}
-
-.optiscroll-htrack {
-  height: $track-size;
-  bottom: 4px;
-}
-
-
