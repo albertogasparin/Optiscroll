@@ -77,10 +77,37 @@ module.exports = exports = function(grunt) {
                 }
             }
         },
+
+        sass: {
+            dist: {
+                options: {
+                    outputStyle: 'compressed'
+                },
+                files: {
+                    'dist/optiscroll.css': ['scss/optiscroll.scss']
+                }
+            }
+        },
+
+        autoprefixer: {
+            options: {
+                browsers: ['last 3 versions', 'IE 9']
+            },
+            dist: {
+                files: {
+                    'dist/optiscroll.css': ['dist/optiscroll.css']
+                }
+            }
+        },
+
         watch: {
             build: {
                 files: ['src/*.js', 'src/**/*.js'],
                 tasks: ['build']
+            },
+            css: {
+                files: ['scss/*.scss'],
+                tasks: ['sass', 'autoprefixer']
             },
             grunt: {
                 files: [
@@ -95,7 +122,7 @@ module.exports = exports = function(grunt) {
                 updateConfigs: ['pkg'],
                 commit: true,
                 commitMessage: 'Release v%VERSION%',
-                commitFiles: ['package.json','bower.json','dist/optiscroll.min.js','dist/optiscroll.js','dist/jquery.optiscroll.min.js','dist/jquery.optiscroll.js'],
+                commitFiles: ['package.json','bower.json','dist/optiscroll.min.js','dist/optiscroll.js','dist/jquery.optiscroll.min.js','dist/jquery.optiscroll.js','dist/optiscroll.css'],
                 createTag: true,
                 tagName: 'v%VERSION%',
                 tagMessage: 'Version %VERSION%',
@@ -109,7 +136,7 @@ module.exports = exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.registerTask('default', ['connect', 'build', 'watch']);
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('build', ['concat', 'uglify', 'sass', 'autoprefixer']);
 
     grunt.registerTask('test', ['build', 'connect']);
 
