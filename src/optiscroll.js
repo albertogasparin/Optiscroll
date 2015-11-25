@@ -14,7 +14,7 @@ var Optiscroll = function Optiscroll(element, options) {
 var GS = Optiscroll.globalSettings = {
   scrollMinUpdateInterval: 1000 / 40, // 40 FPS
   checkFrequency: 1000,
-  pauseCheck: false
+  pauseCheck: false,
 };
 
 Optiscroll.defaults = {
@@ -25,19 +25,19 @@ Optiscroll.defaults = {
   minTrackSize: 5,
   draggableTracks: true,
   autoUpdate: true,
-  classPrefix: 'optiscroll-'
+  classPrefix: 'optiscroll-',
 };
 
 
 
-Optiscroll.Instance = function ( element, options ) {
+Optiscroll.Instance = function (element, options) {
   var me = this;
   
   me.element = element;
   me.scrollEl = element.children[0];
   
   // instance variables
-  me.settings = _extend( _extend({}, Optiscroll.defaults), options || {});
+  me.settings = _extend(_extend({}, Optiscroll.defaults), options || {});
   
   me.cache = {};
   
@@ -55,8 +55,8 @@ Optiscroll.Instance.prototype = {
 
     // initialize scrollbars
     me.scrollbars = { 
-      v: Scrollbar('v', me), 
-      h: Scrollbar('h', me) 
+      v: Scrollbar('v', me),
+      h: Scrollbar('h', me),
     };
 
     // Stop initialization if old IE
@@ -64,7 +64,7 @@ Optiscroll.Instance.prototype = {
 
     // add instance to global array for timed check
     if(settings.autoUpdate) {
-      G.instances.push( me );
+      G.instances.push(me);
     }
 
     // disable forced scrollbars if Firefox 
@@ -80,7 +80,7 @@ Optiscroll.Instance.prototype = {
     } 
 
     if(G.isTouch && settings.preventParentScroll) {
-      toggleClass(me.element, settings.classPrefix+'prevent', true);
+      toggleClass(me.element, settings.classPrefix + 'prevent', true);
     }
 
     // calculate scrollbars
@@ -141,8 +141,8 @@ Optiscroll.Instance.prototype = {
         sW = scrollEl.scrollWidth,
         cW = scrollEl.clientWidth;
     
-    if( sH !== cache.scrollH || cH !== cache.clientH || 
-      sW !== cache.scrollW || cW !== cache.clientW ) {
+    if(sH !== cache.scrollH || cH !== cache.clientH || 
+      sW !== cache.scrollW || cW !== cache.clientW) {
       
       cache.scrollH = sH;
       cache.clientH = cH;
@@ -221,7 +221,7 @@ Optiscroll.Instance.prototype = {
     }
 
     if(typeof delta === 'number') { // same delta for all
-      delta = { top:delta, right:delta, bottom:delta, left:delta };
+      delta = { top: delta, right: delta, bottom: delta, left: delta };
     }
 
     delta = delta || {};
@@ -268,26 +268,24 @@ Optiscroll.Instance.prototype = {
 
     if(isNaN(duration)) { // undefined or auto
       // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
-      duration = Math.pow( Math.max( Math.abs(endX - startX), Math.abs(endY - startY) ), 0.54) * 15;
+      duration = Math.pow(Math.max(Math.abs(endX - startX), Math.abs(endY - startY)), 0.54) * 15;
     }
     
-    var scrollAnimation = function () {
+    (function scrollAnimation () {
       var time = Math.min(1, ((Date.now() - startTime) / duration)),
           easedTime = Utils.easingFunction(time);
       
-      if( endY !== startY ) {
+      if(endY !== startY) {
         scrollEl.scrollTop = ~~(easedTime * (endY - startY)) + startY;
       }
-      if( endX !== startX ) {
+      if(endX !== startX) {
         scrollEl.scrollLeft = ~~(easedTime * (endX - startX)) + startX;
       }
 
       if(time < 1) {
         animationTimeout(scrollAnimation);
       }
-    };
-    
-    animationTimeout(scrollAnimation);
+    }());
   },
 
 
@@ -297,7 +295,7 @@ Optiscroll.Instance.prototype = {
     var me = this,
         scrollEl = me.scrollEl,
         listeners = me.listeners,
-        index = G.instances.indexOf( me );
+        index = G.instances.indexOf(me);
 
     // unbind events
     for (var ev in listeners) {
@@ -312,7 +310,7 @@ Optiscroll.Instance.prototype = {
     scrollEl.removeAttribute('data-scroll');
 
     // remove classes
-    toggleClass(me.element, me.settings.classPrefix+'prevent', false);
+    toggleClass(me.element, me.settings.classPrefix + 'prevent', false);
     
     // defer instance removal from global array
     // to not affect checkLoop _invoke
@@ -347,11 +345,11 @@ Optiscroll.Instance.prototype = {
       scrollWidth: sW,
       scrollHeight: sH,
       clientWidth: cache.clientW,
-      clientHeight: cache.clientH
+      clientHeight: cache.clientH,
     };
 
-    me.element.dispatchEvent( new CustomEvent(eventName, { detail: eventData }) );
-  }
+    me.element.dispatchEvent(new CustomEvent(eventName, { detail: eventData }));
+  },
 
 };
 

@@ -1,3 +1,4 @@
+
 // Global variables
 var G = Optiscroll.G = {
   isTouch: 'ontouchstart' in window,
@@ -7,10 +8,10 @@ var G = Optiscroll.G = {
 
   instances: [],
   checkTimer: null,
-  pauseCheck: false
+  pauseCheck: false,
 };
 
-G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-'+G.cssTransform.replace('T','-t').toLowerCase();
+G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-' + G.cssTransform.replace('T','-t').toLowerCase();
 
 
 
@@ -18,8 +19,7 @@ var animationTimeout = (function () {
   return window.requestAnimationFrame || 
     window.webkitRequestAnimationFrame || 
     window.mozRequestAnimationFrame || 
-    window.msRequestAnimationFrame || 
-    function(callback){ window.setTimeout(callback, 1000/60); };
+    function(callback){ window.setTimeout(callback, 1000 / 60); };
 })();
 
 
@@ -30,7 +30,7 @@ function getScrollbarWidth () {
       outerEl, innerEl, width = 0;
 
   outerEl = document.createElement('div');
-  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;' + 'position:absolute;left:-100px';
+  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;position:absolute;left:-100px';
 
   innerEl = document.createElement('div');
   innerEl.style.cssText = 'width:100px;height:100px';
@@ -46,12 +46,12 @@ function getScrollbarWidth () {
 
 // Detect css3 support, thanks Modernizr
 function cssTest (prop) {
-  var ucProp  = prop.charAt(0).toUpperCase() + prop.slice(1),
-      el = document.createElement( 'test' ),
-      props   = (prop + ' ' + ['Webkit','Moz','O','ms'].join(ucProp + ' ') + ucProp).split(' ');
+  var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
+      el = document.createElement('test'),
+      props = (prop + ' ' + ['Webkit','Moz','O','ms'].join(ucProp + ' ') + ucProp).split(' ');
 
-  for ( var i in props ) {
-    if ( el.style[ props[i] ] !== undefined ) { return props[i]; }
+  for (var i in props) {
+    if(el.style[props[i]] !== undefined) { return props[i]; }
   }
   return false;
 }
@@ -68,7 +68,7 @@ function toggleClass (el, value, bool) {
     ~index && classes.splice(index, 1);
   }
 
-  el.className = classes.join(" ");
+  el.className = classes.join(' ');
 }
 
 

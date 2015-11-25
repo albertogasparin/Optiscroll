@@ -17,7 +17,7 @@
   $.fn[pluginName] = function(options) {
     var method, args;
     
-    if( typeof options === 'string' ) {
+    if(typeof options === 'string') {
       args = Array.prototype.slice.call(arguments);
       method = args.shift();
     }
@@ -32,7 +32,7 @@
         $el.data(pluginName, inst);
       }
       // allow exec method on instance 
-      else if( inst && typeof method === 'string' ) {
+      else if(inst && typeof method === 'string') {
         inst[method].apply(inst, args);
         if(method === 'destroy') {
           $el.removeData(pluginName);
@@ -41,4 +41,4 @@
     });
   };
 
-})( jQuery || Zepto );
+}(jQuery || Zepto));

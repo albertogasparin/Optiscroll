@@ -3,7 +3,7 @@ var Utils = {
   hideNativeScrollbars: function (scrollEl) {
     var size = G.nativeScrollbarSize,
         scrollElStyle = scrollEl.style;
-    if( size === 0 ) {
+    if(size === 0) {
       // hide Webkit/touch scrollbars
       var time = Date.now();
       scrollEl.setAttribute('data-scroll', time);
@@ -11,10 +11,10 @@ var Utils = {
       // force scrollbars update on Webkit
       scrollElStyle.display = 'none';
       
-      if( G.isTouch ) {
-        Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'display: none;');
+      if(G.isTouch) {
+        Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display: none;');
       } else {
-        Utils.addCssRule('[data-scroll="'+time+'"]::-webkit-scrollbar', 'width: 0; height: 0;');
+        Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'width: 0; height: 0;');
       }
 
       animationTimeout(function () { 
@@ -33,14 +33,14 @@ var Utils = {
   addCssRule: function (selector, rules) {
     var styleSheet = document.getElementById('scroll-sheet');
 
-    if ( !styleSheet ) {
-      styleSheet = document.createElement("style");
+    if(!styleSheet) {
+      styleSheet = document.createElement('style');
       styleSheet.id = 'scroll-sheet';
       document.head.appendChild(styleSheet);
     } 
     // do not use sheet.insertRule because FF throws an error
     // if the selector is not supported
-    styleSheet.innerHTML += selector + "{" + rules + "} ";
+    styleSheet.innerHTML += selector + '{' + rules + '} ';
   },
 
 
@@ -75,7 +75,7 @@ var Utils = {
   // easeOutCubic function
   easingFunction: function (t) { 
     return (--t) * t * t + 1; 
-  }
+  },
 
 
 };

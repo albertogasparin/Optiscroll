@@ -8,8 +8,8 @@ var Scrollbar = function (which, instance) {
       scrollbarCache = cache[which] = {},
 
       sizeProp = isVertical ? 'H' : 'W',
-      clientSize = 'client'+sizeProp,
-      scrollSize = 'scroll'+sizeProp,
+      clientSize = 'client' + sizeProp,
+      scrollSize = 'scroll' + sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
       trackTransition = 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
@@ -42,7 +42,7 @@ var Scrollbar = function (which, instance) {
 
     dragEnd: function () {
       events.dragData = null;
-    }
+    },
   };
   
   return {
@@ -52,7 +52,7 @@ var Scrollbar = function (which, instance) {
       enabled = bool;
 
       if(trackEl) {
-        toggleClass(parentEl, 'has-' + which+'track', enabled);
+        toggleClass(parentEl, 'has-' + which + 'track', enabled);
 
         if(enabled) {
           trackEl.style[G.cssTransition] = trackTransition;
@@ -68,8 +68,8 @@ var Scrollbar = function (which, instance) {
       scrollbarEl = document.createElement('div');
       trackEl = document.createElement('b');
 
-      scrollbarEl.className = settings.classPrefix+which;
-      trackEl.className = settings.classPrefix+which+'track';
+      scrollbarEl.className = settings.classPrefix + which;
+      trackEl.className = settings.classPrefix + which + 'track';
       scrollbarEl.appendChild(trackEl);
       parentEl.appendChild(scrollbarEl);
 
@@ -123,19 +123,19 @@ var Scrollbar = function (which, instance) {
       var me = this;
 
       if(newSize !== oldSize) {
-        trackEl.style[ isVertical ? 'height':'width' ] = newSize * 100 + '%';
+        trackEl.style[ isVertical ? 'height' : 'width' ] = newSize * 100 + '%';
       }
 
       if(deltaPos) { // only if position has changed
-        me.animateTrack( G.isTouch && deltaPos > 20 );
-        trackEl.style[G.cssTransform] = 'translate(' + (isVertical ?  '0%,'+newRelPos+'%' : newRelPos+'%'+',0%') +')';
+        me.animateTrack(G.isTouch && deltaPos > 20);
+        trackEl.style[G.cssTransform] = 'translate(' + (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') + ')';
       }
     },
 
 
     animateTrack: function (animatePos) {
       if(animatePos || animated) {
-        trackEl.style[G.cssTransition] = trackTransition + (animatePos ? ', '+ G.cssTransformDashed + ' 0.2s linear 0s' : '');
+        trackEl.style[G.cssTransition] = trackTransition + (animatePos ? ', ' + G.cssTransformDashed + ' 0.2s linear 0s' : '');
       }
       animated = animatePos;
     },
@@ -186,7 +186,7 @@ var Scrollbar = function (which, instance) {
 
       if(scrollbarCache.was !== percent && percent % 100 === 0) {
         instance.fireCustomEvent('scrollreachedge');
-        instance.fireCustomEvent('scrollreach'+ evNames[percent/100] );
+        instance.fireCustomEvent('scrollreach' + evNames[percent / 100]);
       }
 
       scrollbarCache.was = percent;
@@ -202,8 +202,7 @@ var Scrollbar = function (which, instance) {
       if(scrollbarEl && scrollbarEl.parentNode) {
         scrollbarEl.parentNode.removeChild(scrollbarEl);
       }
-    }
-
+    },
 
   };
 

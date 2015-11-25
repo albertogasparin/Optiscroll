@@ -57,7 +57,7 @@ var Events = {
     if(cacheH.enabled && cacheH.percent % 100 === 0) {
       me.scrollEl.scrollLeft = cacheH.percent ? (cache.scrollW - cache.clientW - 1) : 1;
     }
-  }
+  },
 
 
 };
