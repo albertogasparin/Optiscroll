@@ -12,12 +12,10 @@ var Scrollbar = function (which, instance) {
       scrollSize = 'scroll' + sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
-      trackTransition = 'height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s',
 
       enabled = false,
       scrollbarEl = null,
-      trackEl = null,
-      animated = false;
+      trackEl = null;
 
   var events = {
     dragData: null,
@@ -53,10 +51,6 @@ var Scrollbar = function (which, instance) {
 
       if(trackEl) {
         toggleClass(parentEl, 'has-' + which + 'track', enabled);
-
-        if(enabled) {
-          trackEl.style[G.cssTransition] = trackTransition;
-        }
       }
 
       // expose enabled
@@ -120,24 +114,10 @@ var Scrollbar = function (which, instance) {
 
 
     style: function (newRelPos, deltaPos, newSize, oldSize) {
-      var me = this;
-
       if(newSize !== oldSize) {
         trackEl.style[ isVertical ? 'height' : 'width' ] = newSize * 100 + '%';
       }
-
-      if(deltaPos) { // only if position has changed
-        me.animateTrack(G.isTouch && deltaPos > 20);
-        trackEl.style[G.cssTransform] = 'translate(' + (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') + ')';
-      }
-    },
-
-
-    animateTrack: function (animatePos) {
-      if(animatePos || animated) {
-        trackEl.style[G.cssTransition] = trackTransition + (animatePos ? ', ' + G.cssTransformDashed + ' 0.2s linear 0s' : '');
-      }
-      animated = animatePos;
+      trackEl.style[G.cssTransform] = 'translate(' + (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') + ')';
     },
 
 
@@ -148,7 +128,6 @@ var Scrollbar = function (which, instance) {
       if (trackEl) { trackEl[method](type[0], events.dragStart); }
       document[method](type[1], events.dragMove);
       document[method](type[2], events.dragEnd);
-      
     },
 
 

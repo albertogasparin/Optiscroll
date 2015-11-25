@@ -58,6 +58,7 @@ $optiscroll-defaultStyle: true !default;
   position: absolute;
   opacity: 0;
   transform: translate(0%, 0%);
+  transition: height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s;
   box-sizing: border-box;
 }
 

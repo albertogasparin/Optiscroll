@@ -11,8 +11,6 @@ var G = Optiscroll.G = {
   pauseCheck: false,
 };
 
-G.cssTransformDashed = (G.cssTransform === 'transform') ? G.cssTransform : '-' + G.cssTransform.replace('T','-t').toLowerCase();
-
 
 
 var animationTimeout = (function () {

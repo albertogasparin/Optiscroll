@@ -32,8 +32,8 @@ test("It should create scrollbars", function () {
   ok( os.element.querySelector('.optiscroll-h'), "Horizontal scrollbar element created");
   
   // Classes
-  notEqual( os.element.className.indexOf('vtrack-on'), -1);
-  notEqual( os.element.className.indexOf('htrack-on'), -1);
+  notEqual( os.element.className.indexOf('has-vtrack'), -1);
+  notEqual( os.element.className.indexOf('has-htrack'), -1);
 });
 
 test("It should set the track size", function () {
