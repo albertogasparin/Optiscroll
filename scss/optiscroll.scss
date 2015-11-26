@@ -39,6 +39,7 @@ $optiscroll-defaultStyle: true !default;
 .#{$optiscroll-classPrefix}v,
 .#{$optiscroll-classPrefix}h {
   position: absolute;
+  visibility: hidden;
   z-index: 2;
   backface-visibility: hidden;
   user-select: none;
@@ -46,6 +47,11 @@ $optiscroll-defaultStyle: true !default;
 
 .#{$optiscroll-classPrefix}v { right: 0; }
 .#{$optiscroll-classPrefix}h { bottom: 0; }
+
+.#{$optiscroll-namespace}.has-vtrack > .#{$optiscroll-classPrefix}v,
+.#{$optiscroll-namespace}.has-htrack > .#{$optiscroll-classPrefix}h {
+  visibility: visible;
+}
 
 
 /**************************************
@@ -56,16 +62,11 @@ $optiscroll-defaultStyle: true !default;
 .#{$optiscroll-classPrefix}htrack {
   display: block;
   position: absolute;
-  opacity: 0;
+  opacity: 1;
   transform: translate(0%, 0%);
   transition: height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s;
   box-sizing: border-box;
 }
-
-
-/* track visible only when enabled */
-.#{$optiscroll-namespace}.has-vtrack > .#{$optiscroll-classPrefix}v .#{$optiscroll-classPrefix}vtrack { opacity: 1; }
-.#{$optiscroll-namespace}.has-htrack > .#{$optiscroll-classPrefix}h .#{$optiscroll-classPrefix}htrack { opacity: 1; }
 
 
 
@@ -112,18 +113,6 @@ $optiscroll-defaultStyle: true !default;
   /***
    ***  Scrollbars style  ***/
 
-  .#{$optiscroll-classPrefix}v,
-  .#{$optiscroll-classPrefix}h {
-    background: transparent;
-    
-    /* Scrollbars are visible only on hover */ 
-    opacity: 0; 
-    transition: opacity 0.2s ease 0s;
-  }
-
-  .#{$optiscroll-namespace}.has-vtrack:hover > .#{$optiscroll-classPrefix}v { opacity: 1; }
-  .#{$optiscroll-namespace}.has-htrack:hover > .#{$optiscroll-classPrefix}h { opacity: 1; }
-
   .#{$optiscroll-classPrefix}v {
     top: 4px;
     bottom: 4px;
@@ -152,6 +141,7 @@ $optiscroll-defaultStyle: true !default;
     background: rgba(#000, 0.3);
     border-radius: 2px;
     box-shadow: 0 0 1px #FFF;
+    opacity: 0;
   }
 
   .#{$optiscroll-classPrefix}vtrack {
@@ -162,6 +152,13 @@ $optiscroll-defaultStyle: true !default;
   .#{$optiscroll-classPrefix}htrack {
     height: 3px;
     bottom: 4px;
+  }
+
+  .#{$optiscroll-namespace}:hover {
+    & > .#{$optiscroll-classPrefix}v .#{$optiscroll-classPrefix}vtrack,
+    & > .#{$optiscroll-classPrefix}h .#{$optiscroll-classPrefix}htrack { 
+      opacity: 1; 
+    }
   }
 
 }
