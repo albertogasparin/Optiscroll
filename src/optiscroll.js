@@ -59,9 +59,6 @@ Optiscroll.Instance.prototype = {
       h: Scrollbar('h', me),
     };
 
-    // Stop initialization if old IE
-    if(!document.addEventListener) { return; }
-
     // add instance to global array for timed check
     if(settings.autoUpdate) {
       G.instances.push(me);
@@ -101,10 +98,6 @@ Optiscroll.Instance.prototype = {
     listeners.scroll = _throttle(function (ev) { 
       Events.scroll(ev, me); 
     }, GS.scrollMinUpdateInterval);
-
-    // overflow events bindings (non standard, moz + webkit)
-    // to update scrollbars immediately 
-    listeners.overflow = listeners.underflow = listeners.overflowchanged = function () { me.update(); };
 
     if(G.isTouch) {
       listeners.touchstart = function (ev) { Events.touchstart(ev, me); };
