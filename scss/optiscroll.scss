@@ -17,7 +17,9 @@ $optiscroll-defaultStyle: true !default;
 
 .#{$optiscroll-namespace} {
   position: relative;
-  overflow: hidden;
+  overflow: auto;
+  
+  &.is-enabled { overflow: hidden; }
 }
 
 .#{$optiscroll-classPrefix}content {

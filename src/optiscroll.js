@@ -33,10 +33,9 @@ Optiscroll.defaults = {
 Optiscroll.Instance = function (element, options) {
   var me = this;
   
-  me.element = element;
   // instance variables
+  me.element = element;  
   me.settings = _extend(_extend({}, Optiscroll.defaults), options || {});
-  
   me.cache = {};
   
   me.init();
@@ -52,6 +51,8 @@ Optiscroll.Instance.prototype = {
         settings = me.settings;
 
     me.scrollEl = Utils.createWrapper(me.element, settings.classPrefix + 'content');
+    toggleClass(me.element, 'is-enabled', true);
+
     // initialize scrollbars
     me.scrollbars = { 
       v: Scrollbar('v', me),
@@ -310,7 +311,8 @@ Optiscroll.Instance.prototype = {
     me.scrollEl = null;
 
     // remove classes
-    toggleClass(me.element, me.settings.classPrefix + 'prevent', false);
+    toggleClass(element, me.settings.classPrefix + 'prevent', false);
+    toggleClass(element, 'is-enabled', false);
     
     // defer instance removal from global array
     // to not affect checkLoop _invoke
