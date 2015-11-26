@@ -24,9 +24,7 @@ var Events = {
     me.scrollbars.v.update();
     me.scrollbars.h.update();
     
-    if(me.settings.preventParentScroll) {
-      Events.wheel(ev, me);
-    }
+    Events.wheel(ev, me);
   },
 
 
@@ -45,12 +43,16 @@ var Events = {
 
   wheel: function (ev, me) {
     var cache = me.cache,
-        cacheV = cache.v, cacheH = cache.h;
+        cacheV = cache.v, 
+        cacheH = cache.h,
+        preventScroll = me.settings.preventParentScroll;
 
-    if(cacheV.enabled && cacheV.percent % 100 === 0) {
+    window.cancelAnimationFrame(me.scrollAnimation);
+    
+    if(preventScroll && cacheV.enabled && cacheV.percent % 100 === 0) {
       me.scrollEl.scrollTop = cacheV.percent ? (cache.scrollH - cache.clientH - 1) : 1;
     }
-    if(cacheH.enabled && cacheH.percent % 100 === 0) {
+    if(preventScroll && cacheH.enabled && cacheH.percent % 100 === 0) {
       me.scrollEl.scrollLeft = cacheH.percent ? (cache.scrollW - cache.clientW - 1) : 1;
     }
   },

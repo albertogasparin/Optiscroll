@@ -111,10 +111,8 @@ Optiscroll.Instance.prototype = {
       listeners.touchend = function (ev) { Events.touchend(ev, me); };
     }
 
-    if(me.settings.preventParentScroll) {
-       // Safari does not support wheel event
-      listeners.mousewheel = listeners.wheel = function (ev) { Events.wheel(ev, me); };
-    }
+    // Safari does not support wheel event
+    listeners.mousewheel = listeners.wheel = function (ev) { Events.wheel(ev, me); };
 
     for (var ev in listeners) {
       scrollEl.addEventListener(ev, listeners[ev]);
@@ -265,7 +263,7 @@ Optiscroll.Instance.prototype = {
       duration = Math.pow(Math.max(Math.abs(endX - startX), Math.abs(endY - startY)), 0.54) * 15;
     }
     
-    (function scrollAnimation () {
+    (function animate () {
       var time = Math.min(1, ((Date.now() - startTime) / duration)),
           easedTime = Utils.easingFunction(time);
       
@@ -276,9 +274,7 @@ Optiscroll.Instance.prototype = {
         scrollEl.scrollLeft = ~~(easedTime * (endX - startX)) + startX;
       }
 
-      if(time < 1) {
-        window.requestAnimationFrame(scrollAnimation);
-      }
+      me.scrollAnimation = time < 1 ? window.requestAnimationFrame(animate) : null;
     }());
   },
 
