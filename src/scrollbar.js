@@ -23,14 +23,13 @@ var Scrollbar = function (which, instance) {
     dragStart: function (ev) {
       var evData = ev.touches ? ev.touches[0] : ev;
       events.dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
+      events.bind(true);
     },
 
     dragMove: function (ev) {
       var evData = ev.touches ? ev.touches[0] : ev,
           delta, deltaRatio;
       
-      if(!events.dragData) { return; }
-
       ev.preventDefault();
       delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
       deltaRatio = delta / cache[clientSize];
@@ -40,7 +39,17 @@ var Scrollbar = function (which, instance) {
 
     dragEnd: function () {
       events.dragData = null;
+      events.bind(false);
     },
+
+    bind: function (on) {
+      var method = (on ? 'add' : 'remove') + 'EventListener',
+          type = G.isTouch ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup'];
+
+      document[method](type[0], events.dragMove);
+      document[method](type[1], events.dragEnd);
+    },
+
   };
   
   return {
@@ -59,6 +68,7 @@ var Scrollbar = function (which, instance) {
 
 
     create: function () {
+      var evType = G.isTouch ? 'touchstart' : 'mousedown';
       scrollbarEl = document.createElement('div');
       trackEl = document.createElement('b');
 
@@ -68,7 +78,7 @@ var Scrollbar = function (which, instance) {
       parentEl.appendChild(scrollbarEl);
 
       if(settings.draggableTracks) {
-        this.bind(true);
+        trackEl.addEventListener(evType, events.dragStart);
       }
     },
 
@@ -119,16 +129,6 @@ var Scrollbar = function (which, instance) {
     },
 
 
-    bind: function (on) {
-      var method = (on ? 'add' : 'remove') + 'EventListener',
-          type = G.isTouch ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
-
-      if (trackEl) { trackEl[method](type[0], events.dragStart); }
-      document[method](type[1], events.dragMove);
-      document[method](type[2], events.dragEnd);
-    },
-
-
     calc: function () {
       var position = scrollEl[scrollProp],
           viewS = cache[clientSize], 
@@ -173,11 +173,10 @@ var Scrollbar = function (which, instance) {
     remove: function () {
       // remove parent custom classes
       this.toggle(false);
-      // unbind drag events
-      this.bind(false);
       // remove elements
-      if(scrollbarEl && scrollbarEl.parentNode) {
+      if(scrollbarEl) {
         scrollbarEl.parentNode.removeChild(scrollbarEl);
+        scrollbarEl = null;
       }
     },
 
