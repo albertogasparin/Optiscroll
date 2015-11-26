@@ -14,6 +14,7 @@
     .m-wrapper { width: 100%; height: 100%; }
     .column { width: 50%; height: 15rem; background: #f5f5f5; }
     .optiscroll-content { padding: 1em; }
+    #m-wrapper > .optiscroll-v .optiscroll-vtrack { opacity: 1 }
   </style>
   
   <script type="text/javascript" src="src/optiscroll.js"></script>
@@ -36,7 +37,7 @@
         
       <div id="os1" class="optiscroll column mid-50">
         <div class="optiscroll-content">
-          <p>
+          <p style="width: 150%">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id nibh dictum ex ultrices pellentesque non eget eros. Sed pellentesque in lorem ac porttitor. Phasellus consectetur risus eu quam pellentesque, at malesuada odio hendrerit. Morbi vitae commodo lectus. In hac habitasse platea dictumst. Quisque placerat arcu ac risus pretium, a efficitur elit hendrerit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
           </p>
           <p>
@@ -58,14 +59,14 @@
       </p>
 
       <script type="text/javascript">
-        var os1 = new Optiscroll(document.getElementById('os1'), { preventParentScroll: true, forceScrollbars: !Optiscroll.G.isTouch });
+        var os1 = new Optiscroll(document.getElementById('os1'), { maxTrackSize: 20, preventParentScroll: true });
       </script>
   
     </div>
   </div><!-- /wrapper -->
 
   <script type="text/javascript">
-    var wr = new Optiscroll(document.getElementById('m-wrapper'), { maxTrackSize: 20, forceScrollbars: !Optiscroll.G.isTouch });
+    var wr = new Optiscroll(document.getElementById('m-wrapper'), { forceScrollbars: true });
   </script>
 
 </body>

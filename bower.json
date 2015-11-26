@@ -1,17 +1,14 @@
 {
   "name": "optiscroll",
   "version": "1.0.6",
-  "homepage": "https://github.com/wilsonfletcher/optiScroll",
+  "homepage": "https://github.com/wilsonfletcher/Optiscroll",
   "authors": [
     "Alberto Gasparin <albertogasparin@gmail.com>"
   ],
   "description": "Custom scrollbars for modern webapps",
   "main": [
     "dis/optiscroll.css",
-    "dist/jquery.optiscroll.js",
-    "dist/jquery.optiscroll.min.js",
-    "dist/optiscroll.js",
-    "dist/optiscroll.min.js"
+    "dist/optiscroll.js"
   ],
   "moduleType": [
     "amd",

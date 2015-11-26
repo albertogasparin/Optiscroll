@@ -20,7 +20,6 @@ var Events = {
 
 
   touchstart: function (ev, me) {
-    
     G.pauseCheck = false;
     me.scrollbars.v.update();
     me.scrollbars.h.update();
@@ -39,10 +38,7 @@ var Events = {
 
 
   scrollStop: function (me) {
-    // fire custom event
     me.fireCustomEvent('scrollstop');
-
-    // restore check loop
     G.pauseCheck = false;
   },
 

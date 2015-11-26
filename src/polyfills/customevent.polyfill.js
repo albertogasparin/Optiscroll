@@ -7,10 +7,10 @@
 
 typeof window.CustomEvent === 'function' || (function (window) {
 
-  function CustomEvent ( event, params ) {
+  function CustomEvent (event, params) {
     params = params || { bubbles: false, cancelable: false, detail: undefined };
-    var evt = document.createEvent( 'CustomEvent' );
-    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    var evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
     return evt;
   }
 

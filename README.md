@@ -22,20 +22,19 @@ Optiscroll aims to be as light as possible in order to not affect the performace
 
 ## Browser support
 
-Optiscroll works in **all modern browsers** (IE9 and above). IE8 support is under evaluation. Keep in mind that if Optiscroll does not work your web page will fallback to default scrollbars.
-
-Moreover, Optiscroll has been properly tested on:
-- IE9, IE10, IE11
-- Chrome 32, Chrome 34, Chrome 36
-- Opera 12.16, Opera 20, Opera 23
-- Firefox 7, Firefox 12, Firefox 27
-- Android 4.1, Android 4.4
-- iOS 6.1, iOS 7.0.4, iOS 7.1.2
+Optiscroll works in **all modern browsers** (IE9 and above). Keep in mind that if Optiscroll does not work your web page will still fallback to default scrollbars.
 
 
 
 # How to use Optiscroll
 
+## Installation
+
+Grab `optiscroll.min.js` (or `jquery.optiscroll.min.js`) from `dist` folder or:
+
+```
+bower install optiscroll --save
+```
 
 ## Basic usage
 
@@ -85,7 +84,7 @@ $('#scroll').optiscroll()
 | minTrackSize | 5 (%) | Minimum size (width or height) of the track
 | draggableTracks | true | Allow track dragging to scroll
 | autoUpdate | true | Scrollbars will be automatically updated on size or content changes
-| classPrefix | 'optiscroll' | Custom class prefix for optiscroll elements
+| classPrefix | 'optiscroll-' | Custom class prefix for optiscroll elements
 
 Examples:
 
@@ -242,7 +241,7 @@ Optiscroll.globalSettings.checkFrequency = 0;
 
 - `forceScrollbars` is not 100% reliable on iOS Safari (due to dynamic style rules)
 
-- On iOS, custom events (and scrollbars if enabled with `forceScrollbars: true`) are fired/updated when the momentum scrolling ends.  
+- On iOS/Android, custom events (and scrollbars if `forceScrollbars: true`) are fired/updated whenever browser fires the scroll event.  
 
 - On older versions of Chrome/Safari if parent Optiscroll has `forceScrollbars`, native scrollbars will not appear also on child scrollable elements.
 

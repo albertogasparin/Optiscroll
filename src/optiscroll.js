@@ -144,7 +144,7 @@ Optiscroll.Instance.prototype = {
       cache.clientW = cW;
 
       // only fire if cache was defined
-      if( oldcH !== undefined ) {
+      if(oldcH !== undefined) {
 
         // if the element is no more in the DOM
         if(sH === 0 && cH === 0 && !Utils.containsNode(document.body, me.element)) {
