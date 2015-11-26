@@ -52,11 +52,8 @@ Add Optiscroll containers around your content. The library does **not** add them
 
 ```html
 <div id="scroll" class="optiscroll">
-    <div class="optiscroll-content">
-        <!-- this is the area that actually scrolls -->
-        My content
-    </div>
-    <!-- scrollbars elements will be added here  -->
+    <!-- scrollable area, an additional wrapper will be created -->
+    My content
 </div>
 ```
 

@@ -34,8 +34,6 @@ Optiscroll.Instance = function (element, options) {
   var me = this;
   
   me.element = element;
-  me.scrollEl = element.children[0];
-  
   // instance variables
   me.settings = _extend(_extend({}, Optiscroll.defaults), options || {});
   
@@ -53,6 +51,7 @@ Optiscroll.Instance.prototype = {
     var me = this,
         settings = me.settings;
 
+    me.scrollEl = Utils.createWrapper(me.element, settings.classPrefix + 'content');
     // initialize scrollbars
     me.scrollbars = { 
       v: Scrollbar('v', me),
@@ -287,9 +286,13 @@ Optiscroll.Instance.prototype = {
 
   destroy: function () {
     var me = this,
+        element = me.element,
         scrollEl = me.scrollEl,
         listeners = me.listeners,
-        index = G.instances.indexOf(me);
+        index = G.instances.indexOf(me),
+        child;
+
+    if(!me.scrollEl) { return; }
 
     // unbind events
     for (var ev in listeners) {
@@ -299,9 +302,12 @@ Optiscroll.Instance.prototype = {
     // remove scrollbars elements
     _invoke(me.scrollbars, 'remove');
     
-    // restore style
-    scrollEl.removeAttribute('style');
-    scrollEl.removeAttribute('data-scroll');
+    // unwrap content
+    while(child = scrollEl.childNodes[0]) {
+      element.insertBefore(child, scrollEl);
+    }
+    element.removeChild(scrollEl);
+    me.scrollEl = null;
 
     // remove classes
     toggleClass(me.element, me.settings.classPrefix + 'prevent', false);

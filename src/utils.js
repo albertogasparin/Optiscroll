@@ -9,8 +9,6 @@ var Utils = {
       scrollEl.setAttribute('data-scroll', time);
       Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
     } else {
-      // force scrollbars and hide them
-      scrollElStyle.overflow = 'scroll';
       scrollElStyle.right = -size + 'px';
       scrollElStyle.bottom = -size + 'px';
     }
@@ -26,6 +24,17 @@ var Utils = {
       document.head.appendChild(styleSheet);
     } 
     styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
+  },
+
+
+  createWrapper: function (element, className) {
+    var wrapper = document.createElement('div'),
+        child;
+    while(child = element.childNodes[0]) {
+      wrapper.appendChild(child);
+    }
+    wrapper.className = className;
+    return element.appendChild(wrapper);
   },
 
 

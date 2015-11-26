@@ -26,8 +26,8 @@ $optiscroll-defaultStyle: true !default;
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: auto;
   z-index: 1;
+  overflow: scroll;
   -webkit-overflow-scrolling: touch;
 }
 

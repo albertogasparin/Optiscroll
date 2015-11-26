@@ -13,8 +13,8 @@ module("Basics", {
 test("It should be initialized", function () {
   equal(typeof os, 'object');
   // check DOM elements
-  equal(os.element.toString(), '[object HTMLDivElement]');
-  equal(os.scrollEl.toString(), '[object HTMLDivElement]');
+  equal(os.element.childNodes.length, 3);
+  equal(os.scrollEl.childNodes.length, 7);
   // check globals
   equal(Optiscroll.G.instances.length, 1);
   ok(Optiscroll.G.checkTimer);
@@ -27,8 +27,8 @@ asyncTest("Optiscroll should be destroyed", function () {
   
   setTimeout(function () {
     // check DOM elements style
-    ok( !os.scrollEl.getAttribute('style') );
-    ok( !os.scrollEl.getAttribute('data-scroll') );
+    ok(!os.scrollEl);
+    equal(os.element.childNodes.length, 7);
     // check globals
     equal(Optiscroll.G.instances.length, 0);
     equal(Optiscroll.G.checkTimer, null);
