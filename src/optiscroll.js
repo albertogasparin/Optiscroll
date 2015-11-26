@@ -277,7 +277,7 @@ Optiscroll.Instance.prototype = {
       }
 
       if(time < 1) {
-        animationTimeout(scrollAnimation);
+        window.requestAnimationFrame(scrollAnimation);
       }
     }());
   },
@@ -309,7 +309,7 @@ Optiscroll.Instance.prototype = {
     // defer instance removal from global array
     // to not affect checkLoop _invoke
     if (index > -1) {
-      animationTimeout(function () {
+      window.requestAnimationFrame(function () {
         G.instances.splice(index, 1);
       });
     }

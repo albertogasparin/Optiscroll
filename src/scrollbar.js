@@ -98,9 +98,7 @@ var Scrollbar = function (which, instance) {
       }
 
       if(trackEl && enabled) {
-        // animationTimeout(function () {
         me.style(newRelPos, deltaPos, newSize, oldSize);
-        // });
       }
 
       // update cache values

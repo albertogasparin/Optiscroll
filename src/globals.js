@@ -12,16 +12,6 @@ var G = Optiscroll.G = {
 };
 
 
-
-var animationTimeout = (function () {
-  return window.requestAnimationFrame || 
-    window.webkitRequestAnimationFrame || 
-    window.mozRequestAnimationFrame || 
-    function(callback){ window.setTimeout(callback, 1000 / 60); };
-})();
-
-
-
 // Get scrollbars width, thanks Google Closure Library
 function getScrollbarWidth () {
   var htmlEl = document.documentElement,

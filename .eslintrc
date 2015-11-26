@@ -116,7 +116,6 @@ globals:
   Optiscroll: true
   G: true
   GS: true
-  animationTimeout: true
   toggleClass: true
   _extend: true
   _invoke: true
