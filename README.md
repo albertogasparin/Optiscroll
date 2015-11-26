@@ -240,11 +240,11 @@ Optiscroll.globalSettings.checkFrequency = 0;
 
 ## Known limitations
 
-- `forceScrollbars` is ignored on Firefox under OSX because there is no way to hide the "Lion style" scrollbars under Firefox. So, Optiscroll always disable custom scrollbars to avoid double scrollbars.
+- `forceScrollbars` is not 100% reliable on iOS Safari (due to dynamic style rules)
 
 - On iOS, custom events (and scrollbars if enabled with `forceScrollbars: true`) are fired/updated when the momentum scrolling ends.  
 
-- If parent Optiscroll has `forceScrollbars: true` and nested Optiscroll has `forceScrollbars: false` the "Lion style" scrollbars will not appear on Chrome/Safari.
+- On older versions of Chrome/Safari if parent Optiscroll has `forceScrollbars`, native scrollbars will not appear also on child scrollable elements.
 
 
 ## Running Tests

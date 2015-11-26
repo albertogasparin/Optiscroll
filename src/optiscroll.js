@@ -67,12 +67,6 @@ Optiscroll.Instance.prototype = {
       G.instances.push(me);
     }
 
-    // disable forced scrollbars if Firefox 
-    // because we cannot hide native scrollbars yet
-    if(G.nativeScrollbarSize === 0 && 'mozRequestAnimationFrame' in window) {
-      settings.forceScrollbars = false;
-    }
-
     // create DOM scrollbars only if they have size or if it's forced
     if(G.nativeScrollbarSize || settings.forceScrollbars) {
       Utils.hideNativeScrollbars(me.scrollEl);
