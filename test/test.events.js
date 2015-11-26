@@ -1,14 +1,17 @@
-module("Custom events", {
+/* eslint-env qunit */
+/* globals os:true */
+
+module('Custom events', {
   setup: function() {
     os = new window.Optiscroll(document.querySelector('#os'), { autoUpdate: false });
   }, teardown: function() {
     os.destroy();
     os = null;
-  }
+  },
 });
 
 
-asyncTest("It should fire scrollstart", function () {
+asyncTest('It should fire scrollstart', function () {
   expect(4);
 
   os.scrollEl.scrollTop = 0;
@@ -29,11 +32,10 @@ asyncTest("It should fire scrollstart", function () {
 });
 
 
-asyncTest("It should fire scrollstop", function () {
+asyncTest('It should fire scrollstop', function () {
   expect(4);
 
   os.element.addEventListener('scrollstop', function (ev) {
-    var scrolled = ev.detail.scrollTop;
     equal(ev.type, 'scrollstop');
     equal(ev.detail.scrollTop, 50);
     equal(ev.detail.scrollBottom, 50);
@@ -45,7 +47,7 @@ asyncTest("It should fire scrollstop", function () {
 });
 
 
-asyncTest("It should fire scrollreachtop", function () {
+asyncTest('It should fire scrollreachtop', function () {
   expect(4);
 
   os.scrollEl.scrollTop = 50;
@@ -61,12 +63,12 @@ asyncTest("It should fire scrollreachtop", function () {
 
   setTimeout(function() {
     os.scrollEl.scrollTop = 0;
-  }, 50)
+  }, 50);
   
 });
 
 
-asyncTest("It should fire scrollreachbottom", function () {
+asyncTest('It should fire scrollreachbottom', function () {
   expect(4);
 
   os.scrollEl.scrollTop = 50;
@@ -82,12 +84,12 @@ asyncTest("It should fire scrollreachbottom", function () {
 
   setTimeout(function() {
     os.scrollEl.scrollTop = 100;
-  }, 50)
+  }, 50);
   
 });
 
 
-asyncTest("It should fire scrollreachleft", function () {
+asyncTest('It should fire scrollreachleft', function () {
   expect(4);
 
   os.scrollEl.scrollLeft = 50;
@@ -103,12 +105,12 @@ asyncTest("It should fire scrollreachleft", function () {
 
   setTimeout(function() {
     os.scrollEl.scrollLeft = 0;
-  }, 50)
+  }, 50);
   
 });
 
 
-asyncTest("It should fire scrollreachright", function () {
+asyncTest('It should fire scrollreachright', function () {
   expect(4);
 
   os.scrollEl.scrollLeft = 50;
@@ -129,7 +131,7 @@ asyncTest("It should fire scrollreachright", function () {
 });
 
 
-asyncTest("It should fire scrollreachedge", function () {
+asyncTest('It should fire scrollreachedge', function () {
   expect(7);
 
   os.scrollEl.scrollLeft = 20;
@@ -144,7 +146,7 @@ asyncTest("It should fire scrollreachedge", function () {
     equal(ev.detail.scrollbarH.percent, 20);
     os.element.removeEventListener('scrollreachedge', listener);
     start();
-  }
+  };
 
   os.element.addEventListener('scrollreachedge', listener);
 

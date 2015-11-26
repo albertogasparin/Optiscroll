@@ -1,4 +1,7 @@
-module("Scrollbars", {
+/* eslint-env qunit */
+/* globals os:true, $, Syn */
+
+module('Scrollbars', {
   setup: function() {
     os = new window.Optiscroll(document.querySelector('#os'), { autoUpdate: false });
     // force scrollbars creation and setup
@@ -19,27 +22,26 @@ module("Scrollbars", {
   }, teardown: function() {
     os.destroy();
     os = null;
-  }
+  },
 });
 
 
-test("It should create scrollbars", function () {
+test('It should create scrollbars', function () {
   // internal scrollbar intances
-  ok(os.scrollbars.v, "Vertical scrollbar instance created");
-  ok(os.scrollbars.h, "Horizontal scrollbar instance created");
+  ok(os.scrollbars.v, 'Vertical scrollbar instance created');
+  ok(os.scrollbars.h, 'Horizontal scrollbar instance created');
   // DOM elements
-  ok( os.element.querySelector('.optiscroll-v'), "Vertical scrollbar element created");
-  ok( os.element.querySelector('.optiscroll-h'), "Horizontal scrollbar element created");
+  ok(os.element.querySelector('.optiscroll-v'), 'Vertical scrollbar element created');
+  ok(os.element.querySelector('.optiscroll-h'), 'Horizontal scrollbar element created');
   
   // Classes
-  notEqual( os.element.className.indexOf('has-vtrack'), -1);
-  notEqual( os.element.className.indexOf('has-htrack'), -1);
+  notEqual(os.element.className.indexOf('has-vtrack'), -1);
+  notEqual(os.element.className.indexOf('has-htrack'), -1);
 });
 
-test("It should set the track size", function () {
+test('It should set the track size', function () {
   var vTrack = os.element.querySelector('.optiscroll-vtrack'),
       hTrack = os.element.querySelector('.optiscroll-htrack');
-  
   // size
   equal(os.cache.v.size, 0.5);
   equal(vTrack.style.height, '50%');
@@ -48,7 +50,7 @@ test("It should set the track size", function () {
 });
 
 
-asyncTest("It should move the tracks on scroll", function () {
+asyncTest('It should move the tracks on scroll', function () {
   var vTrack = os.element.querySelector('.optiscroll-vtrack'),
       hTrack = os.element.querySelector('.optiscroll-htrack');
 
@@ -68,7 +70,7 @@ asyncTest("It should move the tracks on scroll", function () {
 });
 
 
-asyncTest("Vertical track should be draggable", function () {
+asyncTest('Vertical track should be draggable', function () {
   expect(4);
   var vTrack = os.element.querySelector('.optiscroll-vtrack');
   
@@ -77,7 +79,7 @@ asyncTest("Vertical track should be draggable", function () {
   // usign both jquery.simulate and Syn.js to make drag work across all browsers
   $(vTrack).simulate('mousedown', { 
     clientX: $(vTrack).offset().left + $(vTrack).outerWidth() / 2,
-    clientY: $(vTrack).offset().top + $(vTrack).outerHeight() / 2
+    clientY: $(vTrack).offset().top + $(vTrack).outerHeight() / 2,
   });
 
   Syn.drag('+0 +25', vTrack, function () {
@@ -92,7 +94,7 @@ asyncTest("Vertical track should be draggable", function () {
   
 });
 
-asyncTest("Horizontal track should be draggable", function () {
+asyncTest('Horizontal track should be draggable', function () {
   expect(4);
   var hTrack = os.element.querySelector('.optiscroll-htrack');
 
@@ -101,7 +103,7 @@ asyncTest("Horizontal track should be draggable", function () {
   // usign both jquery.simulate and Syn.js to make drag work across all browsers
   $(hTrack).simulate('mousedown', { 
     clientX: $(hTrack).offset().left + $(hTrack).outerWidth() / 2,
-    clientY: $(hTrack).offset().top + $(hTrack).outerHeight() / 2
+    clientY: $(hTrack).offset().top + $(hTrack).outerHeight() / 2,
   });
 
   Syn.drag('+25 +0', hTrack, function () {
@@ -112,15 +114,13 @@ asyncTest("Horizontal track should be draggable", function () {
       equal(hTrack.style[Optiscroll.G.cssTransform], 'translate(50%, 0%)');
       start();
     }, 500); // wait for scrollStop to fire
-  })
+  });
 });
 
 
-asyncTest("It should update tracks", function () {
+asyncTest('It should update tracks', function () {
   expect(4);
-  var vTrack = os.element.querySelector('.optiscroll-vtrack'),
-      hTrack = os.element.querySelector('.optiscroll-htrack');
-
+  
   os.scrollEl.scrollTop = 100;
   os.scrollEl.scrollLeft = 10;
   os.element.style.width = '150px';
@@ -128,7 +128,7 @@ asyncTest("It should update tracks", function () {
   
   setTimeout(function () {
     os.update();
-  })
+  });
 
   setTimeout(function () {
     equal(os.cache.v.size, 0.75);
@@ -141,7 +141,7 @@ asyncTest("It should update tracks", function () {
 });
 
 
-asyncTest("Vertical track should be disabled if no scroll", function () {
+asyncTest('Vertical track should be disabled if no scroll', function () {
   expect(4);
   
   os.element.style.height = '300px';
@@ -151,13 +151,13 @@ asyncTest("Vertical track should be disabled if no scroll", function () {
     equal(os.cache.v.enabled, false);
     equal(os.cache.v.size, 1);
     equal(os.cache.v.percent, 0);
-    equal( os.element.className.indexOf('vtrack-on'), -1);
+    equal(os.element.className.indexOf('vtrack-on'), -1);
     start();
-  }, 50)
+  }, 50);
 });
 
 
-asyncTest("Horizontal track should be disabled if no scroll", function () {
+asyncTest('Horizontal track should be disabled if no scroll', function () {
   expect(4);
   
   os.element.style.width = '300px';
@@ -167,9 +167,9 @@ asyncTest("Horizontal track should be disabled if no scroll", function () {
     equal(os.cache.h.enabled, false);
     equal(os.cache.h.size, 1);
     equal(os.cache.h.percent, 0);
-    equal( os.element.className.indexOf('htrack-on'), -1);
+    equal(os.element.className.indexOf('htrack-on'), -1);
     start();
-  }, 50)
+  }, 50);
   
 });
 

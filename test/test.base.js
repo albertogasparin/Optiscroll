@@ -1,4 +1,7 @@
-module("Basics", {
+/* eslint-env qunit */
+/* globals os:true */
+
+module('Basics', {
   setup: function() {
     Optiscroll.globalSettings.checkFrequency = 300;
     os = new window.Optiscroll(document.querySelector('#os'));
@@ -6,11 +9,11 @@ module("Basics", {
     os.destroy();
     Optiscroll.G.instances.length = 0;
     os = null;
-  }
+  },
 });
 
 
-test("It should be initialized", function () {
+test('It should be initialized', function () {
   equal(typeof os, 'object');
   // check DOM elements
   equal(os.element.childNodes.length, 3);
@@ -21,14 +24,15 @@ test("It should be initialized", function () {
 });
 
 
-asyncTest("Optiscroll should be destroyed", function () {
-  expect(4);
+asyncTest('Optiscroll should be destroyed', function () {
+  expect(5);
   os.destroy();
   
   setTimeout(function () {
     // check DOM elements style
     ok(!os.scrollEl);
     equal(os.element.childNodes.length, 7);
+    equal(os.element.className.indexOf('is-enabled'), -1);
     // check globals
     equal(Optiscroll.G.instances.length, 0);
     equal(Optiscroll.G.checkTimer, null);
@@ -37,7 +41,7 @@ asyncTest("Optiscroll should be destroyed", function () {
 });
 
 
-asyncTest("Optiscroll should auto update itself", function () {
+asyncTest('Optiscroll should auto update itself', function () {
   expect(4);
   os.element.style.width = '300px';
   os.element.style.height = '300px';
@@ -53,7 +57,7 @@ asyncTest("Optiscroll should auto update itself", function () {
 });
 
 
-asyncTest("Optiscroll should auto destroy itself", function () {
+asyncTest('Optiscroll should auto destroy itself', function () {
   expect(2);
   os.element.parentNode.removeChild(os.element);
 

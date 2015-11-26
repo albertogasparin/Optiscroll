@@ -1,14 +1,17 @@
-module("Public APIs", {
+/* eslint-env qunit */
+/* globals os:true */
+
+module('Public APIs', {
   setup: function() {
     os = new window.Optiscroll(document.querySelector('#os'), { autoUpdate: false });
   }, teardown: function() {
     os.destroy();
     os = null;
-  }
+  },
 });
 
 
-asyncTest("It should scrollTo(value, value, 0)", function () {
+asyncTest('It should scrollTo(value, value, 0)', function () {
   expect(2);
 
   os.scrollEl.scrollLeft = 0;
@@ -23,7 +26,7 @@ asyncTest("It should scrollTo(value, value, 0)", function () {
 });
 
 
-asyncTest("It should scrollTo(edgeName, false)", function() {
+asyncTest('It should scrollTo(edgeName, false)', function() {
   expect(2);
 
   os.scrollEl.scrollLeft = 0;
@@ -38,7 +41,7 @@ asyncTest("It should scrollTo(edgeName, false)", function() {
 });
 
 
-asyncTest("It should scrollTo(false, value, time)", function() {
+asyncTest('It should scrollTo(false, value, time)', function() {
   expect(2);
 
   os.scrollEl.scrollLeft = 50;
@@ -53,7 +56,7 @@ asyncTest("It should scrollTo(false, value, time)", function() {
 });
 
 
-asyncTest("It should scrollIntoView(selector) from top/left", function () {
+asyncTest('It should scrollIntoView(selector) from top/left', function () {
   expect(2);
 
   os.scrollEl.scrollLeft = 0;
@@ -68,12 +71,12 @@ asyncTest("It should scrollIntoView(selector) from top/left", function () {
 });
 
 
-asyncTest("It should scrollIntoView(node, time) from bottom/right", function () {
+asyncTest('It should scrollIntoView(node, time) from bottom/right', function () {
   expect(2);
 
   os.scrollEl.scrollLeft = 100;
   os.scrollEl.scrollTop = 100;
-  os.scrollIntoView( os.element.querySelector('.test-child'), 100);
+  os.scrollIntoView(os.element.querySelector('.test-child'), 100);
 
   setTimeout(function() {
     equal(os.scrollEl.scrollLeft, 90);
@@ -83,8 +86,7 @@ asyncTest("It should scrollIntoView(node, time) from bottom/right", function () 
 });
 
 
-
-asyncTest("It should scrollIntoView(selector, time, delta)", function () {
+asyncTest('It should scrollIntoView(selector, time, delta)', function () {
   expect(2);
 
   os.scrollEl.scrollLeft = 0;
@@ -97,8 +99,3 @@ asyncTest("It should scrollIntoView(selector, time, delta)", function () {
     start();
   }, 150);
 });
-
-
-
-
-

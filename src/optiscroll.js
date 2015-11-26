@@ -59,11 +59,6 @@ Optiscroll.Instance.prototype = {
       h: Scrollbar('h', me),
     };
 
-    // add instance to global array for timed check
-    if(settings.autoUpdate) {
-      G.instances.push(me);
-    }
-
     // create DOM scrollbars only if they have size or if it's forced
     if(G.nativeScrollbarSize || settings.forceScrollbars) {
       Utils.hideNativeScrollbars(me.scrollEl);
@@ -79,6 +74,11 @@ Optiscroll.Instance.prototype = {
 
     // bind container events
     me.bind();
+
+    // add instance to global array for timed check
+    if(settings.autoUpdate) {
+      G.instances.push(me);
+    }
 
     // start the timed check if it is not already running
     if(settings.autoUpdate && !G.checkTimer) {
