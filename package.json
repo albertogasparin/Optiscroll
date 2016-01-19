@@ -6,7 +6,7 @@
     "scrollbars",
     "user interface"
   ],
-  "version": "1.0.6",
+  "version": "2.0.0",
   "homepage": "https://github.com/wilsonfletcher/optiscroll",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "grunt-contrib-watch": "^0.5.0",
     "grunt-sass": "^1.1.0",
     "load-grunt-tasks": "^0.4.0",
-    "uglify-js": "^2.3.x"
+    "uglify-js": "^2.3.0"
   },
   "browser": "dist/optiscroll.js",
   "main": "dist/optiscroll.js",
