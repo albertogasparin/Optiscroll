@@ -250,6 +250,19 @@ a browser environment instead of any JavaScript environment (i.e. node.js).
 You can simply load test/index.html in any browser to run all the tests.
 
 
+## Upgrade from v1 to v2
+
+**Options changes**  
+- `classPrefix` option no longer adds `-` to the namespace, so it allows you to pick your favourite separator (or no separator at all) for `.optiscroll*` elements.
+
+**HTML changes**  
+- Optiscroll now automatically wraps inner content. So, remove `.optiscroll-content` from your html.
+
+**CSS changes**  
+- Styles organisation got a major overhaul, so my suggestion is to [go and have a look](https://github.com/wilsonfletcher/Optiscroll/blob/master/scss/optiscroll.scss).
+- Tracks states class names have been renamed to `.has-vtrack`, `.has-htrack`.
+- `opacity` is now set on the track, no longer on the whole scrollbar. 
+
 
 ## History
 
