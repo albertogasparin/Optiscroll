@@ -29,198 +29,186 @@
   </nav>
 
   <div id="m-wrapper" class="m-wrapper optiscroll">
-    <div class="optiscroll-content">
+    
+    <header class="m-header">
+      <h1>Optiscroll</h1>
+      <p>Custom scrollbars for modern webapps</p>
+      <a href="https://github.com/wilsonfletcher/Optiscroll/releases" class="btn">Download v2</a>
+      or
+      <pre><code>bower install optiscroll</code></pre>
+    </header>
+    
+    <a href="https://github.com/wilsonfletcher/Optiscroll">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png">
+    </a>
 
-      <header class="m-header">
-        <h1>Optiscroll</h1>
-        <p>Custom scrollbars for modern webapps</p>
-        <a href="https://github.com/wilsonfletcher/Optiscroll/releases" class="btn">Download</a>
-        or
-        <pre><code>bower install optiscroll</code></pre>
-      </header>
+    <div class="m-sections">
+
+      <section id="features" class="section s-features">
+        <h2>Features</h2>
+        <ul>
+          <li>Only 9kB and framework-independent</li>
+          <li>Highly optimized</li>
+          <li>Vertical and horizontal scrollbars support</li>
+          <li>Nested scrollbars support</li>
+          <li>Custom events</li>
+          <li>Animated scrollTo and scrollIntoView</li>
+          <li>Auto update on content/scroll area change</li>
+          <li>Integrated page bounce fix for iOS</li>
+          <li>Works on any modern browser (IE9+)</li>
+          <li>Optional jQuery plugin</li>
+        </ul>
+      </section>
+
+
+      <section id="usage" class="section s-usage">
+        <h2>Usage</h2>
+
+        
+        <!-- 
+        SIMPLE USE CASE EXAMPLE 
+        -->
+
+        <div id="os1" class="optiscroll column mid-50">
+          <h3>Simple use case</h3>
+          <pre><code>new Optiscroll(element)</code></pre>
+          or if you prefer the jQuery flavour
+          <pre><code>$('selector').optiscroll()</code></pre>
+          <p>Try it out:<p>
+          <button id="os1-init">Initialize!</button>
+          <button id="os1-destroy">Destroy</button>
+          <p>
+            <strong>Don't see any difference?</strong><br>
+            By default Optiscroll does not create custom scrollbars on iOS, Android 
+            and OSX w/ trackpad. However, the API and the custom events will work across all platforms.
+          </p>
+        </div>
+
+        <script type="text/javascript">
+          var os1 = new Optiscroll(document.getElementById('os1'));
+        </script>
+
+
+        <!-- 
+        FORCED SCROLLBARS EXAMPLE 
+        -->
+
+        <div id="os2" class="optiscroll column mid-50">
+          <h3>Forced scrollbars with inline appearance</h3>
+          <pre><code>new Optiscroll(element, { forceScrollbars: true })</code></pre>
+          or if you prefer the jQuery flavour
+          <pre><code>$(element).optiscroll({ forceScrollbars: true })</code></pre>
+          <p>
+            If you decide to force the scrollbars, they will be created on all platform. 
+            However, this is not recommended because on iOS the position will be updated
+            when the momentum scrolling ends.
+          </p>
+        </div>
+
+        <script type="text/javascript">
+          var os2 = new Optiscroll(document.getElementById('os2'), { forceScrollbars: true });
+        </script>
+
+
+      </section>
+
+
+      <section id="api" class="section s-api">
+        <h2>API</h2>
+
+        <h3>scrollTo ( destX, destY [, duration] )</h3>
+
+        <div class="column mid-50">
+          <p>Scroll to a specific point with a nice animation. If you need to scroll a single axis then set the opposite axis destination to false. Duration could be auto (based on the distance) or in milliseconds.</p>
+          <div class="demo-form">
+            scrollTo(<input id="os3-x" placeholder="100">, <input id="os3-y" placeholder="200">, <input id="os3-ms" placeholder="auto">)
+            <button class="btn" id="os3-scroll">Go</button>
+          </div>
+        </div>
+
+        <div id="os3" class="optiscroll column mid-50">
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. </p><p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. </p><p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. </p><p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. </p><p>Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. </p><p>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. </p><p>Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum</p>
+        </div>
+
+        <script type="text/javascript">
+          var os3 = new Optiscroll(document.getElementById('os3'), { forceScrollbars: !Optiscroll.G.isTouch });
+        </script>
+
+
+
+        <h3><br><br>scrollIntoView (elem [, duration, delta])</h3>
+
+        <div class="column mid-50">
+          <p>Scrolls the element into view. The alignment will be driven by the nearest edge. Duration could be auto (based on the distance) or in milliseconds. Delta is an optional distance from the edge.</p>
+          <div class="demo-form">
+            scrollIntoView(el, <input id="os4-ms" placeholder="auto">, <input id="os4-dt" placeholder="0">)
+            <button class="btn" id="os4-scroll">Go</button>
+          </div>
+        </div>
+
+        <div id="os4" class="optiscroll column mid-50">
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. </p><p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. </p>
+          <b id="os4-el"></b>
+          <p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. </p><p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. </p><p>Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. </p><p>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. </p><p>Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum</p>
+        </div>
+
+        <script type="text/javascript">
+          var os4 = new Optiscroll(document.getElementById('os4'), { forceScrollbars: !Optiscroll.G.isTouch });
+        </script>
+
+      </section>
+
+
+      <section id="events" class="section s-events">
+        <h2>Custom events</h2>
+        
+        <div class="column">
+          <div class="column mid-50">
+            <h3>sizechange</h3>
+          </div>
+          <div class="column mid-50">
+            This event is fired on <code>clientWidth</code>/<code>clientHeight</code> changes of the optiscroll element, or on <code>scrollWidth</code>/<code>scrollHeight</code> changes of the scroll area.
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="column mid-50">
+            <h3>scrollstart</h3>
+          </div>
+          <div class="column mid-50">
+            This event is fired when the user starts scrolling. It's not fired again until a <code>scrollstop</code> event gets fired.
+            See <code>scrollstop</code> event for further details.
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="column mid-50">
+            <h3>scroll</h3>
+          </div>
+          <div class="column mid-50">
+            This event is fired while user scrolls. This event differs from the native one as it is throttled. It's fired accordingly with the <code>scrollMinUpdateInterval</code> value.
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="column mid-50">
+            <h3>scrollstop</h3>
+          </div>
+          <div class="column mid-50">
+            This event is fired when the user stops scrolling. The wait time before this event gets fired is defined by the <code>scrollStopDelay</code> option.
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="column mid-50">
+            <h3>scrollreachedge</h3>
+          </div>
+          <div class="column mid-50">
+            This event is fired when the user scrolls to any edge (top/left/right/bottom). There are also edge specific events: <code>scrollreachtop</code>, <code>scrollreachbottom</code>, <code>scrollreachleft</code>, <code>scrollreachright</code>. The "generic" event name is fired before the specific one.
+          </div>
+        </div>
       
-      <a href="https://github.com/wilsonfletcher/Optiscroll">
-        <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png">
-      </a>
-
-      <div class="m-sections">
-
-        <section id="features" class="section s-features">
-          <h2>Features</h2>
-          <ul>
-            <li>Only 9kB and framework-independent</li>
-            <li>Highly optimized</li>
-            <li>Vertical and horizontal scrollbars support</li>
-            <li>Nested scrollbars support</li>
-            <li>Custom events</li>
-            <li>Animated scrollTo and scrollIntoView</li>
-            <li>Auto update on content/scroll area change</li>
-            <li>Integrated page bounce fix for iOS</li>
-            <li>Works on any modern browser (IE9+)</li>
-            <li>Optional jQuery plugin</li>
-          </ul>
-        </section>
-
-
-        <section id="usage" class="section s-usage">
-          <h2>Usage</h2>
-
-          
-          <!-- 
-          SIMPLE USE CASE EXAMPLE 
-          -->
-
-          <div id="os1" class="optiscroll column mid-50">
-            <div class="optiscroll-content">
-              <h3>Simple use case</h3>
-              <pre><code>new Optiscroll(element)</code></pre>
-              or if you prefer the jQuery flavour
-              <pre><code>$('selector').optiscroll()</code></pre>
-              <p>Try it out:<p>
-              <button id="os1-init">Initialize!</button>
-              <button id="os1-destroy">Destroy</button>
-              <p>
-                <strong>Don't see any difference?</strong><br>
-                By default Optiscroll does not create custom scrollbars on iOS, Android 
-                and OSX w/ trackpad. However, the API and the custom events will work across all platforms.
-              </p>
-            </div>
-          </div>
-
-          <script type="text/javascript">
-            var os1 = new Optiscroll(document.getElementById('os1'));
-          </script>
-
-
-          <!-- 
-          FORCED SCROLLBARS EXAMPLE 
-          -->
-  
-          <div id="os2" class="optiscroll column mid-50">
-            <div class="optiscroll-content">
-              <h3>Forced scrollbars with inline appearance</h3>
-              <pre><code>new Optiscroll(element, { forceScrollbars: true })</code></pre>
-              or if you prefer the jQuery flavour
-              <pre><code>$(element).optiscroll({ forceScrollbars: true })</code></pre>
-              <p>
-                If you decide to force the scrollbars, they will be created on all platform. 
-                However, this is not recommended because on iOS the position will be updated
-                when the momentum scrolling ends.
-              </p>
-            </div>
-          </div>
-
-          <script type="text/javascript">
-            var os2 = new Optiscroll(document.getElementById('os2'), { forceScrollbars: true });
-          </script>
-
-
-        </section>
-
-
-        <section id="api" class="section s-api">
-          <h2>API</h2>
-
-          <h3>scrollTo ( destX, destY [, duration] )</h3>
-
-          <div class="column mid-50">
-            <p>Scroll to a specific point with a nice animation. If you need to scroll a single axis then set the opposite axis destination to false. Duration could be auto (based on the distance) or in milliseconds.</p>
-            <div class="demo-form">
-              scrollTo(<input id="os3-x" placeholder="100">, <input id="os3-y" placeholder="200">, <input id="os3-ms" placeholder="auto">)
-              <button class="btn" id="os3-scroll">Go</button>
-            </div>
-          </div>
-
-          <div id="os3" class="optiscroll column mid-50">
-            <div class="optiscroll-content">
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. </p><p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. </p><p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. </p><p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. </p><p>Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. </p><p>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. </p><p>Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum</p>
-            </div>
-          </div>
-
-          <script type="text/javascript">
-            var os3 = new Optiscroll(document.getElementById('os3'), { forceScrollbars: !Optiscroll.G.isTouch });
-          </script>
-
-
-
-          <h3><br><br>scrollIntoView (elem [, duration, delta])</h3>
-
-          <div class="column mid-50">
-            <p>Scrolls the element into view. The alignment will be driven by the nearest edge. Duration could be auto (based on the distance) or in milliseconds. Delta is an optional distance from the edge.</p>
-            <div class="demo-form">
-              scrollIntoView(el, <input id="os4-ms" placeholder="auto">, <input id="os4-dt" placeholder="0">)
-              <button class="btn" id="os4-scroll">Go</button>
-            </div>
-          </div>
-
-          <div id="os4" class="optiscroll column mid-50">
-            <div class="optiscroll-content">
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. </p><p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. </p>
-              <b id="os4-el"></b>
-              <p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. </p><p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. </p><p>Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. </p><p>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. </p><p>Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum</p>
-            </div>
-          </div>
-
-          <script type="text/javascript">
-            var os4 = new Optiscroll(document.getElementById('os4'), { forceScrollbars: !Optiscroll.G.isTouch });
-          </script>
-
-        </section>
-
-
-        <section id="events" class="section s-events">
-          <h2>Custom events</h2>
-          
-          <div class="column">
-            <div class="column mid-50">
-              <h3>sizechange</h3>
-            </div>
-            <div class="column mid-50">
-              This event is fired on <code>clientWidth</code>/<code>clientHeight</code> changes of the optiscroll element, or on <code>scrollWidth</code>/<code>scrollHeight</code> changes of the scroll area.
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="column mid-50">
-              <h3>scrollstart</h3>
-            </div>
-            <div class="column mid-50">
-              This event is fired when the user starts scrolling. It's not fired again until a <code>scrollstop</code> event gets fired.
-              See <code>scrollstop</code> event for further details.
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="column mid-50">
-              <h3>scroll</h3>
-            </div>
-            <div class="column mid-50">
-              This event is fired while user scrolls. This event differs from the native one as it is throttled. It's fired accordingly with the <code>scrollMinUpdateInterval</code> value.
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="column mid-50">
-              <h3>scrollstop</h3>
-            </div>
-            <div class="column mid-50">
-              This event is fired when the user stops scrolling. The wait time before this event gets fired is defined by the <code>scrollStopDelay</code> option.
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="column mid-50">
-              <h3>scrollreachedge</h3>
-            </div>
-            <div class="column mid-50">
-              This event is fired when the user scrolls to any edge (top/left/right/bottom). There are also edge specific events: <code>scrollreachtop</code>, <code>scrollreachbottom</code>, <code>scrollreachleft</code>, <code>scrollreachright</code>. The "generic" event name is fired before the specific one.
-            </div>
-          </div>
-        
-        </section>
-        
-      </div>
-
+      </section>
   
     </div>
   </div><!-- /wrapper -->
