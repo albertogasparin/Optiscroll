@@ -251,6 +251,10 @@ You can simply load test/index.html in any browser to run all the tests.
 
 
 
+## History
+
+[Check Github Releases page](https://github.com/wilsonfletcher/Optiscroll/releases)
+
 
 # License
 
@@ -259,5 +263,5 @@ This program is free software; it is distributed under an
 
 ---
 
-Copyright (c) 2014 [Wilson Fletcher](http://wilsonfletcher.com/)
+Copyright (c) 2016 [Wilson Fletcher](http://wilsonfletcher.com/)
 ([Contributors](https://github.com/wilsonfletcher/Optiscroll/graphs/contributors)).
