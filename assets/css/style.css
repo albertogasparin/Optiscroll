@@ -248,16 +248,16 @@ code {
 
 
 /* STYLE FOR INLINE SCROLLBARS */
-#os2.vtrack-on .optiscroll-content {
+#os2.has-vtrack .optiscroll-content {
   margin-right: 12px; /* scrollbar size */
 }
 
-#os2.htrack-on .optiscroll-content {
+#os2.has-htrack .optiscroll-content {
   margin-bottom: 12px; /* scrollbar size */
 }
 
-#os2.vtrack-on .optiscroll-v,
-#os2.htrack-on .optiscroll-h { opacity: 1; } 
+#os2.has-vtrack .optiscroll-v,
+#os2.has-htrack .optiscroll-h { opacity: 1; } 
 
 #os2 .optiscroll-v {
   top: 0;
@@ -287,8 +287,8 @@ code {
   bottom: 2px;
 }
 
-#os2.vtrack-on.htrack-on .optiscroll-v { border-bottom: 12px solid transparent; } /* scrollbar size */
-#os2.vtrack-on.htrack-on .optiscroll-h { border-right: 12px solid transparent; } /* scrollbar size */
+#os2.has-vtrack.has-htrack .optiscroll-v { border-bottom: 12px solid transparent; } /* scrollbar size */
+#os2.has-vtrack.has-htrack .optiscroll-h { border-right: 12px solid transparent; } /* scrollbar size */
 
 
 
