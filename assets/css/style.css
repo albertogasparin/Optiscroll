@@ -256,8 +256,8 @@ code {
   margin-bottom: 12px; /* scrollbar size */
 }
 
-#os2.has-vtrack .optiscroll-v,
-#os2.has-htrack .optiscroll-h { opacity: 1; } 
+#os2.has-vtrack .optiscroll-vtrack,
+#os2.has-htrack .optiscroll-htrack { opacity: 1; } 
 
 #os2 .optiscroll-v {
   top: 0;
