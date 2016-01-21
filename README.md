@@ -236,11 +236,10 @@ Optiscroll.globalSettings.checkFrequency = 0;
 
 ## Known limitations
 
-- `forceScrollbars` is not 100% reliable on iOS Safari (due to dynamic style rules)
+- `forceScrollbars` is not 100% reliable on iOS Safari (due to on-the-fly style changes), it is ignored on Firefox Mac w/ trackpad ([see FF bug](https://bugzilla.mozilla.org/show_bug.cgi?id=926294)) and on older versions of Chrome/Safari this setting will hide scrollbars also on child scrollable elements.
 
-- On iOS/Android, custom events (and scrollbars if `forceScrollbars: true`) are fired/updated whenever browser fires the scroll event.  
+- On iOS/Android, custom events (and scrollbars if `forceScrollbars: true`) are fired/updated whenever browser fires the scroll event.
 
-- On older versions of Chrome/Safari if parent Optiscroll has `forceScrollbars`, native scrollbars will not appear also on child scrollable elements.
 
 
 ## Running Tests
@@ -248,6 +247,7 @@ Optiscroll.globalSettings.checkFrequency = 0;
 Optiscroll is designed to run in the browser so the tests explicitly require
 a browser environment instead of any JavaScript environment (i.e. node.js).
 You can simply load test/index.html in any browser to run all the tests.
+
 
 
 ## Upgrade from v1 to v2
@@ -264,9 +264,11 @@ You can simply load test/index.html in any browser to run all the tests.
 - `opacity` is now set on the track, no longer on the whole scrollbar. 
 
 
+
 ## History
 
 [Check Github Releases page](https://github.com/wilsonfletcher/Optiscroll/releases)
+
 
 
 # License

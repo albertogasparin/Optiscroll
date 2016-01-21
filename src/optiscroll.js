@@ -48,7 +48,8 @@ Optiscroll.Instance.prototype = {
 
   init: function () {
     var me = this,
-        settings = me.settings;
+        settings = me.settings,
+        shouldCreateScrollbars = false;
 
     me.scrollEl = Utils.createWrapper(me.element, settings.classPrefix + 'content');
     toggleClass(me.element, 'is-enabled', true);
@@ -61,9 +62,12 @@ Optiscroll.Instance.prototype = {
 
     // create DOM scrollbars only if they have size or if it's forced
     if(G.nativeScrollbarSize || settings.forceScrollbars) {
-      Utils.hideNativeScrollbars(me.scrollEl);
-      _invoke(me.scrollbars, 'create');
+      shouldCreateScrollbars = Utils.hideNativeScrollbars(me.scrollEl);
     } 
+
+    if(shouldCreateScrollbars) {
+      _invoke(me.scrollbars, 'create');
+    }
 
     if(G.isTouch && settings.preventParentScroll) {
       toggleClass(me.element, settings.classPrefix + 'prevent', true);

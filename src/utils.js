@@ -7,10 +7,11 @@ var Utils = {
       // hide Webkit/touch scrollbars
       var time = Date.now();
       scrollEl.setAttribute('data-scroll', time);
-      Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
+      return Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
     } else {
       scrollElStyle.right = -size + 'px';
       scrollElStyle.bottom = -size + 'px';
+      return true;
     }
   },
 
@@ -23,7 +24,10 @@ var Utils = {
       styleSheet.appendChild(document.createTextNode('')); // WebKit hack
       document.head.appendChild(styleSheet);
     } 
-    styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
+    try {
+      styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
+      return true;
+    } catch (e) { return; }
   },
 
 
