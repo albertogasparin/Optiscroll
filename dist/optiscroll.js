@@ -1,5 +1,5 @@
 /*!
-* Optiscroll.js v2.0.0
+* Optiscroll.js v2.0.1
 * https://github.com/wilsonfletcher/Optiscroll/
 * by Alberto Gasparin
 * 
@@ -104,7 +104,8 @@ Optiscroll.Instance.prototype = {
 
   init: function () {
     var me = this,
-        settings = me.settings;
+        settings = me.settings,
+        shouldCreateScrollbars = false;
 
     me.scrollEl = Utils.createWrapper(me.element, settings.classPrefix + 'content');
     toggleClass(me.element, 'is-enabled', true);
@@ -117,9 +118,12 @@ Optiscroll.Instance.prototype = {
 
     // create DOM scrollbars only if they have size or if it's forced
     if(G.nativeScrollbarSize || settings.forceScrollbars) {
-      Utils.hideNativeScrollbars(me.scrollEl);
-      _invoke(me.scrollbars, 'create');
+      shouldCreateScrollbars = Utils.hideNativeScrollbars(me.scrollEl);
     } 
+
+    if(shouldCreateScrollbars) {
+      _invoke(me.scrollbars, 'create');
+    }
 
     if(G.isTouch && settings.preventParentScroll) {
       toggleClass(me.element, settings.classPrefix + 'prevent', true);
@@ -662,10 +666,11 @@ var Utils = {
       // hide Webkit/touch scrollbars
       var time = Date.now();
       scrollEl.setAttribute('data-scroll', time);
-      Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
+      return Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
     } else {
       scrollElStyle.right = -size + 'px';
       scrollElStyle.bottom = -size + 'px';
+      return true;
     }
   },
 
@@ -678,7 +683,10 @@ var Utils = {
       styleSheet.appendChild(document.createTextNode('')); // WebKit hack
       document.head.appendChild(styleSheet);
     } 
-    styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
+    try {
+      styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
+      return true;
+    } catch (e) { return; }
   },
 
 
