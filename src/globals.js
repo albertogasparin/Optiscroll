@@ -3,7 +3,7 @@
 var G = Optiscroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
-  cssTransform: cssTest('transform') || '',
+  cssTransform: cssTest('transform'),
   nativeScrollbarSize: getScrollbarWidth(),
 
   instances: [],
@@ -36,12 +36,12 @@ function getScrollbarWidth () {
 function cssTest (prop) {
   var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
       el = document.createElement('test'),
-      props = (prop + ' ' + ['Webkit','Moz','O','ms'].join(ucProp + ' ') + ucProp).split(' ');
-
+      props = [prop, 'Webkit' + ucProp];
+  
   for (var i in props) {
     if(el.style[props[i]] !== undefined) { return props[i]; }
   }
-  return false;
+  return '';
 }
 
 

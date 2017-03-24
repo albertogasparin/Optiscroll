@@ -1,8 +1,8 @@
 # Optiscroll
 
-Optiscroll is an tiny (**9kB**) and highly optimized custom scrollbar library for modern web apps.
+Optiscroll is an tiny (9kB min / **3.8kB gzipped**) and highly optimized custom scrollbar library for modern web apps.
 
-Optiscroll aims to be as light as possible in order to not affect the performace of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript. It only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, Optiscroll adds custom events and methods to extend browser scroll functionalities. 
+Optiscroll aims to be as light as possible in order to not affect the performance of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript. It only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, Optiscroll adds custom events and methods to extend browser scroll functionalities. 
 
 
 
@@ -227,7 +227,6 @@ Examples:
 ```javascript
 // set the scrollbar update interval to 30 FPS
 Optiscroll.globalSettings.scrollMinUpdateInterval = 1000 / 30;
-
 // disable auto update for all Optiscroll instances
 Optiscroll.globalSettings.checkFrequency = 0;
 ```
@@ -240,6 +239,11 @@ Optiscroll.globalSettings.checkFrequency = 0;
 
 - On iOS/Android, custom events (and scrollbars if `forceScrollbars: true`) are fired/updated whenever browser fires the scroll event.
 
+
+
+## Why still timers to check size/content changes?
+
+Even if there are clever tricks to detect an element size change (eg iframes) there is still no reliable way to detect overflow changes (the event is Firefox only and Chrome has deprecated it). So, timers are still the most performing solution because they allow a more fine grained control.
 
 
 ## Running Tests
@@ -278,5 +282,6 @@ This program is free software; it is distributed under an
 
 ---
 
-Copyright (c) 2016 [Wilson Fletcher](http://wilsonfletcher.com/)
+Copyright (c) 2017 Alberto Gasparin
+Initially developed at [Wilson Fletcher design studio](http://wilsonfletcher.com/)
 ([Contributors](https://github.com/wilsonfletcher/Optiscroll/graphs/contributors)).

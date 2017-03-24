@@ -122,9 +122,9 @@ Optiscroll.Instance.prototype = {
 
   update: function () {
     var me = this,
-        oldcH = me.cache.clientH,
         scrollEl = me.scrollEl,
         cache = me.cache,
+        oldcH = cache.clientH,
         sH = scrollEl.scrollHeight,
         cH = scrollEl.clientHeight,
         sW = scrollEl.scrollWidth,
@@ -142,7 +142,7 @@ Optiscroll.Instance.prototype = {
       if(oldcH !== undefined) {
 
         // if the element is no more in the DOM
-        if(sH === 0 && cH === 0 && !Utils.containsNode(document.body, me.element)) {
+        if(sH === 0 && cH === 0 && !document.body.contains(me.element)) {
           me.destroy();
           return false;
         }
@@ -343,7 +343,14 @@ Optiscroll.Instance.prototype = {
       clientHeight: cache.clientH,
     };
 
-    me.element.dispatchEvent(new CustomEvent(eventName, { detail: eventData }));
+    var event;
+    if (CustomEvent === 'function') {
+      event = new CustomEvent(eventName, { detail: eventData });
+    } else { // IE does not support CustomEvent
+      event = document.createEvent('CustomEvent');
+      event.initCustomEvent(eventName, false, false, eventData);
+    }
+    me.element.dispatchEvent(event);
   },
 
 };

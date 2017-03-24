@@ -18,6 +18,7 @@ $optiscroll-defaultStyle: true !default;
 .#{$optiscroll-namespace} {
   position: relative;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   
   &.is-enabled { overflow: hidden; }
 }

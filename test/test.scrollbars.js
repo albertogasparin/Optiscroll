@@ -118,7 +118,7 @@ asyncTest('Horizontal track should be draggable', function () {
 });
 
 
-asyncTest('It should update tracks', function () {
+asyncTest('It should update tracks on size change', function () {
   expect(4);
   
   os.scrollEl.scrollTop = 100;
@@ -135,6 +135,26 @@ asyncTest('It should update tracks', function () {
     equal(os.cache.v.percent, 100);
     equal(os.cache.h.size, 0.75);
     equal(os.cache.h.percent, 20);
+    start();
+  }, 100);
+  
+});
+
+
+asyncTest('It should update tracks on content change', function () {
+  expect(2);
+  
+  var content = document.querySelector('.test');
+  content.style.width = '400px';
+  content.style.height = '400px';
+
+  setTimeout(function () {
+    os.update();
+  });
+  
+  setTimeout(function () {
+    equal(os.cache.v.size, 0.25);
+    equal(os.cache.h.size, 0.25);
     start();
   }, 100);
   

@@ -154,3 +154,17 @@ asyncTest('It should fire scrollreachedge', function () {
     os.scrollEl.scrollTop = 100;
   }, 50);
 });
+
+
+asyncTest('It should fire sizechange', function () {
+  expect(2);
+
+  os.element.addEventListener('sizechange', function (ev) {
+    equal(ev.type, 'sizechange');
+    equal(ev.detail.clientHeight, 150);
+    start();
+  });
+
+  os.element.style.height = '150px';
+  os.update();
+});
