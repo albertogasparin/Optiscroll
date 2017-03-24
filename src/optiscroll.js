@@ -112,7 +112,7 @@ Optiscroll.Instance.prototype = {
     listeners.mousewheel = listeners.wheel = function (ev) { Events.wheel(ev, me); };
 
     for (var ev in listeners) {
-      scrollEl.addEventListener(ev, listeners[ev]);
+      scrollEl.addEventListener(ev, listeners[ev], G.passiveEvent);
     }
 
   },

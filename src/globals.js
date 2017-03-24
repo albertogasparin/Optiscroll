@@ -5,6 +5,7 @@ var G = Optiscroll.G = {
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
   nativeScrollbarSize: getScrollbarWidth(),
+  passiveEvent: getPassiveSupport(),
 
   instances: [],
   checkTimer: null,
@@ -31,6 +32,15 @@ function getScrollbarWidth () {
   return width;
 }
 
+
+function getPassiveSupport () {
+  var passive = false;
+  var options = Object.defineProperty({}, 'passive', {
+    get: function () { passive = true; },
+  });
+  window.addEventListener('test', null, options);
+  return passive ? { capture: false, passive: true } : false;
+}
 
 // Detect css3 support, thanks Modernizr
 function cssTest (prop) {
