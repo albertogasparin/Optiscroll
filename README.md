@@ -48,7 +48,7 @@ Include Optiscroll library and stylesheet
 <script src="jquery.optiscroll.js"></script>
 ```
 
-Add Optiscroll containers around your content. The library does **not** add them for you.
+Optiscroll automatically wraps your content with a scrollable element, but if you need more control you can create your own element and set `wrapContent: false`.
 
 ```html
 <div id="scroll" class="optiscroll">
@@ -82,6 +82,7 @@ $('#scroll').optiscroll()
 | draggableTracks | true | Allow track dragging to scroll
 | autoUpdate | true | Scrollbars will be automatically updated on size or content changes
 | classPrefix | 'optiscroll-' | Custom class prefix for optiscroll elements
+| wrapContent | true | Optiscroll will generate an element to wrap your content. If not, the first child will be used
 
 Examples:
 

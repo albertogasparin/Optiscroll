@@ -26,6 +26,7 @@ Optiscroll.defaults = {
   draggableTracks: true,
   autoUpdate: true,
   classPrefix: 'optiscroll-',
+  wrapContent: true,
 };
 
 
@@ -50,8 +51,12 @@ Optiscroll.Instance.prototype = {
     var me = this,
         settings = me.settings,
         shouldCreateScrollbars = false;
-
-    me.scrollEl = Utils.createWrapper(me.element, settings.classPrefix + 'content');
+    
+    me.scrollEl = settings.wrapContent 
+      ? Utils.createWrapper(me.element) 
+      : me.element.firstElementChild;
+      
+    toggleClass(me.scrollEl, settings.classPrefix + 'content', true);
     toggleClass(me.element, 'is-enabled', true);
 
     // initialize scrollbars
@@ -295,18 +300,20 @@ Optiscroll.Instance.prototype = {
 
     // remove scrollbars elements
     _invoke(me.scrollbars, 'remove');
-    
+
     // unwrap content
-    while(child = scrollEl.childNodes[0]) {
-      element.insertBefore(child, scrollEl);
+    if (!me.settings.contentElement) {
+      while(child = scrollEl.childNodes[0]) {
+        element.insertBefore(child, scrollEl);
+      }
+      element.removeChild(scrollEl);
+      me.scrollEl = null;
     }
-    element.removeChild(scrollEl);
-    me.scrollEl = null;
 
     // remove classes
     toggleClass(element, me.settings.classPrefix + 'prevent', false);
     toggleClass(element, 'is-enabled', false);
-    
+
     // defer instance removal from global array
     // to not affect checkLoop _invoke
     if (index > -1) {

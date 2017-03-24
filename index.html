@@ -65,7 +65,7 @@
       var os1 = new Optiscroll(document.getElementById('os1'), { 
         maxTrackSize: 70,
         preventParentScroll: true, 
-        contentElement: document.getElementById('os1-content'),
+        wrapContent: false,
       });
       setInterval(function () {
         document.querySelector('#os1-content p').classList.toggle('collapse');

@@ -37,7 +37,6 @@ var Utils = {
     while(child = element.childNodes[0]) {
       wrapper.appendChild(child);
     }
-    wrapper.className = className;
     return element.appendChild(wrapper);
   },
 

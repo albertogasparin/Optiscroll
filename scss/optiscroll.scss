@@ -23,7 +23,7 @@ $optiscroll-defaultStyle: true !default;
   &.is-enabled { overflow: hidden; }
 }
 
-.#{$optiscroll-classPrefix}content {
+.#{$optiscroll-namespace}.is-enabled > .#{$optiscroll-classPrefix}content {
   position: absolute;
   top: 0;
   left: 0;
