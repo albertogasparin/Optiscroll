@@ -27,6 +27,7 @@ Optiscroll.defaults = {
   autoUpdate: true,
   classPrefix: 'optiscroll-',
   wrapContent: true,
+  rtl: false,
 };
 
 
@@ -37,6 +38,9 @@ Optiscroll.Instance = function (element, options) {
   // instance variables
   me.element = element;  
   me.settings = _extend(_extend({}, Optiscroll.defaults), options || {});
+  if (typeof options.rtl !== 'boolean') {
+    me.settings.rtl = window.getComputedStyle(element).direction === 'rtl';
+  }
   me.cache = {};
   
   me.init();
@@ -55,9 +59,9 @@ Optiscroll.Instance.prototype = {
     me.scrollEl = settings.wrapContent 
       ? Utils.createWrapper(me.element) 
       : me.element.firstElementChild;
-      
+
     toggleClass(me.scrollEl, settings.classPrefix + 'content', true);
-    toggleClass(me.element, 'is-enabled', true);
+    toggleClass(me.element, 'is-enabled' + (settings.rtl ? ' is-rtl' : ''), true);
 
     // initialize scrollbars
     me.scrollbars = { 
@@ -67,7 +71,7 @@ Optiscroll.Instance.prototype = {
 
     // create DOM scrollbars only if they have size or if it's forced
     if(G.nativeScrollbarSize || settings.forceScrollbars) {
-      shouldCreateScrollbars = Utils.hideNativeScrollbars(me.scrollEl);
+      shouldCreateScrollbars = Utils.hideNativeScrollbars(me.scrollEl, settings.rtl);
     } 
 
     if(shouldCreateScrollbars) {

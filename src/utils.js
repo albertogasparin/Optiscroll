@@ -1,6 +1,6 @@
 var Utils = {
 
-  hideNativeScrollbars: function (scrollEl) {
+  hideNativeScrollbars: function (scrollEl, isRtl) {
     var size = G.nativeScrollbarSize,
         scrollElStyle = scrollEl.style;
     if(size === 0) {
@@ -9,7 +9,7 @@ var Utils = {
       scrollEl.setAttribute('data-scroll', time);
       return Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
     } else {
-      scrollElStyle.right = -size + 'px';
+      scrollElStyle[isRtl ? 'left' : 'right'] = -size + 'px';
       scrollElStyle.bottom = -size + 'px';
       return true;
     }

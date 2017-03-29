@@ -124,8 +124,13 @@ var Scrollbar = function (which, instance) {
     style: function (newRelPos, deltaPos, newSize, oldSize) {
       if(newSize !== oldSize) {
         trackEl.style[ isVertical ? 'height' : 'width' ] = newSize * 100 + '%';
+        if (settings.rtl && !isVertical) {
+          trackEl.style.marginRight = (1 - newSize) * 100 + '%';
+        }
       }
-      trackEl.style[G.cssTransform] = 'translate(' + (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') + ')';
+      trackEl.style[G.cssTransform] = 'translate(' + 
+        (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') 
+        + ')';
     },
 
 
