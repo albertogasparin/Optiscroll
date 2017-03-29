@@ -1,59 +1,57 @@
 var Events = {
 
-  scroll: function (ev, me) {
+  scroll: function (ev) {
     
     if (!G.pauseCheck) {
-      me.fireCustomEvent('scrollstart');
+      this.fireCustomEvent('scrollstart');
     }
     G.pauseCheck = true;
     
-    me.scrollbars.v.update();
-    me.scrollbars.h.update();
+    this.scrollbars.v.update();
+    this.scrollbars.h.update();
 
-    me.fireCustomEvent('scroll');
+    this.fireCustomEvent('scroll');
     
-    clearTimeout(me.cache.timerStop);
-    me.cache.timerStop = setTimeout(function () {
-      Events.scrollStop(me);
-    }, me.settings.scrollStopDelay);
+    clearTimeout(this.cache.timerStop);
+    this.cache.timerStop = setTimeout(Events.scrollStop.bind(this), this.settings.scrollStopDelay);
   },
 
 
-  touchstart: function (ev, me) {
+  touchstart: function (ev) {
     G.pauseCheck = false;
-    me.scrollbars.v.update();
-    me.scrollbars.h.update();
+    this.scrollbars.v.update();
+    this.scrollbars.h.update();
     
-    Events.wheel(ev, me);
+    Events.wheel.call(this, ev);
   },
 
 
-  touchend: function (ev, me) {
+  touchend: function (ev) {
     // prevents touchmove generate scroll event to call
     // scrollstop  while the page is still momentum scrolling
-    clearTimeout(me.cache.timerStop);
+    clearTimeout(this.cache.timerStop);
   },
 
 
-  scrollStop: function (me) {
-    me.fireCustomEvent('scrollstop');
+  scrollStop: function () {
+    this.fireCustomEvent('scrollstop');
     G.pauseCheck = false;
   },
 
 
-  wheel: function (ev, me) {
-    var cache = me.cache,
+  wheel: function (ev) {
+    var cache = this.cache,
         cacheV = cache.v, 
         cacheH = cache.h,
-        preventScroll = me.settings.preventParentScroll;
+        preventScroll = this.settings.preventParentScroll;
 
-    window.cancelAnimationFrame(me.scrollAnimation);
+    window.cancelAnimationFrame(this.scrollAnimation);
     
     if(preventScroll && cacheV.enabled && cacheV.percent % 100 === 0) {
-      me.scrollEl.scrollTop = cacheV.percent ? (cache.scrollH - cache.clientH - 1) : 1;
+      this.scrollEl.scrollTop = cacheV.percent ? (cache.scrollH - cache.clientH - 1) : 1;
     }
     if(preventScroll && cacheH.enabled && cacheH.percent % 100 === 0) {
-      me.scrollEl.scrollLeft = cacheH.percent ? (cache.scrollW - cache.clientW - 1) : 1;
+      this.scrollEl.scrollLeft = cacheH.percent ? (cache.scrollW - cache.clientW - 1) : 1;
     }
   },
 

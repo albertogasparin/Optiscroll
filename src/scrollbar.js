@@ -84,8 +84,7 @@ var Scrollbar = function (which, instance) {
 
 
     update: function () {
-      var me = this,
-          newSize, oldSize,
+      var newSize, oldSize,
           newDim, newRelPos, deltaPos;
 
       // if scrollbar is disabled and no scroll
@@ -100,22 +99,22 @@ var Scrollbar = function (which, instance) {
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
       if(newSize === 1 && enabled) {
-        me.toggle(false);
+        this.toggle(false);
       }
 
       if(newSize < 1 && !enabled) {
-        me.toggle(true);
+        this.toggle(true);
       }
 
       if(trackEl && enabled) {
-        me.style(newRelPos, deltaPos, newSize, oldSize);
+        this.style(newRelPos, deltaPos, newSize, oldSize);
       }
 
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
 
       if(enabled) {
-        me.fireEdgeEv();
+        this.fireEdgeEv();
       }
       
     },
