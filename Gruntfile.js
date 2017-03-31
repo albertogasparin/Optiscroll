@@ -20,9 +20,8 @@ module.exports = exports = function(grunt) {
                 banner: "/*!\n"+
                     "* Optiscroll.js v<%= pkg.version %>\n"+
                     "* https://github.com/wilsonfletcher/Optiscroll/\n"+
-                    "* by Alberto Gasparin\n"+
                     "* \n"+
-                    "* @copyright <%= grunt.template.today('yyyy') %> Wilson Fletcher\n"+
+                    "* @copyright <%= grunt.template.today('yyyy') %> Alberto Gasparin\n"+
                     "* @license Released under MIT LICENSE\n"+
                     "*/\n\n",
                 separator: "\n\n",
@@ -30,7 +29,6 @@ module.exports = exports = function(grunt) {
             nojquery: {
                 src: [
                     'src/intro.js',
-                    'src/polyfills/*.js',
                     'src/optiscroll.js',
                     'src/events.js',
                     'src/scrollbar.js',
@@ -91,7 +89,7 @@ module.exports = exports = function(grunt) {
 
         autoprefixer: {
             options: {
-                browsers: ['last 3 versions', 'IE 9']
+                browsers: ['last 3 versions', 'IE 11']
             },
             dist: {
                 files: {

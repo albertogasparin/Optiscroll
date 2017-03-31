@@ -13,6 +13,7 @@ var Scrollbar = function (which, instance) {
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
 
+      rtlMode = G.scrollbarSpec.rtl,
       enabled = false,
       scrollbarEl = null,
       trackEl = null;
@@ -28,13 +29,14 @@ var Scrollbar = function (which, instance) {
 
     dragMove: function (ev) {
       var evData = ev.touches ? ev.touches[0] : ev,
+          dragMode = settings.rtl && rtlMode === 1 && !isVertical ? -1 : 1,
           delta, deltaRatio;
       
       ev.preventDefault();
       delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
       deltaRatio = delta / cache[clientSize];
       
-      scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize];
+      scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize] * dragMode;
     },
 
     dragEnd: function () {
@@ -84,8 +86,7 @@ var Scrollbar = function (which, instance) {
 
 
     update: function () {
-      var me = this,
-          newSize, oldSize,
+      var newSize, oldSize,
           newDim, newRelPos, deltaPos;
 
       // if scrollbar is disabled and no scroll
@@ -100,22 +101,22 @@ var Scrollbar = function (which, instance) {
       deltaPos = Math.abs(newDim.position - (scrollbarCache.position || 0)) * cache[clientSize];
 
       if(newSize === 1 && enabled) {
-        me.toggle(false);
+        this.toggle(false);
       }
 
       if(newSize < 1 && !enabled) {
-        me.toggle(true);
+        this.toggle(true);
       }
 
       if(trackEl && enabled) {
-        me.style(newRelPos, deltaPos, newSize, oldSize);
+        this.style(newRelPos, deltaPos, newSize, oldSize);
       }
 
       // update cache values
       scrollbarCache = _extend(scrollbarCache, newDim);
 
       if(enabled) {
-        me.fireEdgeEv();
+        this.fireEdgeEv();
       }
       
     },
@@ -124,8 +125,13 @@ var Scrollbar = function (which, instance) {
     style: function (newRelPos, deltaPos, newSize, oldSize) {
       if(newSize !== oldSize) {
         trackEl.style[ isVertical ? 'height' : 'width' ] = newSize * 100 + '%';
+        if (settings.rtl && !isVertical) {
+          trackEl.style.marginRight = (1 - newSize) * 100 + '%';
+        }
       }
-      trackEl.style[G.cssTransform] = 'translate(' + (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') + ')';
+      trackEl.style[G.cssTransform] = 'translate(' + 
+        (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') 
+        + ')';
     },
 
 
@@ -136,9 +142,12 @@ var Scrollbar = function (which, instance) {
           sizeRatio = viewS / scrollS,
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
-
+      
       if(sizeRatio >= 1 || !scrollS) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
+      }
+      if (!isVertical && settings.rtl && rtlMode) {
+        position = sizeDiff - position * rtlMode;
       }
 
       percent = 100 * position / sizeDiff;

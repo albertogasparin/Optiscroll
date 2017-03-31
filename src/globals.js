@@ -3,8 +3,9 @@
 var G = Optiscroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
-  cssTransform: cssTest('transform') || '',
-  nativeScrollbarSize: getScrollbarWidth(),
+  cssTransform: cssTest('transform'),
+  scrollbarSpec: getScrollbarSpec(),
+  passiveEvent: getPassiveSupport(),
 
   instances: [],
   checkTimer: null,
@@ -13,12 +14,12 @@ var G = Optiscroll.G = {
 
 
 // Get scrollbars width, thanks Google Closure Library
-function getScrollbarWidth () {
+function getScrollbarSpec () {
   var htmlEl = document.documentElement,
-      outerEl, innerEl, width = 0;
+      outerEl, innerEl, width = 0, rtl = 1; // IE is reverse
 
   outerEl = document.createElement('div');
-  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;position:absolute;left:-100px';
+  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;position:absolute;left:-100px;direction:rtl';
 
   innerEl = document.createElement('div');
   innerEl.style.cssText = 'width:100px;height:100px';
@@ -26,9 +27,27 @@ function getScrollbarWidth () {
   outerEl.appendChild(innerEl);
   htmlEl.appendChild(outerEl);
   width = outerEl.offsetWidth - outerEl.clientWidth;
+  if (outerEl.scrollLeft > 0) { 
+    rtl = 0; // webkit is default
+  } else {
+    outerEl.scrollLeft = 1;
+    if (outerEl.scrollLeft === 0) { 
+      rtl = -1; // firefox is negative
+    }
+  }
   htmlEl.removeChild(outerEl);
+  
+  return { width: width, rtl: rtl };
+}
 
-  return width;
+
+function getPassiveSupport () {
+  var passive = false;
+  var options = Object.defineProperty({}, 'passive', {
+    get: function () { passive = true; },
+  });
+  window.addEventListener('test', null, options);
+  return passive ? { capture: false, passive: true } : false;
 }
 
 
@@ -36,12 +55,12 @@ function getScrollbarWidth () {
 function cssTest (prop) {
   var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
       el = document.createElement('test'),
-      props = (prop + ' ' + ['Webkit','Moz','O','ms'].join(ucProp + ' ') + ucProp).split(' ');
-
+      props = [prop, 'Webkit' + ucProp];
+  
   for (var i in props) {
     if(el.style[props[i]] !== undefined) { return props[i]; }
   }
-  return false;
+  return '';
 }
 
 

@@ -1,7 +1,7 @@
 var Utils = {
 
-  hideNativeScrollbars: function (scrollEl) {
-    var size = G.nativeScrollbarSize,
+  hideNativeScrollbars: function (scrollEl, isRtl) {
+    var size = G.scrollbarSpec.width,
         scrollElStyle = scrollEl.style;
     if(size === 0) {
       // hide Webkit/touch scrollbars
@@ -9,7 +9,7 @@ var Utils = {
       scrollEl.setAttribute('data-scroll', time);
       return Utils.addCssRule('[data-scroll="' + time + '"]::-webkit-scrollbar', 'display:none;width:0;height:0;');
     } else {
-      scrollElStyle.right = -size + 'px';
+      scrollElStyle[isRtl ? 'left' : 'right'] = -size + 'px';
       scrollElStyle.bottom = -size + 'px';
       return true;
     }
@@ -37,15 +37,7 @@ var Utils = {
     while(child = element.childNodes[0]) {
       wrapper.appendChild(child);
     }
-    wrapper.className = className;
     return element.appendChild(wrapper);
-  },
-
-
-  containsNode: function (parent, node) {
-    return parent.contains ?
-      parent != node && parent.contains(node) :
-      !!(parent.compareDocumentPosition(node) & 16);
   },
 
 

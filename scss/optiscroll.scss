@@ -8,6 +8,7 @@ $optiscroll-classPrefix: $optiscroll-namespace + '-' !default;
 
 $optiscroll-forceScrollbarV: false !default;
 $optiscroll-forceScrollbarH: false !default;
+$optiscroll-supportRtl: true !default;
 $optiscroll-defaultStyle: true !default;
 
 
@@ -18,11 +19,12 @@ $optiscroll-defaultStyle: true !default;
 .#{$optiscroll-namespace} {
   position: relative;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   
   &.is-enabled { overflow: hidden; }
 }
 
-.#{$optiscroll-classPrefix}content {
+.#{$optiscroll-namespace}.is-enabled > .#{$optiscroll-classPrefix}content {
   position: absolute;
   top: 0;
   left: 0;
@@ -52,6 +54,13 @@ $optiscroll-defaultStyle: true !default;
 .#{$optiscroll-namespace}.has-vtrack > .#{$optiscroll-classPrefix}v,
 .#{$optiscroll-namespace}.has-htrack > .#{$optiscroll-classPrefix}h {
   visibility: visible;
+}
+
+@if $optiscroll-supportRtl {
+  .#{$optiscroll-namespace}.is-rtl > .#{$optiscroll-classPrefix}v { 
+    left: 0; 
+    right: auto; 
+  }
 }
 
 
@@ -160,6 +169,20 @@ $optiscroll-defaultStyle: true !default;
     & > .#{$optiscroll-classPrefix}h .#{$optiscroll-classPrefix}htrack { 
       opacity: 1; 
     }
+  }
+
+  @if $optiscroll-supportRtl {
+
+    .#{$optiscroll-namespace}.has-vtrack.has-htrack.is-rtl > .#{$optiscroll-classPrefix}h {
+      right: 4px;
+      left: 8px;
+    }
+
+    .#{$optiscroll-namespace}.is-rtl > .#{$optiscroll-classPrefix}v .#{$optiscroll-classPrefix}vtrack {
+      right: auto;
+      left: 4px;
+    }
+
   }
 
 }
