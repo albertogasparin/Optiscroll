@@ -1,6 +1,6 @@
 # Optiscroll
 
-Optiscroll is an tiny (9kB min / **3.9kB gzipped**) and highly optimized custom scrollbar library for modern web apps.
+Optiscroll is an tiny (9kB min / **3.9kB gzip**) and highly optimized custom scrollbar library for modern web apps.
 
 Optiscroll aims to be as light as possible in order to not affect the performance of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript. It only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, Optiscroll adds custom events and methods to extend browser scroll functionalities. 
 
@@ -33,8 +33,10 @@ Optiscroll works in **all modern browsers** (IE11 and above). Keep in mind that 
 
 Grab `optiscroll.min.js` (or `jquery.optiscroll.min.js`) from `dist` folder or:
 
-```
+```sh
 bower install optiscroll --save
+# or
+npm install optiscroll --save
 ```
 
 ## Basic usage
@@ -60,7 +62,7 @@ Optiscroll automatically wraps your content with a scrollable element, but if yo
 
 Initialize it in your JS code
 
-```javascript
+```js
 // plain JS version
 var element = document.querySelector('#scroll')
 var myOptiscrollInstance = new Optiscroll(element);
@@ -88,7 +90,7 @@ $('#scroll').optiscroll()
 
 Examples:
 
-```javascript
+```js
 // change min and max track size - plain JS version
 var myOptiscrollInstance = new Optiscroll(element, { maxTrackSize: 50, minTrackSize: 20 });
 
@@ -114,7 +116,7 @@ By default the duration is calculated based on the distance (eg: 500px in 700ms,
 
 Examples:
 
-```javascript
+```js
 // scroll vertically by 500px (scroll duration will be auto) - plain JS version
 myOptiscrollInstance.scrollTo(false, 500);
 
@@ -141,7 +143,7 @@ Scrolls the element into view. The alignment will be driven by the nearest edge.
 
 Examples:
 
-```javascript
+```js
 // scrolls element with id anchor-1 into view (scroll duration will be auto) - plain JS version
 myOptiscrollInstance.scrollIntoView('#anchor-1');
 
@@ -200,7 +202,7 @@ Each instance will fire a set of custom events after user interaction. Each even
 
 Examples:
 
-```javascript
+```js
 // plain JS listener
 document.querySelector('#scroll').addEventListener('scrollreachtop', function (ev) {
     console.log(ev.type) // outputs 'scrollreachtop'
@@ -227,11 +229,26 @@ $('#scroll').on('scrollstop', function (ev) {
 
 Examples:
 
-```javascript
+```js
 // set the scrollbar update interval to 30 FPS
 Optiscroll.globalSettings.scrollMinUpdateInterval = 1000 / 30;
 // disable auto update for all Optiscroll instances
 Optiscroll.globalSettings.checkFrequency = 0;
+```
+
+
+## SCSS styling options
+
+If you want more control over the styling, you can set these SCSS variables before including `scss/optiscroll.scss` in your `.scss` file:
+
+```scss
+$optiscroll-namespace: 'optiscroll'; // custom css class namespace
+$optiscroll-classPrefix: $optiscroll-namespace + '-'; // same as js classPrefix option
+
+$optiscroll-forceScrollbarV: false; // css trick to force vertical scrollbars
+$optiscroll-forceScrollbarH: false; // css trick to force horizontal scrollbars
+$optiscroll-supportRtl: true; // enable/disable rules for rtl support
+$optiscroll-defaultStyle: true; // enable/disable default styling
 ```
 
 
@@ -256,35 +273,31 @@ a browser environment instead of any JavaScript environment (i.e. node.js).
 You can simply load test/index.html in any browser to run all the tests.
 
 
+## Upgrading
 
-## Upgrade from v1 to v2
+#### From v2 to v3
+No changes should be required, just dropped IE < 11 support and added bunch of new features.
 
-**Options changes**  
+#### From v1 to v2
 - `classPrefix` option no longer adds `-` to the namespace, so it allows you to pick your favourite separator (or no separator at all) for `.optiscroll*` elements.
-
-**HTML changes**  
-- Optiscroll now automatically wraps inner content. So, remove `.optiscroll-content` from your html.
-
-**CSS changes**  
-- Styles organisation got a major overhaul, so my suggestion is to [go and have a look](https://github.com/wilsonfletcher/Optiscroll/blob/master/scss/optiscroll.scss).
-- Tracks states class names have been renamed to `.has-vtrack`, `.has-htrack`.
-- `opacity` is now set on the track, no longer on the whole scrollbar. 
+- Optiscroll now automatically wraps inner content. So, remove `.optiscroll-content` from your html (behaviour customisable on v3).
+- Styles organisation got a major overhaul, so my suggestion is to [go and have a look](https://github.com/albertogasparin/Optiscroll/blob/master/scss/optiscroll.scss).
 
 
 
-## History
+## History & Changelog
 
-[Check Github Releases page](https://github.com/wilsonfletcher/Optiscroll/releases)
+[Check Github Releases page](https://github.com/albertogasparin/Optiscroll/releases)
 
 
 
 # License
 
 This program is free software; it is distributed under an
-[MIT License](https://github.com/wilsonfletcher/Optiscroll/blob/master/LICENSE).
+[MIT License](https://github.com/albertogasparin/Optiscroll/blob/master/LICENSE).
 
 ---
 
 Copyright (c) 2017 Alberto Gasparin
 Initially developed at [Wilson Fletcher design studio](http://wilsonfletcher.com/)
-([Contributors](https://github.com/wilsonfletcher/Optiscroll/graphs/contributors)).
+([Contributors](https://github.com/albertogasparin/Optiscroll/graphs/contributors)).
