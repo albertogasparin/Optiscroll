@@ -4,7 +4,7 @@ var G = Optiscroll.G = {
   isTouch: 'ontouchstart' in window,
   cssTransition: cssTest('transition'),
   cssTransform: cssTest('transform'),
-  nativeScrollbarSize: getScrollbarWidth(),
+  scrollbarSpec: getScrollbarSpec(),
   passiveEvent: getPassiveSupport(),
 
   instances: [],
@@ -14,12 +14,12 @@ var G = Optiscroll.G = {
 
 
 // Get scrollbars width, thanks Google Closure Library
-function getScrollbarWidth () {
+function getScrollbarSpec () {
   var htmlEl = document.documentElement,
-      outerEl, innerEl, width = 0;
+      outerEl, innerEl, width = 0, rtl = 1; // IE is reverse
 
   outerEl = document.createElement('div');
-  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;position:absolute;left:-100px';
+  outerEl.style.cssText = 'overflow:scroll;width:50px;height:50px;position:absolute;left:-100px;direction:rtl';
 
   innerEl = document.createElement('div');
   innerEl.style.cssText = 'width:100px;height:100px';
@@ -27,9 +27,17 @@ function getScrollbarWidth () {
   outerEl.appendChild(innerEl);
   htmlEl.appendChild(outerEl);
   width = outerEl.offsetWidth - outerEl.clientWidth;
+  if (outerEl.scrollLeft > 0) { 
+    rtl = 0; // webkit is default
+  } else {
+    outerEl.scrollLeft = 1;
+    if (outerEl.scrollLeft === 0) { 
+      rtl = -1; // firefox is negative
+    }
+  }
   htmlEl.removeChild(outerEl);
-
-  return width;
+  
+  return { width: width, rtl: rtl };
 }
 
 
@@ -41,6 +49,7 @@ function getPassiveSupport () {
   window.addEventListener('test', null, options);
   return passive ? { capture: false, passive: true } : false;
 }
+
 
 // Detect css3 support, thanks Modernizr
 function cssTest (prop) {

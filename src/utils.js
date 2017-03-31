@@ -1,7 +1,7 @@
 var Utils = {
 
   hideNativeScrollbars: function (scrollEl, isRtl) {
-    var size = G.nativeScrollbarSize,
+    var size = G.scrollbarSpec.width,
         scrollElStyle = scrollEl.style;
     if(size === 0) {
       // hide Webkit/touch scrollbars

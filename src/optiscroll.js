@@ -68,7 +68,7 @@ Optiscroll.Instance.prototype = {
     };
 
     // create DOM scrollbars only if they have size or if it's forced
-    if(G.nativeScrollbarSize || settings.forceScrollbars) {
+    if(G.scrollbarSpec.width || settings.forceScrollbars) {
       shouldCreateScrollbars = Utils.hideNativeScrollbars(scrollEl, settings.rtl);
     } 
 

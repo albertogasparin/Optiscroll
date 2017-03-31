@@ -1,6 +1,6 @@
 # Optiscroll
 
-Optiscroll is an tiny (9kB min / **3.8kB gzipped**) and highly optimized custom scrollbar library for modern web apps.
+Optiscroll is an tiny (9kB min / **3.9kB gzipped**) and highly optimized custom scrollbar library for modern web apps.
 
 Optiscroll aims to be as light as possible in order to not affect the performance of your webapp. Optiscroll does **not** replace the scrolling logic with Javascript. It only hides native scrollbars and allows you to style the fake scrollbars as you like. Moreover, Optiscroll adds custom events and methods to extend browser scroll functionalities. 
 
@@ -11,6 +11,7 @@ Optiscroll aims to be as light as possible in order to not affect the performanc
 - Lightweight and without dependencies 
 - Highly optimized
 - Vertical and horizontal scrollbars support
+- Both `ltr` and `rtl` text direction support (with smart detection)
 - Nested scrollbars support
 - Custom events
 - Animated `scrollTo` and `scrollIntoView`
@@ -74,15 +75,16 @@ $('#scroll').optiscroll()
 
 | Option name | Default | Purpose  
 |-------------|---------|----------
-| preventParentScroll | false | Prevents scrolling parent container (or body) when scroll reach top or bottom. Works also on iOS preventing the page bounce. 
+| preventParentScroll | false | Mobile only, prevents scrolling parent container (or body) when scroll reach top or bottom (known as iOS page bounce fix). 
 | forceScrollbars | false | Use custom scrollbars also on iOS, Android and OSX (w/ trackpad)
-| scrollStopDelay | 300 (ms) | Time before presuming that the scroll is ended, then fire `scrollstop` event
+| scrollStopDelay | 300 (ms) | Time before presuming that the scroll is ended, after which `scrollstop` event is fired
 | maxTrackSize | 95 (%) | Maximum size (width or height) of the track
 | minTrackSize | 5 (%) | Minimum size (width or height) of the track
-| draggableTracks | true | Allow track dragging to scroll
+| draggableTracks | true | Allow scroll through tracks dragging
 | autoUpdate | true | Scrollbars will be automatically updated on size or content changes
 | classPrefix | 'optiscroll-' | Custom class prefix for optiscroll elements
 | wrapContent | true | Optiscroll will generate an element to wrap your content. If not, the first child will be used
+| rtl | false | Optiscroll will automatically detect if the content is rtl, however you can force it if the detection fails
 
 Examples:
 
@@ -221,7 +223,7 @@ $('#scroll').on('scrollstop', function (ev) {
 | Option name | Default | Purpose  
 |-------------|---------|----------
 | scrollMinUpdateInterval | 25 (ms) | By default the scrollbars position is updated up to 40 times per second. By increasing this time the scroll tracks will be updated less frequently. The smallest interval is 16, which means scroll tracks are updated up to 60 times per second.
-| checkFrequency | 1000 (ms) | How often scroll areas are checked for size or content changes. To disable the check timer (and the scrollbars auto update feature) set this value to 0. 
+| checkFrequency | 1000 (ms) | How often scroll areas are checked for size or content changes. To disable the timer (and stop all scrollbars to auto update) set this value to 0. 
 
 Examples:
 

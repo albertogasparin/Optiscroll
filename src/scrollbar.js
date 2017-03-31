@@ -13,6 +13,7 @@ var Scrollbar = function (which, instance) {
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
       evNames = isVertical ? ['top','bottom'] : ['left','right'],
 
+      rtlMode = G.scrollbarSpec.rtl,
       enabled = false,
       scrollbarEl = null,
       trackEl = null;
@@ -28,13 +29,14 @@ var Scrollbar = function (which, instance) {
 
     dragMove: function (ev) {
       var evData = ev.touches ? ev.touches[0] : ev,
+          dragMode = settings.rtl && rtlMode === 1 && !isVertical ? -1 : 1,
           delta, deltaRatio;
       
       ev.preventDefault();
       delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
       deltaRatio = delta / cache[clientSize];
       
-      scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize];
+      scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize] * dragMode;
     },
 
     dragEnd: function () {
@@ -140,9 +142,12 @@ var Scrollbar = function (which, instance) {
           sizeRatio = viewS / scrollS,
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
-
+      
       if(sizeRatio >= 1 || !scrollS) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
+      }
+      if (!isVertical && settings.rtl && rtlMode) {
+        position = sizeDiff - position * rtlMode;
       }
 
       percent = 100 * position / sizeDiff;

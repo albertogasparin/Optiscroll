@@ -43,7 +43,7 @@ var Events = {
     var cache = this.cache,
         cacheV = cache.v, 
         cacheH = cache.h,
-        preventScroll = this.settings.preventParentScroll;
+        preventScroll = this.settings.preventParentScroll && G.isTouch;
 
     window.cancelAnimationFrame(this.scrollAnimation);
     
