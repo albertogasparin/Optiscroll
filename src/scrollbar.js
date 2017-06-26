@@ -11,7 +11,8 @@ var Scrollbar = function (which, instance) {
       clientSize = 'client' + sizeProp,
       scrollSize = 'scroll' + sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
-      evNames = isVertical ? ['top','bottom'] : ['left','right'],
+      evSuffixes = isVertical ? ['top','bottom'] : ['left','right'],
+      evTypesMatcher = /^(mouse|touch|pointer)/,
 
       rtlMode = G.scrollbarSpec.rtl,
       enabled = false,
@@ -22,9 +23,10 @@ var Scrollbar = function (which, instance) {
     dragData: null,
 
     dragStart: function (ev) {
+      ev.preventDefault();
       var evData = ev.touches ? ev.touches[0] : ev;
       events.dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
-      events.bind(true);
+      events.bind(true, ev.type.match(evTypesMatcher)[1]);
     },
 
     dragMove: function (ev) {
@@ -39,17 +41,19 @@ var Scrollbar = function (which, instance) {
       scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize] * dragMode;
     },
 
-    dragEnd: function () {
+    dragEnd: function (ev) {
       events.dragData = null;
-      events.bind(false);
+      events.bind(false, ev.type.match(evTypesMatcher)[1]);
     },
 
-    bind: function (on) {
+    bind: function (on, type) {
       var method = (on ? 'add' : 'remove') + 'EventListener',
-          type = G.isTouch ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup'];
+          moveEv = type + 'move',
+          upEv = type + (type === 'touch' ? 'end' : 'up');
 
-      document[method](type[0], events.dragMove);
-      document[method](type[1], events.dragEnd);
+      document[method](moveEv, events.dragMove);
+      document[method](upEv, events.dragEnd);
+      document[method](type + 'cancel', events.dragEnd);
     },
 
   };
@@ -70,7 +74,6 @@ var Scrollbar = function (which, instance) {
 
 
     create: function () {
-      var evType = G.isTouch ? 'touchstart' : 'mousedown';
       scrollbarEl = document.createElement('div');
       trackEl = document.createElement('b');
 
@@ -80,7 +83,10 @@ var Scrollbar = function (which, instance) {
       parentEl.appendChild(scrollbarEl);
 
       if(settings.draggableTracks) {
-        trackEl.addEventListener(evType, events.dragStart);
+        var evTypes = window.PointerEvent ? ['pointerdown'] : ['touchstart', 'mousedown'];
+        evTypes.forEach(function (evType) {
+          trackEl.addEventListener(evType, events.dragStart);
+        });
       }
     },
 
@@ -172,7 +178,7 @@ var Scrollbar = function (which, instance) {
 
       if(scrollbarCache.was !== percent && percent % 100 === 0) {
         instance.fireCustomEvent('scrollreachedge');
-        instance.fireCustomEvent('scrollreach' + evNames[percent / 100]);
+        instance.fireCustomEvent('scrollreach' + evSuffixes[percent / 100]);
       }
 
       scrollbarCache.was = percent;

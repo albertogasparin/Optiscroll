@@ -76,13 +76,7 @@ asyncTest('Vertical track should be draggable', function () {
   
   os.scrollEl.scrollTop = 0;
 
-  // usign both jquery.simulate and Syn.js to make drag work across all browsers
-  $(vTrack).simulate('mousedown', { 
-    clientX: $(vTrack).offset().left + $(vTrack).outerWidth() / 2,
-    clientY: $(vTrack).offset().top + $(vTrack).outerHeight() / 2,
-  });
-
-  Syn.drag('+0 +25', vTrack, function () {
+  window.syn.drag('+0 +25', vTrack, function () {
     setTimeout(function () {
       equal(os.scrollEl.scrollTop, 50);
       equal(os.cache.v.position, 0.25);
@@ -100,13 +94,7 @@ asyncTest('Horizontal track should be draggable', function () {
 
   os.scrollEl.scrollLeft = 0;
 
-  // usign both jquery.simulate and Syn.js to make drag work across all browsers
-  $(hTrack).simulate('mousedown', { 
-    clientX: $(hTrack).offset().left + $(hTrack).outerWidth() / 2,
-    clientY: $(hTrack).offset().top + $(hTrack).outerHeight() / 2,
-  });
-
-  Syn.drag('+25 +0', hTrack, function () {
+  window.syn.drag('+25 +0', hTrack, function () {
     setTimeout(function () {
       equal(os.scrollEl.scrollLeft, 50);
       equal(os.cache.h.position, 0.25);
