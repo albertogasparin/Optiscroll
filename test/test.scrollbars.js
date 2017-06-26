@@ -33,7 +33,7 @@ test('It should create scrollbars', function () {
   // DOM elements
   ok(os.element.querySelector('.optiscroll-v'), 'Vertical scrollbar element created');
   ok(os.element.querySelector('.optiscroll-h'), 'Horizontal scrollbar element created');
-  
+
   // Classes
   notEqual(os.element.className.indexOf('has-vtrack'), -1);
   notEqual(os.element.className.indexOf('has-htrack'), -1);
@@ -66,14 +66,14 @@ asyncTest('It should move the tracks on scroll', function () {
     equal(hTrack.style[Optiscroll.G.cssTransform], 'translate(50%, 0%)');
     start();
   }, 100);
-  
+
 });
 
 
 asyncTest('Vertical track should be draggable', function () {
   expect(4);
   var vTrack = os.element.querySelector('.optiscroll-vtrack');
-  
+
   os.scrollEl.scrollTop = 0;
 
   window.syn.drag('+0 +25', vTrack, function () {
@@ -85,7 +85,7 @@ asyncTest('Vertical track should be draggable', function () {
       start();
     }, 50);
   });
-  
+
 });
 
 asyncTest('Horizontal track should be draggable', function () {
@@ -108,12 +108,12 @@ asyncTest('Horizontal track should be draggable', function () {
 
 asyncTest('It should update tracks on size change', function () {
   expect(4);
-  
+
   os.scrollEl.scrollTop = 100;
   os.scrollEl.scrollLeft = 10;
   os.element.style.width = '150px';
   os.element.style.height = '150px';
-  
+
   setTimeout(function () {
     os.update();
   });
@@ -125,13 +125,13 @@ asyncTest('It should update tracks on size change', function () {
     equal(os.cache.h.percent, 20);
     start();
   }, 100);
-  
+
 });
 
 
 asyncTest('It should update tracks on content change', function () {
   expect(2);
-  
+
   var content = document.querySelector('.test');
   content.style.width = '400px';
   content.style.height = '400px';
@@ -139,19 +139,19 @@ asyncTest('It should update tracks on content change', function () {
   setTimeout(function () {
     os.update();
   });
-  
+
   setTimeout(function () {
     equal(os.cache.v.size, 0.25);
     equal(os.cache.h.size, 0.25);
     start();
   }, 100);
-  
+
 });
 
 
 asyncTest('Vertical track should be disabled if no scroll', function () {
   expect(4);
-  
+
   os.element.style.height = '300px';
   os.update();
 
@@ -167,7 +167,7 @@ asyncTest('Vertical track should be disabled if no scroll', function () {
 
 asyncTest('Horizontal track should be disabled if no scroll', function () {
   expect(4);
-  
+
   os.element.style.width = '300px';
   os.update();
 
@@ -178,6 +178,6 @@ asyncTest('Horizontal track should be disabled if no scroll', function () {
     equal(os.element.className.indexOf('htrack-on'), -1);
     start();
   }, 50);
-  
+
 });
 

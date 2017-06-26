@@ -4,12 +4,12 @@
       return Optiscroll;
     });
   }
-  
+
   // commonjs export
   if(typeof module !== 'undefined' && module.exports) {
     module.exports = Optiscroll;
   }
-  
+
   window.Optiscroll = Optiscroll;
 
 })(window, document, Math);

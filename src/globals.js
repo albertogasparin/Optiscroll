@@ -27,16 +27,16 @@ function getScrollbarSpec () {
   outerEl.appendChild(innerEl);
   htmlEl.appendChild(outerEl);
   width = outerEl.offsetWidth - outerEl.clientWidth;
-  if (outerEl.scrollLeft > 0) { 
+  if (outerEl.scrollLeft > 0) {
     rtl = 0; // webkit is default
   } else {
     outerEl.scrollLeft = 1;
-    if (outerEl.scrollLeft === 0) { 
+    if (outerEl.scrollLeft === 0) {
       rtl = -1; // firefox is negative
     }
   }
   htmlEl.removeChild(outerEl);
-  
+
   return { width: width, rtl: rtl };
 }
 
@@ -56,7 +56,7 @@ function cssTest (prop) {
   var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
       el = document.createElement('test'),
       props = [prop, 'Webkit' + ucProp];
-  
+
   for (var i in props) {
     if(el.style[props[i]] !== undefined) { return props[i]; }
   }
@@ -68,7 +68,7 @@ function cssTest (prop) {
 function toggleClass (el, value, bool) {
   var classes = el.className.split(/\s+/),
       index = classes.indexOf(value);
-  
+
   if(bool) {
     ~index || classes.push(value);
   } else {

@@ -11,12 +11,12 @@
  */
 
 (function ($) {
-  
+
   var pluginName = 'optiscroll';
 
   $.fn[pluginName] = function(options) {
     var method, args;
-    
+
     if(typeof options === 'string') {
       args = Array.prototype.slice.call(arguments);
       method = args.shift();
@@ -31,7 +31,7 @@
         inst = new window.Optiscroll(this, options || {});
         $el.data(pluginName, inst);
       }
-      // allow exec method on instance 
+      // allow exec method on instance
       else if(inst && typeof method === 'string') {
         inst[method].apply(inst, args);
         if(method === 'destroy') {

@@ -23,7 +23,7 @@ var Utils = {
       styleSheet.id = 'scroll-sheet';
       styleSheet.appendChild(document.createTextNode('')); // WebKit hack
       document.head.appendChild(styleSheet);
-    } 
+    }
     try {
       styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
       return true;
@@ -44,7 +44,7 @@ var Utils = {
   // Global height checker
   // looped to listen element changes
   checkLoop: function () {
-    
+
     if(!G.instances.length) {
       G.checkTimer = null;
       return;
@@ -53,7 +53,7 @@ var Utils = {
     if(!G.pauseCheck) { // check size only if not scrolling
       _invoke(G.instances, 'update');
     }
-    
+
     if(GS.checkFrequency) {
       G.checkTimer = setTimeout(function () {
         Utils.checkLoop();
@@ -63,8 +63,8 @@ var Utils = {
 
 
   // easeOutCubic function
-  easingFunction: function (t) { 
-    return (--t) * t * t + 1; 
+  easingFunction: function (t) {
+    return (--t) * t * t + 1;
   },
 
 

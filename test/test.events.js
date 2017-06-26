@@ -15,7 +15,7 @@ asyncTest('It should fire scrollstart', function () {
   expect(4);
 
   os.scrollEl.scrollTop = 0;
-  
+
   os.element.addEventListener('scrollstart', function (ev) {
     equal(ev.type, 'scrollstart');
     equal(ev.detail.scrollTop, 0);
@@ -28,7 +28,7 @@ asyncTest('It should fire scrollstart', function () {
   setTimeout(function () {
     os.scrollEl.scrollTop = 20;
   }, 50);
-  
+
 });
 
 
@@ -64,7 +64,7 @@ asyncTest('It should fire scrollreachtop', function () {
   setTimeout(function() {
     os.scrollEl.scrollTop = 0;
   }, 50);
-  
+
 });
 
 
@@ -85,7 +85,7 @@ asyncTest('It should fire scrollreachbottom', function () {
   setTimeout(function() {
     os.scrollEl.scrollTop = 100;
   }, 50);
-  
+
 });
 
 
@@ -106,7 +106,7 @@ asyncTest('It should fire scrollreachleft', function () {
   setTimeout(function() {
     os.scrollEl.scrollLeft = 0;
   }, 50);
-  
+
 });
 
 
@@ -127,7 +127,7 @@ asyncTest('It should fire scrollreachright', function () {
   setTimeout(function() {
     os.scrollEl.scrollLeft = 100;
   }, 50);
-  
+
 });
 
 

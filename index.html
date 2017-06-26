@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html> 
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="MobileOptimized" content="320">
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
   <title>Optiscroll.js</title>
-  
+
   <link rel="stylesheet" href="dist/optiscroll.css">
   <style type="text/css">
     * { box-sizing: border-box; }
@@ -20,7 +20,7 @@
     #os1 p { transition: all 2s ease 0s; max-width: 99em; max-height: 99em; }
     .collapse {  max-width: 0 !important; max-height: 0 !important; overflow: hidden; }
   </style>
-  
+
   <script type="text/javascript" src="src/optiscroll.js"></script>
   <script type="text/javascript" src="src/events.js"></script>
   <script type="text/javascript" src="src/scrollbar.js"></script>
@@ -30,14 +30,14 @@
 <body>
 
   <div id="m-wrapper" class="m-wrapper optiscroll">
-    
+
     <h1>Optiscroll</h1>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id nibh dictum ex ultrices pellentesque non eget eros. Sed pellentesque in lorem ac porttitor. Phasellus consectetur risus eu quam pellentesque, at malesuada odio hendrerit. Morbi vitae commodo lectus. In hac habitasse platea dictumst. Quisque placerat arcu ac risus pretium, a efficitur elit hendrerit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
     </p>
-    
+
     <h2>Nested</h2>
-      
+
     <div id="os1" class="optiscroll column">
       <div id="os1-content" class="optiscroll-content">
         <p style="width: 150%">
@@ -75,22 +75,23 @@
     </p>
 
     <script type="text/javascript">
-      var os1 = new Optiscroll(document.getElementById('os1'), { 
+      var os1 = new Optiscroll(document.getElementById('os1'), {
         maxTrackSize: 70,
-        preventParentScroll: true, 
+        preventParentScroll: true,
         wrapContent: false,
+        forceScrollbars: true,
       });
       setInterval(function () {
         document.querySelector('#os1-content p').classList.toggle('collapse');
       }, 5000);
 
-      var os2 = new Optiscroll(document.getElementById('os2'), { 
+      var os2 = new Optiscroll(document.getElementById('os2'), {
         maxTrackSize: 70,
-        preventParentScroll: true, 
+        preventParentScroll: true,
         wrapContent: false,
       });
     </script>
-  
+
   </div>
 
   <script type="text/javascript">

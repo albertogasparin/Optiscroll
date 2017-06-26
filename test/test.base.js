@@ -27,7 +27,7 @@ test('It should be initialized', function () {
 asyncTest('Optiscroll should be destroyed', function () {
   expect(5);
   os.destroy();
-  
+
   setTimeout(function () {
     // check DOM elements style
     ok(!os.scrollEl);

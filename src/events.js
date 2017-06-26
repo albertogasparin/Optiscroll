@@ -1,17 +1,17 @@
 var Events = {
 
   scroll: function (ev) {
-    
+
     if (!G.pauseCheck) {
       this.fireCustomEvent('scrollstart');
     }
     G.pauseCheck = true;
-    
+
     this.scrollbars.v.update();
     this.scrollbars.h.update();
 
     this.fireCustomEvent('scroll');
-    
+
     clearTimeout(this.cache.timerStop);
     this.cache.timerStop = setTimeout(Events.scrollStop.bind(this), this.settings.scrollStopDelay);
   },
@@ -21,7 +21,7 @@ var Events = {
     G.pauseCheck = false;
     this.scrollbars.v.update();
     this.scrollbars.h.update();
-    
+
     Events.wheel.call(this, ev);
   },
 
@@ -41,12 +41,12 @@ var Events = {
 
   wheel: function (ev) {
     var cache = this.cache,
-        cacheV = cache.v, 
+        cacheV = cache.v,
         cacheH = cache.h,
         preventScroll = this.settings.preventParentScroll && G.isTouch;
 
     window.cancelAnimationFrame(this.scrollAnimation);
-    
+
     if(preventScroll && cacheV.enabled && cacheV.percent % 100 === 0) {
       this.scrollEl.scrollTop = cacheV.percent ? (cache.scrollH - cache.clientH - 1) : 1;
     }

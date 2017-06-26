@@ -33,11 +33,11 @@ var Scrollbar = function (which, instance) {
       var evData = ev.touches ? ev.touches[0] : ev,
           dragMode = settings.rtl && rtlMode === 1 && !isVertical ? -1 : 1,
           delta, deltaRatio;
-      
+
       ev.preventDefault();
       delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
       deltaRatio = delta / cache[clientSize];
-      
+
       scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize] * dragMode;
     },
 
@@ -57,7 +57,7 @@ var Scrollbar = function (which, instance) {
     },
 
   };
-  
+
   return {
 
 
@@ -124,7 +124,7 @@ var Scrollbar = function (which, instance) {
       if(enabled) {
         this.fireEdgeEv();
       }
-      
+
     },
 
 
@@ -135,20 +135,20 @@ var Scrollbar = function (which, instance) {
           trackEl.style.marginRight = (1 - newSize) * 100 + '%';
         }
       }
-      trackEl.style[G.cssTransform] = 'translate(' + 
-        (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') 
+      trackEl.style[G.cssTransform] = 'translate(' +
+        (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%')
         + ')';
     },
 
 
     calc: function () {
       var position = scrollEl[scrollProp],
-          viewS = cache[clientSize], 
-          scrollS = cache[scrollSize], 
+          viewS = cache[clientSize],
+          scrollS = cache[scrollSize],
           sizeRatio = viewS / scrollS,
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
-      
+
       if(sizeRatio >= 1 || !scrollS) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
       }
@@ -158,12 +158,12 @@ var Scrollbar = function (which, instance) {
 
       percent = 100 * position / sizeDiff;
 
-      // prevent overscroll effetcs (negative percent) 
+      // prevent overscroll effetcs (negative percent)
       // and keep 1px tolerance near the edges
       if(position <= 1) { percent = 0; }
       if(position >= sizeDiff - 1) { percent = 100; }
-      
-      // Capped size based on min/max track percentage 
+
+      // Capped size based on min/max track percentage
       sizeRatio = Math.max(sizeRatio, settings.minTrackSize / 100);
       sizeRatio = Math.min(sizeRatio, settings.maxTrackSize / 100);
 

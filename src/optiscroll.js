@@ -10,7 +10,7 @@ var Optiscroll = function Optiscroll(element, options) {
 };
 
 
-  
+
 var GS = Optiscroll.globalSettings = {
   scrollMinUpdateInterval: 1000 / 40, // 40 FPS
   checkFrequency: 1000,
@@ -34,13 +34,13 @@ Optiscroll.defaults = {
 
 Optiscroll.Instance = function (element, options) {
   // instance variables
-  this.element = element;  
+  this.element = element;
   this.settings = _extend(_extend({}, Optiscroll.defaults), options || {});
   if (typeof options.rtl !== 'boolean') {
     this.settings.rtl = window.getComputedStyle(element).direction === 'rtl';
   }
   this.cache = {};
-  
+
   this.init();
 };
 
@@ -53,16 +53,16 @@ Optiscroll.Instance.prototype = {
     var element = this.element,
         settings = this.settings,
         shouldCreateScrollbars = false;
-    
-    var scrollEl = this.scrollEl = settings.wrapContent 
-      ? Utils.createWrapper(element) 
+
+    var scrollEl = this.scrollEl = settings.wrapContent
+      ? Utils.createWrapper(element)
       : element.firstElementChild;
 
     toggleClass(scrollEl, settings.classPrefix + 'content', true);
     toggleClass(element, 'is-enabled' + (settings.rtl ? ' is-rtl' : ''), true);
 
     // initialize scrollbars
-    this.scrollbars = { 
+    this.scrollbars = {
       v: Scrollbar('v', this),
       h: Scrollbar('h', this),
     };
@@ -70,7 +70,7 @@ Optiscroll.Instance.prototype = {
     // create DOM scrollbars only if they have size or if it's forced
     if(G.scrollbarSpec.width || settings.forceScrollbars) {
       shouldCreateScrollbars = Utils.hideNativeScrollbars(scrollEl, settings.rtl);
-    } 
+    }
 
     if(shouldCreateScrollbars) {
       _invoke(this.scrollbars, 'create');
@@ -98,7 +98,7 @@ Optiscroll.Instance.prototype = {
 
   },
 
-  
+
 
   bind: function () {
     var listeners = this.listeners = {},
@@ -132,10 +132,10 @@ Optiscroll.Instance.prototype = {
         cH = scrollEl.clientHeight,
         sW = scrollEl.scrollWidth,
         cW = scrollEl.clientWidth;
-    
-    if(sH !== cache.scrollH || cH !== cache.clientH || 
+
+    if(sH !== cache.scrollH || cH !== cache.clientH ||
       sW !== cache.scrollW || cW !== cache.clientW) {
-      
+
       cache.scrollH = sH;
       cache.clientH = cH;
       cache.scrollW = sW;
@@ -175,7 +175,7 @@ Optiscroll.Instance.prototype = {
 
     startX = this.scrollEl.scrollLeft;
     startY = this.scrollEl.scrollTop;
-    
+
     endX = +destX;
     if(destX === 'left') { endX = 0; }
     if(destX === 'right') { endX = cache.scrollW - cache.clientW; }
@@ -188,7 +188,7 @@ Optiscroll.Instance.prototype = {
 
     // animate
     this.animateScroll(startX, endX, startY, endY, +duration);
-    
+
   },
 
 
@@ -227,7 +227,7 @@ Optiscroll.Instance.prototype = {
     topEdge = offsetY - (delta.top || 0);
     rightEdge = offsetX + eDim.width - this.cache.clientW + (delta.right || 0);
     bottomEdge = offsetY + eDim.height - this.cache.clientH + (delta.bottom || 0);
-    
+
     if(leftEdge < startX) { endX = leftEdge; }
     if(rightEdge > startX) { endX = rightEdge; }
 
@@ -260,11 +260,11 @@ Optiscroll.Instance.prototype = {
       // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
       duration = Math.pow(Math.max(Math.abs(endX - startX), Math.abs(endY - startY)), 0.54) * 15;
     }
-    
+
     (function animate () {
       var time = Math.min(1, ((Date.now() - startTime) / duration)),
           easedTime = Utils.easingFunction(time);
-      
+
       if(endY !== startY) {
         scrollEl.scrollTop = ~~(easedTime * (endY - startY)) + startY;
       }
@@ -326,7 +326,7 @@ Optiscroll.Instance.prototype = {
     var cache = this.cache,
         sH = cache.scrollH, sW = cache.scrollW,
         eventData;
-    
+
     eventData = {
       // scrollbars data
       scrollbarV: _extend({}, cache.v),
