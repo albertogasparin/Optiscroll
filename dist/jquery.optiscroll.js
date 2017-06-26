@@ -1,5 +1,5 @@
 /*!
-* Optiscroll.js v3.0.0
+* Optiscroll.js v3.1.0
 * https://github.com/wilsonfletcher/Optiscroll/
 * 
 * @copyright 2017 Alberto Gasparin
@@ -8,6 +8,7 @@
 
 ;(function ( window, document, Math, undefined ) {
   'use strict';
+
 
 
 /**
@@ -21,7 +22,7 @@ var Optiscroll = function Optiscroll(element, options) {
 };
 
 
-  
+
 var GS = Optiscroll.globalSettings = {
   scrollMinUpdateInterval: 1000 / 40, // 40 FPS
   checkFrequency: 1000,
@@ -45,13 +46,13 @@ Optiscroll.defaults = {
 
 Optiscroll.Instance = function (element, options) {
   // instance variables
-  this.element = element;  
+  this.element = element;
   this.settings = _extend(_extend({}, Optiscroll.defaults), options || {});
   if (typeof options.rtl !== 'boolean') {
     this.settings.rtl = window.getComputedStyle(element).direction === 'rtl';
   }
   this.cache = {};
-  
+
   this.init();
 };
 
@@ -64,16 +65,16 @@ Optiscroll.Instance.prototype = {
     var element = this.element,
         settings = this.settings,
         shouldCreateScrollbars = false;
-    
-    var scrollEl = this.scrollEl = settings.wrapContent 
-      ? Utils.createWrapper(element) 
+
+    var scrollEl = this.scrollEl = settings.wrapContent
+      ? Utils.createWrapper(element)
       : element.firstElementChild;
 
     toggleClass(scrollEl, settings.classPrefix + 'content', true);
     toggleClass(element, 'is-enabled' + (settings.rtl ? ' is-rtl' : ''), true);
 
     // initialize scrollbars
-    this.scrollbars = { 
+    this.scrollbars = {
       v: Scrollbar('v', this),
       h: Scrollbar('h', this),
     };
@@ -81,7 +82,7 @@ Optiscroll.Instance.prototype = {
     // create DOM scrollbars only if they have size or if it's forced
     if(G.scrollbarSpec.width || settings.forceScrollbars) {
       shouldCreateScrollbars = Utils.hideNativeScrollbars(scrollEl, settings.rtl);
-    } 
+    }
 
     if(shouldCreateScrollbars) {
       _invoke(this.scrollbars, 'create');
@@ -109,7 +110,7 @@ Optiscroll.Instance.prototype = {
 
   },
 
-  
+
 
   bind: function () {
     var listeners = this.listeners = {},
@@ -143,10 +144,10 @@ Optiscroll.Instance.prototype = {
         cH = scrollEl.clientHeight,
         sW = scrollEl.scrollWidth,
         cW = scrollEl.clientWidth;
-    
-    if(sH !== cache.scrollH || cH !== cache.clientH || 
+
+    if(sH !== cache.scrollH || cH !== cache.clientH ||
       sW !== cache.scrollW || cW !== cache.clientW) {
-      
+
       cache.scrollH = sH;
       cache.clientH = cH;
       cache.scrollW = sW;
@@ -186,7 +187,7 @@ Optiscroll.Instance.prototype = {
 
     startX = this.scrollEl.scrollLeft;
     startY = this.scrollEl.scrollTop;
-    
+
     endX = +destX;
     if(destX === 'left') { endX = 0; }
     if(destX === 'right') { endX = cache.scrollW - cache.clientW; }
@@ -199,7 +200,7 @@ Optiscroll.Instance.prototype = {
 
     // animate
     this.animateScroll(startX, endX, startY, endY, +duration);
-    
+
   },
 
 
@@ -238,7 +239,7 @@ Optiscroll.Instance.prototype = {
     topEdge = offsetY - (delta.top || 0);
     rightEdge = offsetX + eDim.width - this.cache.clientW + (delta.right || 0);
     bottomEdge = offsetY + eDim.height - this.cache.clientH + (delta.bottom || 0);
-    
+
     if(leftEdge < startX) { endX = leftEdge; }
     if(rightEdge > startX) { endX = rightEdge; }
 
@@ -271,11 +272,11 @@ Optiscroll.Instance.prototype = {
       // 500px in 430ms, 1000px in 625ms, 2000px in 910ms
       duration = Math.pow(Math.max(Math.abs(endX - startX), Math.abs(endY - startY)), 0.54) * 15;
     }
-    
+
     (function animate () {
       var time = Math.min(1, ((Date.now() - startTime) / duration)),
           easedTime = Utils.easingFunction(time);
-      
+
       if(endY !== startY) {
         scrollEl.scrollTop = ~~(easedTime * (endY - startY)) + startY;
       }
@@ -284,7 +285,7 @@ Optiscroll.Instance.prototype = {
       }
 
       self.scrollAnimation = time < 1 ? window.requestAnimationFrame(animate) : null;
-    }(this));
+    }());
   },
 
 
@@ -337,7 +338,7 @@ Optiscroll.Instance.prototype = {
     var cache = this.cache,
         sH = cache.scrollH, sW = cache.scrollW,
         eventData;
-    
+
     eventData = {
       // scrollbars data
       scrollbarV: _extend({}, cache.v),
@@ -357,7 +358,7 @@ Optiscroll.Instance.prototype = {
     };
 
     var event;
-    if (CustomEvent === 'function') {
+    if (typeof CustomEvent === 'function') {
       event = new CustomEvent(eventName, { detail: eventData });
     } else { // IE does not support CustomEvent
       event = document.createEvent('CustomEvent');
@@ -374,17 +375,17 @@ Optiscroll.Instance.prototype = {
 var Events = {
 
   scroll: function (ev) {
-    
+
     if (!G.pauseCheck) {
       this.fireCustomEvent('scrollstart');
     }
     G.pauseCheck = true;
-    
+
     this.scrollbars.v.update();
     this.scrollbars.h.update();
 
     this.fireCustomEvent('scroll');
-    
+
     clearTimeout(this.cache.timerStop);
     this.cache.timerStop = setTimeout(Events.scrollStop.bind(this), this.settings.scrollStopDelay);
   },
@@ -394,7 +395,7 @@ var Events = {
     G.pauseCheck = false;
     this.scrollbars.v.update();
     this.scrollbars.h.update();
-    
+
     Events.wheel.call(this, ev);
   },
 
@@ -414,12 +415,12 @@ var Events = {
 
   wheel: function (ev) {
     var cache = this.cache,
-        cacheV = cache.v, 
+        cacheV = cache.v,
         cacheH = cache.h,
         preventScroll = this.settings.preventParentScroll && G.isTouch;
 
     window.cancelAnimationFrame(this.scrollAnimation);
-    
+
     if(preventScroll && cacheV.enabled && cacheV.percent % 100 === 0) {
       this.scrollEl.scrollTop = cacheV.percent ? (cache.scrollH - cache.clientH - 1) : 1;
     }
@@ -445,7 +446,8 @@ var Scrollbar = function (which, instance) {
       clientSize = 'client' + sizeProp,
       scrollSize = 'scroll' + sizeProp,
       scrollProp = isVertical ? 'scrollTop' : 'scrollLeft',
-      evNames = isVertical ? ['top','bottom'] : ['left','right'],
+      evSuffixes = isVertical ? ['top','bottom'] : ['left','right'],
+      evTypesMatcher = /^(mouse|touch|pointer)/,
 
       rtlMode = G.scrollbarSpec.rtl,
       enabled = false,
@@ -456,38 +458,41 @@ var Scrollbar = function (which, instance) {
     dragData: null,
 
     dragStart: function (ev) {
+      ev.preventDefault();
       var evData = ev.touches ? ev.touches[0] : ev;
       events.dragData = { x: evData.pageX, y: evData.pageY, scroll: scrollEl[scrollProp] };
-      events.bind(true);
+      events.bind(true, ev.type.match(evTypesMatcher)[1]);
     },
 
     dragMove: function (ev) {
       var evData = ev.touches ? ev.touches[0] : ev,
           dragMode = settings.rtl && rtlMode === 1 && !isVertical ? -1 : 1,
           delta, deltaRatio;
-      
+
       ev.preventDefault();
       delta = isVertical ? evData.pageY - events.dragData.y : evData.pageX - events.dragData.x;
       deltaRatio = delta / cache[clientSize];
-      
+
       scrollEl[scrollProp] = events.dragData.scroll + deltaRatio * cache[scrollSize] * dragMode;
     },
 
-    dragEnd: function () {
+    dragEnd: function (ev) {
       events.dragData = null;
-      events.bind(false);
+      events.bind(false, ev.type.match(evTypesMatcher)[1]);
     },
 
-    bind: function (on) {
+    bind: function (on, type) {
       var method = (on ? 'add' : 'remove') + 'EventListener',
-          type = G.isTouch ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup'];
+          moveEv = type + 'move',
+          upEv = type + (type === 'touch' ? 'end' : 'up');
 
-      document[method](type[0], events.dragMove);
-      document[method](type[1], events.dragEnd);
+      document[method](moveEv, events.dragMove);
+      document[method](upEv, events.dragEnd);
+      document[method](type + 'cancel', events.dragEnd);
     },
 
   };
-  
+
   return {
 
 
@@ -504,7 +509,6 @@ var Scrollbar = function (which, instance) {
 
 
     create: function () {
-      var evType = G.isTouch ? 'touchstart' : 'mousedown';
       scrollbarEl = document.createElement('div');
       trackEl = document.createElement('b');
 
@@ -514,7 +518,10 @@ var Scrollbar = function (which, instance) {
       parentEl.appendChild(scrollbarEl);
 
       if(settings.draggableTracks) {
-        trackEl.addEventListener(evType, events.dragStart);
+        var evTypes = window.PointerEvent ? ['pointerdown'] : ['touchstart', 'mousedown'];
+        evTypes.forEach(function (evType) {
+          trackEl.addEventListener(evType, events.dragStart);
+        });
       }
     },
 
@@ -552,7 +559,7 @@ var Scrollbar = function (which, instance) {
       if(enabled) {
         this.fireEdgeEv();
       }
-      
+
     },
 
 
@@ -563,20 +570,20 @@ var Scrollbar = function (which, instance) {
           trackEl.style.marginRight = (1 - newSize) * 100 + '%';
         }
       }
-      trackEl.style[G.cssTransform] = 'translate(' + 
-        (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%') 
+      trackEl.style[G.cssTransform] = 'translate(' +
+        (isVertical ? '0%,' + newRelPos + '%' : newRelPos + '%' + ',0%')
         + ')';
     },
 
 
     calc: function () {
       var position = scrollEl[scrollProp],
-          viewS = cache[clientSize], 
-          scrollS = cache[scrollSize], 
+          viewS = cache[clientSize],
+          scrollS = cache[scrollSize],
           sizeRatio = viewS / scrollS,
           sizeDiff = scrollS - viewS,
           positionRatio, percent;
-      
+
       if(sizeRatio >= 1 || !scrollS) { // no scrollbars needed
         return { position: 0, size: 1, percent: 0 };
       }
@@ -586,12 +593,12 @@ var Scrollbar = function (which, instance) {
 
       percent = 100 * position / sizeDiff;
 
-      // prevent overscroll effetcs (negative percent) 
+      // prevent overscroll effetcs (negative percent)
       // and keep 1px tolerance near the edges
       if(position <= 1) { percent = 0; }
       if(position >= sizeDiff - 1) { percent = 100; }
-      
-      // Capped size based on min/max track percentage 
+
+      // Capped size based on min/max track percentage
       sizeRatio = Math.max(sizeRatio, settings.minTrackSize / 100);
       sizeRatio = Math.min(sizeRatio, settings.maxTrackSize / 100);
 
@@ -606,7 +613,7 @@ var Scrollbar = function (which, instance) {
 
       if(scrollbarCache.was !== percent && percent % 100 === 0) {
         instance.fireCustomEvent('scrollreachedge');
-        instance.fireCustomEvent('scrollreach' + evNames[percent / 100]);
+        instance.fireCustomEvent('scrollreach' + evSuffixes[percent / 100]);
       }
 
       scrollbarCache.was = percent;
@@ -653,7 +660,7 @@ var Utils = {
       styleSheet.id = 'scroll-sheet';
       styleSheet.appendChild(document.createTextNode('')); // WebKit hack
       document.head.appendChild(styleSheet);
-    } 
+    }
     try {
       styleSheet.sheet.insertRule(selector + ' {' + rules + '}', 0);
       return true;
@@ -674,7 +681,7 @@ var Utils = {
   // Global height checker
   // looped to listen element changes
   checkLoop: function () {
-    
+
     if(!G.instances.length) {
       G.checkTimer = null;
       return;
@@ -683,7 +690,7 @@ var Utils = {
     if(!G.pauseCheck) { // check size only if not scrolling
       _invoke(G.instances, 'update');
     }
-    
+
     if(GS.checkFrequency) {
       G.checkTimer = setTimeout(function () {
         Utils.checkLoop();
@@ -693,8 +700,8 @@ var Utils = {
 
 
   // easeOutCubic function
-  easingFunction: function (t) { 
-    return (--t) * t * t + 1; 
+  easingFunction: function (t) {
+    return (--t) * t * t + 1;
   },
 
 
@@ -730,16 +737,16 @@ function getScrollbarSpec () {
   outerEl.appendChild(innerEl);
   htmlEl.appendChild(outerEl);
   width = outerEl.offsetWidth - outerEl.clientWidth;
-  if (outerEl.scrollLeft > 0) { 
+  if (outerEl.scrollLeft > 0) {
     rtl = 0; // webkit is default
   } else {
     outerEl.scrollLeft = 1;
-    if (outerEl.scrollLeft === 0) { 
+    if (outerEl.scrollLeft === 0) {
       rtl = -1; // firefox is negative
     }
   }
   htmlEl.removeChild(outerEl);
-  
+
   return { width: width, rtl: rtl };
 }
 
@@ -759,7 +766,7 @@ function cssTest (prop) {
   var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
       el = document.createElement('test'),
       props = [prop, 'Webkit' + ucProp];
-  
+
   for (var i in props) {
     if(el.style[props[i]] !== undefined) { return props[i]; }
   }
@@ -771,7 +778,7 @@ function cssTest (prop) {
 function toggleClass (el, value, bool) {
   var classes = el.className.split(/\s+/),
       index = classes.indexOf(value);
-  
+
   if(bool) {
     ~index || classes.push(value);
   } else {
@@ -836,15 +843,16 @@ function _throttle(fn, threshhold) {
       return Optiscroll;
     });
   }
-  
+
   // commonjs export
   if(typeof module !== 'undefined' && module.exports) {
     module.exports = Optiscroll;
   }
-  
+
   window.Optiscroll = Optiscroll;
 
 })(window, document, Math);
+
 
 /**
  * jQuery plugin
@@ -859,12 +867,12 @@ function _throttle(fn, threshhold) {
  */
 
 (function ($) {
-  
+
   var pluginName = 'optiscroll';
 
   $.fn[pluginName] = function(options) {
     var method, args;
-    
+
     if(typeof options === 'string') {
       args = Array.prototype.slice.call(arguments);
       method = args.shift();
@@ -879,7 +887,7 @@ function _throttle(fn, threshhold) {
         inst = new window.Optiscroll(this, options || {});
         $el.data(pluginName, inst);
       }
-      // allow exec method on instance 
+      // allow exec method on instance
       else if(inst && typeof method === 'string') {
         inst[method].apply(inst, args);
         if(method === 'destroy') {
