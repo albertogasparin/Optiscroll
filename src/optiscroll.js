@@ -273,7 +273,7 @@ Optiscroll.Instance.prototype = {
       }
 
       self.scrollAnimation = time < 1 ? window.requestAnimationFrame(animate) : null;
-    }(this));
+    }());
   },
 
 
@@ -346,7 +346,7 @@ Optiscroll.Instance.prototype = {
     };
 
     var event;
-    if (CustomEvent === 'function') {
+    if (typeof CustomEvent === 'function') {
       event = new CustomEvent(eventName, { detail: eventData });
     } else { // IE does not support CustomEvent
       event = document.createEvent('CustomEvent');
