@@ -7,10 +7,10 @@
     "user interface"
   ],
   "version": "3.1.0",
-  "homepage": "https://github.com/wilsonfletcher/optiscroll",
+  "homepage": "https://github.com/albertogasparin/optiscroll",
   "repository": {
     "type": "git",
-    "url": "git://github.com/wilsonfletcher/optiscroll.git"
+    "url": "git://github.com/albertogasparin/optiscroll.git"
   },
   "scripts": {
     "prepublish": "grunt build",
@@ -34,6 +34,6 @@
   "main": "dist/optiscroll.js",
   "licence": "MIT",
   "bugs": {
-    "url": "http://github.com/wilsonfletcher/optiscroll/issues"
+    "url": "http://github.com/albertogasparin/optiscroll/issues"
   }
 }

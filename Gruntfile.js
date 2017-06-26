@@ -19,7 +19,7 @@ module.exports = exports = function(grunt) {
             options: {
                 banner: "/*!\n"+
                     "* Optiscroll.js v<%= pkg.version %>\n"+
-                    "* https://github.com/wilsonfletcher/Optiscroll/\n"+
+                    "* https://github.com/albertogasparin/Optiscroll/\n"+
                     "* \n"+
                     "* @copyright <%= grunt.template.today('yyyy') %> Alberto Gasparin\n"+
                     "* @license Released under MIT LICENSE\n"+
