@@ -1,8 +1,8 @@
 /*!
-* Optiscroll.js v3.1.0
-* https://github.com/wilsonfletcher/Optiscroll/
+* Optiscroll.js v3.2.0
+* https://github.com/albertogasparin/Optiscroll/
 * 
-* @copyright 2017 Alberto Gasparin
+* @copyright 2018 Alberto Gasparin
 * @license Released under MIT LICENSE
 */
 
