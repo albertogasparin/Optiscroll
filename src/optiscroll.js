@@ -297,7 +297,7 @@ Optiscroll.Instance.prototype = {
     _invoke(this.scrollbars, 'remove');
 
     // unwrap content
-    if (!this.settings.contentElement) {
+    if (this.settings.wrapContent) {
       while(child = scrollEl.childNodes[0]) {
         element.insertBefore(child, scrollEl);
       }
