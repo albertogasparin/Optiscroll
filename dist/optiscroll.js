@@ -1,5 +1,5 @@
 /*!
-* Optiscroll.js v3.2.0
+* Optiscroll.js v3.2.1
 * https://github.com/albertogasparin/Optiscroll/
 * 
 * @copyright 2018 Alberto Gasparin
@@ -309,7 +309,7 @@ Optiscroll.Instance.prototype = {
     _invoke(this.scrollbars, 'remove');
 
     // unwrap content
-    if (!this.settings.contentElement) {
+    if (this.settings.wrapContent) {
       while(child = scrollEl.childNodes[0]) {
         element.insertBefore(child, scrollEl);
       }
