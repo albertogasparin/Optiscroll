@@ -165,7 +165,16 @@ Optiscroll caches some DOM properties (like `scrollHeight`, `clientHeight`, ...)
 
 ### destroy ()
 
-If you want to remove Optiscroll, this method will clean up the class names, unbind all events and remove the scrollbar elements. Optiscroll is clever enough to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks).
+If you want to remove Optiscroll, this method will clean up the class names, unbind all events and remove the scrollbar elements. Anyway, Optiscroll is clever enough to destroy itself automatically if its element is removed from the DOM (so it avoids memory leaks). 
+
+```js
+myOptiscrollInstance.destroy();
+
+/* The jQuery plugin should be destroyed this way 
+ * so it handles removing its internal reference properly */
+
+$('#scroll').optiscroll('destroy');
+```
 
 
 ## Instance events
